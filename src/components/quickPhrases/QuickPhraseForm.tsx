@@ -58,10 +58,10 @@ function QuickPhraseForm({
 
     try {
       await onSave({
-        userId: "local-user",
+        userId: initialPhrase?.userId ?? "local-user",
         text,
-        categoryId: null,
-        position: 0,
+        categoryId: initialPhrase?.categoryId ?? null,
+        position: initialPhrase?.position ?? 0,
         icon: selectedIcon,
         color: selectedColor,
       });
