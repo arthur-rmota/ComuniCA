@@ -1,5 +1,5 @@
-import API_URL from './api.js';
-import type { Card } from '../types/card.js';
+import API_URL from './api';
+import type { Card } from '../types/card';
 
 export async function getCards(): Promise<Card[]> {
   const response = await fetch(`${API_URL}/cards`);

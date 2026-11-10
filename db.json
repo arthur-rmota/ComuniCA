@@ -3,9 +3,10 @@
   "categories": [
     {
       "id": "cat-001",
-      "name": "Necessidades básicas",
+      "name": "Básicos",
       "icon": "hand-heart",
-      "color": "#F4B183",
+      "color": "#A8D49A",
+      "description": "Expressar necessidades básicas",
       "ownerId": null,
       "position": 1
     },
@@ -14,6 +15,7 @@
       "name": "Alimentação",
       "icon": "utensils",
       "color": "#A8D5BA",
+      "description": "Expressar desejos relacionados à alimentação",
       "ownerId": null,
       "position": 2
     },
@@ -22,8 +24,18 @@
       "name": "Emoções",
       "icon": "heart",
       "color": "#F4A6A6",
+      "description": "Comunicar sentimentos e emoções",
       "ownerId": null,
       "position": 3
+    },
+    {
+      "id": "cat-004",
+      "name": "Emergência",
+      "icon": "siren",
+      "color": "#F59A9D",
+      "description": "Comunicar situações de emergência e pedir ajuda",
+      "ownerId": null,
+      "position": 4
     }
   ],
   "cards": [
