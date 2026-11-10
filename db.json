@@ -47,7 +47,11 @@
       "speechText": "Quero água",
       "categoryId": "cat-001",
       "ownerId": null,
-      "keywords": ["água", "beber", "sede"],
+      "keywords": [
+        "água",
+        "beber",
+        "sede"
+      ],
       "isActive": true
     },
     {
@@ -58,7 +62,11 @@
       "speechText": "Quero comer",
       "categoryId": "cat-002",
       "ownerId": null,
-      "keywords": ["comida", "comer", "fome"],
+      "keywords": [
+        "comida",
+        "comer",
+        "fome"
+      ],
       "isActive": true
     },
     {
@@ -69,11 +77,65 @@
       "speechText": "Estou feliz",
       "categoryId": "cat-003",
       "ownerId": null,
-      "keywords": ["feliz", "alegria", "bem"],
+      "keywords": [
+        "feliz",
+        "alegria",
+        "bem"
+      ],
       "isActive": true
     }
   ],
   "userCardSettings": [],
   "phrases": [],
-  "quickPhrases": []
+  "quickPhrases": [
+    {
+      "id": "quick-001",
+      "userId": null,
+      "text": "Quero beber água",
+      "categoryId": "cat-001",
+      "position": 1,
+      "icon": "glass-water",
+      "color": "#AFE0FA"
+    },
+    {
+      "id": "quick-002",
+      "userId": null,
+      "text": "Estou com fome",
+      "categoryId": "cat-002",
+      "position": 2,
+      "icon": "utensils",
+      "color": "#C9E2B7"
+    },
+    {
+      "id": "quick-003",
+      "userId": null,
+      "text": "Preciso de ajuda",
+      "categoryId": "cat-004",
+      "position": 3,
+      "icon": "life-buoy",
+      "color": "#FFC7C8"
+    },
+    {
+      "id": "quick-004",
+      "userId": null,
+      "text": "Estou feliz",
+      "categoryId": "cat-003",
+      "position": 4,
+      "icon": "smile",
+      "color": "#E7C4FF"
+    }
+  ],
+  "quickPhraseFavorites": [
+    {
+      "userId": "local-user",
+      "quickPhraseId": "quick-001",
+      "id": "yvBjjQQHwVQ"
+    },
+    {
+      "userId": "local-user",
+      "quickPhraseId": "quick-001",
+      "id": "lw7nH8Coav0"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
