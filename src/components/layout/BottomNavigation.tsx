@@ -16,10 +16,10 @@ function BottomNavigation() {
 
       <button
         type="button"
-        aria-label="Criar cartão"
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-[#FFA726] text-3xl shadow-md"
+        aria-label="Frases rápidas favoritas"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-[#FFA726] text-3xl text-white shadow-md"
       >
-        +
+        ★
       </button>
 
       <button type="button" className="flex flex-col items-center gap-1">
