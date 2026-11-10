@@ -1,12 +1,6 @@
 import type { QuickPhrase } from "../../types/quickPhrase";
-import { GlassWater, Utensils, Smile, LifeBuoy, Star } from "lucide-react";
-
-const phraseIcons = {
-  "glass-water": GlassWater,
-  utensils: Utensils,
-  "life-buoy": LifeBuoy,
-  smile: Smile,
-};
+import { Smile, Star } from "lucide-react";
+import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
 
 const phraseIconColors: Record<string, string> = {
   "glass-water": "#006AA6",
@@ -37,6 +31,8 @@ function QuickPhraseCard({
   onToggleFavorite,
 }: QuickPhraseCardProps) {
   const canEdit = phrase.userId === "local-user";
+  const selectedIcon = quickPhraseIcons.find((item) => item.id === phrase.icon);
+  const Icon = selectedIcon?.Icon;
   return (
     <div className="relative">
       <button
@@ -63,19 +59,15 @@ function QuickPhraseCard({
         style={{ backgroundColor: phrase.color }}
       >
         <span aria-hidden="true">
-          {(() => {
-            const Icon = phraseIcons[phrase.icon as keyof typeof phraseIcons];
-
-            return Icon ? (
-              <Icon
-                size={52}
-                strokeWidth={2.5}
-                color={phraseIconColors[phrase.icon] ?? "#383838"}
-              />
-            ) : (
-              <Smile size={52} strokeWidth={2.5} />
-            );
-          })()}
+          {Icon ? (
+            <Icon
+              size={52}
+              strokeWidth={2.5}
+              color={phraseIconColors[phrase.icon] ?? "#383838"}
+            />
+          ) : (
+            <Smile size={52} strokeWidth={2.5} color="#383838" />
+          )}
         </span>
 
         <span className="text-sm font-semibold text-[#383838]">

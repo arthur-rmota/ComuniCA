@@ -1,13 +1,6 @@
 import { useState } from "react";
-import { GlassWater, Utensils, LifeBuoy, Smile } from "lucide-react";
+import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
 import type { QuickPhrase } from "../../types/quickPhrase";
-
-const availableIcons = [
-  { id: "glass-water", label: "Água", Icon: GlassWater },
-  { id: "utensils", label: "Alimentação", Icon: Utensils },
-  { id: "life-buoy", label: "Ajuda", Icon: LifeBuoy },
-  { id: "smile", label: "Emoções", Icon: Smile },
-];
 
 const availableColors = [
   "#AFE0FA",
@@ -40,7 +33,8 @@ function QuickPhraseForm({
   );
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
-
+  const [iconSearch, setIconSearch] = useState("");
+  const [selectedIconCategory, setSelectedIconCategory] = useState("Todas");
   const isPhraseValid = phraseText.trim().length > 0;
 
   async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
@@ -78,13 +72,37 @@ function QuickPhraseForm({
 
   const isEditing = Boolean(initialPhrase);
 
+  const iconCategories = [
+    "Todas",
+    ...new Set(quickPhraseIcons.map((item) => item.category)),
+  ];
+
+  const filteredIcons = quickPhraseIcons.filter((item) => {
+    const matchesSearch = item.label
+      .toLocaleLowerCase("pt-BR")
+      .includes(iconSearch.trim().toLocaleLowerCase("pt-BR"));
+
+    const matchesCategory =
+      selectedIconCategory === "Todas" ||
+      item.category === selectedIconCategory;
+
+    return matchesSearch && matchesCategory;
+  });
+
   return (
-    <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/50 p-4">
+    <div
+      className="fixed inset-0 z-30 flex items-center justify-center bg-black/50 p-4"
+      onClick={(event) => {
+        if (event.target === event.currentTarget && !isSaving) {
+          onClose();
+        }
+      }}
+    >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="add-phrase-title"
-        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+        className="min-w-0 max-h-[90dvh] w-full max-w-md overflow-x-hidden overflow-y-auto rounded-2xl bg-white p-4 shadow-xl sm:p-6"
       >
         <h2
           id="add-phrase-title"
@@ -122,24 +140,61 @@ function QuickPhraseForm({
             <p className="mb-3 text-sm font-semibold text-[#383838]">
               Escolha um ícone
             </p>
+            <input
+              type="search"
+              value={iconSearch}
+              onChange={(event) => setIconSearch(event.target.value)}
+              placeholder="Pesquisar ícone..."
+              aria-label="Pesquisar ícones"
+              className="mb-3 w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-[#383838] outline-none focus:border-[#FFA726]"
+            />
 
-            <div className="grid grid-cols-4 gap-2">
-              {availableIcons.map(({ id, label, Icon }) => (
+            <div
+              role="group"
+              aria-label="Filtrar ícones por categoria"
+              className="mb-3 flex w-full min-w-0 max-w-full gap-2 overflow-x-auto overscroll-x-contain pb-2"
+            >
+              {iconCategories.map((category) => (
                 <button
-                  key={id}
+                  key={category}
                   type="button"
-                  onClick={() => setSelectedIcon(id)}
-                  aria-label={label}
-                  aria-pressed={selectedIcon === id}
-                  className={`flex aspect-square items-center justify-center rounded-xl border-2 transition-colors ${
-                    selectedIcon === id
-                      ? "border-[#FFA726] bg-[#FFF3E0]"
-                      : "border-gray-200 bg-gray-50"
+                  onClick={() => setSelectedIconCategory(category)}
+                  aria-pressed={selectedIconCategory === category}
+                  className={`shrink-0 rounded-full border px-3 py-2 text-xs font-semibold transition-colors ${
+                    selectedIconCategory === category
+                      ? "border-[#FFA726] bg-[#FFF3E0] text-[#A86400]"
+                      : "border-gray-200 bg-gray-50 text-[#383838]"
                   }`}
                 >
-                  <Icon size={28} color="#383838" />
+                  {category}
                 </button>
               ))}
+            </div>
+
+            <div className="max-h-56 overflow-y-auto rounded-xl border border-gray-200 p-2">
+              <div className="grid grid-cols-4 gap-2">
+                {filteredIcons.map(({ id, label, Icon }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setSelectedIcon(id)}
+                    aria-label={label}
+                    aria-pressed={selectedIcon === id}
+                    className={`flex aspect-square items-center justify-center rounded-xl border-2 transition-colors ${
+                      selectedIcon === id
+                        ? "border-[#FFA726] bg-[#FFF3E0]"
+                        : "border-gray-200 bg-gray-50"
+                    }`}
+                  >
+                    <Icon size={28} color="#383838" />
+                  </button>
+                ))}
+                {filteredIcons.length === 0 && (
+                  <p className="col-span-full w-full py-6 text-center text-sm text-gray-500">
+                    Nenhum ícone encontrado.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
@@ -200,7 +255,7 @@ function QuickPhraseForm({
             </button>
           </div>
         </form>
-        
+
         {isEditing && onDelete && (
           <button
             type="button"
