@@ -1,7 +1,66 @@
 {
   "users": [],
-  "categories": [],
-  "cards": [],
+  "categories": [
+    {
+      "id": "cat-001",
+      "name": "Necessidades básicas",
+      "icon": "hand-heart",
+      "color": "#F4B183",
+      "ownerId": null,
+      "position": 1
+    },
+    {
+      "id": "cat-002",
+      "name": "Alimentação",
+      "icon": "utensils",
+      "color": "#A8D5BA",
+      "ownerId": null,
+      "position": 2
+    },
+    {
+      "id": "cat-003",
+      "name": "Emoções",
+      "icon": "heart",
+      "color": "#F4A6A6",
+      "ownerId": null,
+      "position": 3
+    }
+  ],
+  "cards": [
+    {
+      "id": "card-001",
+      "title": "Água",
+      "image": null,
+      "altText": "Copo com água",
+      "speechText": "Quero água",
+      "categoryId": "cat-001",
+      "ownerId": null,
+      "keywords": ["água", "beber", "sede"],
+      "isActive": true
+    },
+    {
+      "id": "card-002",
+      "title": "Comida",
+      "image": null,
+      "altText": "Prato com comida",
+      "speechText": "Quero comer",
+      "categoryId": "cat-002",
+      "ownerId": null,
+      "keywords": ["comida", "comer", "fome"],
+      "isActive": true
+    },
+    {
+      "id": "card-003",
+      "title": "Feliz",
+      "image": null,
+      "altText": "Rosto demonstrando felicidade",
+      "speechText": "Estou feliz",
+      "categoryId": "cat-003",
+      "ownerId": null,
+      "keywords": ["feliz", "alegria", "bem"],
+      "isActive": true
+    }
+  ],
   "userCardSettings": [],
   "phrases": [],
   "quickPhrases": []
