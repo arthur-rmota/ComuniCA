@@ -123,19 +123,17 @@
       "position": 4,
       "icon": "smile",
       "color": "#E7C4FF"
-    }
-  ],
-  "quickPhraseFavorites": [
-    {
-      "userId": "local-user",
-      "quickPhraseId": "quick-001",
-      "id": "yvBjjQQHwVQ"
     },
     {
       "userId": "local-user",
-      "quickPhraseId": "quick-001",
-      "id": "lw7nH8Coav0"
+      "text": "Quero Brincar",
+      "categoryId": null,
+      "position": 5,
+      "icon": "smile",
+      "color": "#C9E2B7",
+      "id": "pfMfc_OgMYw"
     }
   ],
+  "quickPhraseFavorites": [],
   "$schema": "./node_modules/json-server/schema.json"
 }

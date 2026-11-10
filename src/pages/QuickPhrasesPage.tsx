@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { getQuickPhrases } from "../services/quickPhraseService";
+import {
+  getQuickPhrases,
+  createQuickPhrase,
+} from "../services/quickPhraseService";
 import type { QuickPhrase } from "../types/quickPhrase";
 import { speak } from "../utils/speech";
-import { GlassWater, Utensils, Smile, LifeBuoy } from "lucide-react";
 import {
   getQuickPhraseFavorites,
   addQuickPhraseFavorite,
@@ -10,7 +12,8 @@ import {
 } from "../services/quickPhraseFavoriteService";
 import type { QuickPhraseFavorite } from "../types/quickPhraseFavorite";
 import QuickPhraseCard from "../components/common/QuickPhraseCard";
-
+import { Pencil } from "lucide-react";
+import QuickPhraseForm from "../components/quickPhrases/QuickPhraseForm";
 
 function QuickPhrasesPage() {
   const [phrases, setPhrases] = useState<QuickPhrase[]>([]);
@@ -20,6 +23,8 @@ function QuickPhrasesPage() {
   const [updatingFavoriteId, setUpdatingFavoriteId] = useState<string | null>(
     null,
   );
+  const [isManageMenuOpen, setIsManageMenuOpen] = useState(false);
+  const [isAddPhraseOpen, setIsAddPhraseOpen] = useState(false);
 
   useEffect(() => {
     async function loadPhrases() {
@@ -87,6 +92,18 @@ function QuickPhrasesPage() {
     }
   }
 
+  async function handleSavePhrase(phrase: Omit<QuickPhrase, "id">) {
+    const nextPosition =
+      Math.max(0, ...phrases.map((item) => item.position)) + 1;
+
+    const newPhrase = await createQuickPhrase({
+      ...phrase,
+      position: nextPosition,
+    });
+
+    setPhrases((currentPhrases) => [...currentPhrases, newPhrase]);
+  }
+
   return (
     <main className="min-h-screen bg-[#E5E5E5] p-4 pb-28">
       <header className="mb-5 pt-3">
@@ -124,6 +141,45 @@ function QuickPhrasesPage() {
           />
         ))}
       </div>
+
+      {isManageMenuOpen && (
+        <div className="fixed bottom-40 right-4 z-10 flex flex-col gap-2 rounded-xl bg-white p-3 shadow-lg">
+          <button
+            type="button"
+            className="rounded-lg bg-[#F5F5F5] px-4 py-2 text-sm font-medium text-[#383838]"
+          >
+            Editar frase
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setIsManageMenuOpen(false);
+              setIsAddPhraseOpen(true);
+            }}
+            className="rounded-lg bg-[#F5F5F5] px-4 py-2 text-sm font-medium text-[#383838]"
+          >
+            Adicionar frase
+          </button>
+        </div>
+      )}
+
+      {isAddPhraseOpen && (
+        <QuickPhraseForm
+          onClose={() => setIsAddPhraseOpen(false)}
+          onSave={handleSavePhrase}
+        />
+      )}
+
+      <button
+        type="button"
+        onClick={() => setIsManageMenuOpen((current) => !current)}
+        aria-expanded={isManageMenuOpen}
+        aria-label="Gerenciar frases rápidas"
+        className="fixed bottom-24 right-4 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#383838] shadow-lg"
+      >
+        <Pencil size={26} strokeWidth={2.5} />
+      </button>
     </main>
   );
 }
