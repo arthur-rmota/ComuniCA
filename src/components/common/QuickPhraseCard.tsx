@@ -19,6 +19,8 @@ interface QuickPhraseCardProps {
   phrase: QuickPhrase;
   isFavorite: boolean;
   isSpeaking: boolean;
+  isSelectingToEdit?: boolean;
+  onSelectToEdit?: (phrase: QuickPhrase) => void;
   isUpdatingFavorite: boolean;
   onSpeak: (phrase: QuickPhrase) => void;
   onToggleFavorite: (phrase: QuickPhrase) => void;
@@ -28,6 +30,8 @@ function QuickPhraseCard({
   phrase,
   isFavorite,
   isSpeaking,
+  isSelectingToEdit = false,
+  onSelectToEdit,
   isUpdatingFavorite,
   onSpeak,
   onToggleFavorite,
@@ -36,7 +40,16 @@ function QuickPhraseCard({
     <div className="relative">
       <button
         type="button"
-        onClick={() => onSpeak(phrase)}
+        onClick={() => {
+          if (isSelectingToEdit) {
+            if (phrase.userId === "local-user") {
+              onSelectToEdit?.(phrase);
+            }
+            return;
+          }
+
+          onSpeak(phrase);
+        }}
         className={`relative flex min-h-40 w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border-2 p-4 text-center transition-all duration-200 active:scale-[0.98] ${
           isSpeaking ? "border-[#FFA726] shadow-md" : "border-transparent"
         }`}
@@ -76,7 +89,7 @@ function QuickPhraseCard({
       <button
         type="button"
         onClick={() => onToggleFavorite(phrase)}
-        disabled={isUpdatingFavorite}
+        disabled={isUpdatingFavorite || isSelectingToEdit}
         aria-label={
           isFavorite
             ? `Desfavoritar ${phrase.text}`

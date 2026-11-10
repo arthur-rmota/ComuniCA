@@ -32,3 +32,26 @@ export async function createQuickPhrase(
 
   return newPhrase;
 }
+export async function updateQuickPhrase(
+  id: string,
+  changes: Partial<Omit<QuickPhrase, "id">>,
+): Promise<QuickPhrase> {
+  const response = await fetch(
+    `${API_URL}/quickPhrases/${encodeURIComponent(id)}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(changes),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Erro ao atualizar frase rápida");
+  }
+
+  const updatedPhrase: QuickPhrase = await response.json();
+
+  return updatedPhrase;
+}

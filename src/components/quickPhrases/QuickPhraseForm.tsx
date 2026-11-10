@@ -21,12 +21,21 @@ const availableColors = [
 interface QuickPhraseFormProps {
   onClose: () => void;
   onSave: (phrase: Omit<QuickPhrase, "id">) => Promise<void>;
+  initialPhrase?: QuickPhrase;
 }
 
-function QuickPhraseForm({ onClose, onSave }: QuickPhraseFormProps) {
-  const [phraseText, setPhraseText] = useState("");
-  const [selectedIcon, setSelectedIcon] = useState("smile");
-  const [selectedColor, setSelectedColor] = useState("#AFE0FA");
+function QuickPhraseForm({
+  onClose,
+  onSave,
+  initialPhrase,
+}: QuickPhraseFormProps) {
+  const [phraseText, setPhraseText] = useState(initialPhrase?.text ?? "");
+  const [selectedIcon, setSelectedIcon] = useState(
+    initialPhrase?.icon ?? "smile",
+  );
+  const [selectedColor, setSelectedColor] = useState(
+    initialPhrase?.color ?? "#AFE0FA",
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -65,6 +74,8 @@ function QuickPhraseForm({ onClose, onSave }: QuickPhraseFormProps) {
     }
   }
 
+  const isEditing = Boolean(initialPhrase);
+
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/50 p-4">
       <div
@@ -77,7 +88,7 @@ function QuickPhraseForm({ onClose, onSave }: QuickPhraseFormProps) {
           id="add-phrase-title"
           className="mb-4 text-xl font-bold text-[#383838]"
         >
-          Adicionar frase
+          {isEditing ? "Editar frase" : "Adicionar frase"}
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
@@ -179,7 +190,11 @@ function QuickPhraseForm({ onClose, onSave }: QuickPhraseFormProps) {
               disabled={isSaving || !isPhraseValid}
               className="flex-1 rounded-xl bg-[#FFA726] px-4 py-3 font-semibold text-white disabled:opacity-50"
             >
-              {isSaving ? "Salvando..." : "Salvar frase"}
+              {isSaving
+                ? "Salvando..."
+                : isEditing
+                  ? "Salvar alterações"
+                  : "Salvar frase"}
             </button>
           </div>
         </form>
