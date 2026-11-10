@@ -1,15 +1,38 @@
-import { useState } from 'react'
+import { useEffect, useState } from "react";
+import { getCards } from "./services/cardService";
+import type { Card } from "./types/card";
+import CardItem from "./components/common/CardItem";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [cards, setCards] = useState<Card[]>([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadCards() {
+      try {
+        const data = await getCards();
+        setCards(data);
+      } catch {
+        setError("Não foi possível carregar os cartões.");
+      }
+    }
+
+    loadCards();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-blue-600 flex items-center justify-center">
-      <h1 className="text-4xl font-bold text-white">
-        ComuniCA
-      </h1>
-    </div>
-  )
+    <main className="p-6">
+      <h1 className="mb-4 text-2xl font-bold">Cartões do ComuniCA</h1>
+
+      {error && <p>{error}</p>}
+
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        {cards.map((card) => (
+          <CardItem key={card.id} card={card} />
+        ))}
+      </div>
+    </main>
+  );
 }
 
-export default App
+export default App;
