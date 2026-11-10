@@ -36,6 +36,7 @@ function QuickPhraseCard({
   onSpeak,
   onToggleFavorite,
 }: QuickPhraseCardProps) {
+  const canEdit = phrase.userId === "local-user";
   return (
     <div className="relative">
       <button
@@ -50,8 +51,14 @@ function QuickPhraseCard({
 
           onSpeak(phrase);
         }}
-        className={`relative flex min-h-40 w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border-2 p-4 text-center transition-all duration-200 active:scale-[0.98] ${
-          isSpeaking ? "border-[#FFA726] shadow-md" : "border-transparent"
+        className={`relative flex min-h-40 w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border-2 p-4 text-center transition-all duration-200 ${
+          isSelectingToEdit
+            ? canEdit
+              ? "cursor-pointer border-[#FFA726] shadow-md active:scale-[0.98]"
+              : "cursor-not-allowed border-transparent opacity-40"
+            : isSpeaking
+              ? "border-[#FFA726] shadow-md active:scale-[0.98]"
+              : "border-transparent active:scale-[0.98]"
         }`}
         style={{ backgroundColor: phrase.color }}
       >
