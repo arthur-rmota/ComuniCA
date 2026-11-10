@@ -3,6 +3,7 @@ import {
   getQuickPhrases,
   createQuickPhrase,
   updateQuickPhrase,
+  deleteQuickPhrase,
 } from "../services/quickPhraseService";
 import type { QuickPhrase } from "../types/quickPhrase";
 import { speak } from "../utils/speech";
@@ -25,9 +26,13 @@ function QuickPhrasesPage() {
   const [updatingFavoriteId, setUpdatingFavoriteId] = useState<string | null>(
     null,
   );
+  const [isDeletingPhrase, setIsDeletingPhrase] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
   const [isManageMenuOpen, setIsManageMenuOpen] = useState(false);
   const [isAddPhraseOpen, setIsAddPhraseOpen] = useState(false);
   const [isSelectingPhraseToEdit, setIsSelectingPhraseToEdit] = useState(false);
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+    useState(false);
 
   useEffect(() => {
     async function loadPhrases() {
@@ -118,6 +123,34 @@ function QuickPhrasesPage() {
         phrase.id === id ? updatedPhrase : phrase,
       ),
     );
+  }
+
+  async function handleDeletePhrase(id: string): Promise<void> {
+    const phrase = phrases.find((item) => item.id === id);
+
+    if (!phrase || phrase.userId !== "local-user") {
+      return;
+    }
+
+    const relatedFavorites = favorites.filter(
+      (favorite) => favorite.quickPhraseId === id,
+    );
+
+    for (const favorite of relatedFavorites) {
+      await removeQuickPhraseFavorite(favorite.id);
+    }
+
+    setFavorites((currentFavorites) =>
+      currentFavorites.filter((favorite) => favorite.quickPhraseId !== id),
+    );
+    await deleteQuickPhrase(id);
+
+    setPhrases((currentPhrases) =>
+      currentPhrases.filter((item) => item.id !== id),
+    );
+
+    setEditingPhrase(null);
+    setIsSelectingPhraseToEdit(false);
   }
 
   function handleSelectPhraseToEdit(phrase: QuickPhrase) {
@@ -239,7 +272,75 @@ function QuickPhrasesPage() {
           onSave={async (changes) => {
             await handleUpdatePhrase(editingPhrase.id, changes);
           }}
+          onDelete={() => setIsDeleteConfirmationOpen(true)}
         />
+      )}
+
+      {isDeleteConfirmationOpen && editingPhrase && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="delete-phrase-title"
+            aria-describedby="delete-phrase-description"
+            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl"
+          >
+            <h2
+              id="delete-phrase-title"
+              className="text-xl font-bold text-[#383838]"
+            >
+              Excluir frase?
+            </h2>
+
+            <p
+              id="delete-phrase-description"
+              className="mt-3 text-sm leading-relaxed text-[#666666]"
+            >
+              Tem certeza de que deseja excluir a frase{" "}
+              <strong>"{editingPhrase.text}"</strong>? Esta ação não poderá ser
+              desfeita.
+            </p>
+            {deleteError && (
+              <p role="alert" className="mt-3 text-sm text-red-600">
+                {deleteError}
+              </p>
+            )}
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={() => setIsDeleteConfirmationOpen(false)}
+                className="flex-1 rounded-xl bg-[#F1F1F1] px-4 py-3 text-sm font-semibold text-[#383838]"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                disabled={isDeletingPhrase}
+                onClick={async () => {
+                  if (!editingPhrase || isDeletingPhrase) return;
+
+                  setIsDeletingPhrase(true);
+                  setDeleteError("");
+
+                  try {
+                    await handleDeletePhrase(editingPhrase.id);
+                    setIsDeleteConfirmationOpen(false);
+                  } catch {
+                    setDeleteError(
+                      "Não foi possível excluir a frase. Tente novamente.",
+                    );
+                  } finally {
+                    setIsDeletingPhrase(false);
+                  }
+                }}
+                className="flex-1 rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white"
+              >
+                {isDeletingPhrase ? "Excluindo..." : "Excluir"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       <button

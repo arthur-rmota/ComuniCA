@@ -55,3 +55,16 @@ export async function updateQuickPhrase(
 
   return updatedPhrase;
 }
+
+export async function deleteQuickPhrase(id: string): Promise<void> {
+  const response = await fetch(
+    `${API_URL}/quickPhrases/${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Erro ao excluir frase rápida");
+  }
+}

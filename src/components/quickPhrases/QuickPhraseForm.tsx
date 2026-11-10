@@ -22,11 +22,13 @@ interface QuickPhraseFormProps {
   onClose: () => void;
   onSave: (phrase: Omit<QuickPhrase, "id">) => Promise<void>;
   initialPhrase?: QuickPhrase;
+  onDelete?: () => void;
 }
 
 function QuickPhraseForm({
   onClose,
   onSave,
+  onDelete,
   initialPhrase,
 }: QuickPhraseFormProps) {
   const [phraseText, setPhraseText] = useState(initialPhrase?.text ?? "");
@@ -198,6 +200,17 @@ function QuickPhraseForm({
             </button>
           </div>
         </form>
+        
+        {isEditing && onDelete && (
+          <button
+            type="button"
+            onClick={onDelete}
+            disabled={isSaving}
+            className="mt-4 w-full rounded-xl border border-red-200 px-4 py-3 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
+          >
+            Excluir frase
+          </button>
+        )}
       </div>
     </div>
   );

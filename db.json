@@ -123,15 +123,6 @@
       "position": 4,
       "icon": "smile",
       "color": "#E7C4FF"
-    },
-    {
-      "userId": "local-user",
-      "text": "Quero Brincar",
-      "categoryId": null,
-      "position": 0,
-      "icon": "smile",
-      "color": "#FFC7C8",
-      "id": "pfMfc_OgMYw"
     }
   ],
   "quickPhraseFavorites": [],
