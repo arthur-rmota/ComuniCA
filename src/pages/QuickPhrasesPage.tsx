@@ -37,19 +37,22 @@ function QuickPhrasesPage() {
   useEffect(() => {
     async function loadPhrases() {
       try {
-        const [phrasesData, favoritesData] = await Promise.all([
-          getQuickPhrases(),
-          getQuickPhraseFavorites("local-user"),
-        ]);
-
+        const phrasesData = await getQuickPhrases();
         setPhrases(phrasesData);
-        setFavorites(favoritesData);
-      } catch {
+      } catch (error) {
+        console.error("Erro ao carregar frases rápidas:", error);
         setError("Não foi possível carregar as frases rápidas.");
+      }
+
+      try {
+        const favoritesData = await getQuickPhraseFavorites("local-user");
+        setFavorites(favoritesData);
+      } catch (error) {
+        console.error("Erro ao carregar favoritos:", error);
       }
     }
 
-    loadPhrases();
+    void loadPhrases();
   }, []);
 
   function handleSpeak(phrase: QuickPhrase) {

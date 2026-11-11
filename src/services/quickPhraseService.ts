@@ -1,70 +1,48 @@
-import API_URL from "./api";
+import { db } from "../database/db";
 import type { QuickPhrase } from "../types/quickPhrase";
 
 export async function getQuickPhrases(): Promise<QuickPhrase[]> {
-  const response = await fetch(`${API_URL}/quickPhrases`);
-
-  if (!response.ok) {
-    throw new Error("Erro ao buscar frases rápidas");
-  }
-
-  const phrases: QuickPhrase[] = await response.json();
-
-  return phrases.sort((a, b) => a.position - b.position);
+  return db.quickPhrases.orderBy("position").toArray();
 }
 
 export async function createQuickPhrase(
   phrase: Omit<QuickPhrase, "id">,
 ): Promise<QuickPhrase> {
-  const response = await fetch(`${API_URL}/quickPhrases`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(phrase),
-  });
+  const newPhrase: QuickPhrase = {
+    ...phrase,
+    id: crypto.randomUUID(),
+  };
 
-  if (!response.ok) {
-    throw new Error("Erro ao criar frase rápida");
-  }
-
-  const newPhrase: QuickPhrase = await response.json();
+  await db.quickPhrases.add(newPhrase);
 
   return newPhrase;
 }
+
 export async function updateQuickPhrase(
   id: string,
   changes: Partial<Omit<QuickPhrase, "id">>,
 ): Promise<QuickPhrase> {
-  const response = await fetch(
-    `${API_URL}/quickPhrases/${encodeURIComponent(id)}`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(changes),
-    },
-  );
+  const updated = await db.quickPhrases.update(id, changes);
 
-  if (!response.ok) {
-    throw new Error("Erro ao atualizar frase rápida");
+  if (updated === 0) {
+    throw new Error("Frase rápida não encontrada.");
   }
 
-  const updatedPhrase: QuickPhrase = await response.json();
+  const updatedPhrase = await db.quickPhrases.get(id);
+
+  if (!updatedPhrase) {
+    throw new Error("Frase rápida não encontrada.");
+  }
 
   return updatedPhrase;
 }
 
 export async function deleteQuickPhrase(id: string): Promise<void> {
-  const response = await fetch(
-    `${API_URL}/quickPhrases/${encodeURIComponent(id)}`,
-    {
-      method: "DELETE",
-    },
-  );
+  const phrase = await db.quickPhrases.get(id);
 
-  if (!response.ok) {
-    throw new Error("Erro ao excluir frase rápida");
+  if (!phrase) {
+    throw new Error("Frase rápida não encontrada.");
   }
+
+  await db.quickPhrases.delete(id);
 }

@@ -1,57 +1,44 @@
-import API_URL from "./api";
+
+import { db } from "../database/db";
 import type { QuickPhraseFavorite } from "../types/quickPhraseFavorite";
 
 export async function getQuickPhraseFavorites(
   userId: string,
 ): Promise<QuickPhraseFavorite[]> {
-  const response = await fetch(
-    `${API_URL}/quickPhraseFavorites?userId=${encodeURIComponent(userId)}`,
-  );
-
-  if (!response.ok) {
-    throw new Error("Erro ao buscar frases favoritas");
-  }
-
-  const favorites: QuickPhraseFavorite[] = await response.json();
-
-  return favorites;
+  return db.quickPhraseFavorites
+    .where("userId")
+    .equals(userId)
+    .toArray();
 }
 
 export async function addQuickPhraseFavorite(
   userId: string,
   quickPhraseId: string,
 ): Promise<QuickPhraseFavorite> {
-  const response = await fetch(`${API_URL}/quickPhraseFavorites`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
+  return db.transaction("rw", db.quickPhraseFavorites, async () => {
+    const existingFavorite = await db.quickPhraseFavorites
+      .where("[userId+quickPhraseId]")
+      .equals([userId, quickPhraseId])
+      .first();
+
+    if (existingFavorite) {
+      return existingFavorite;
+    }
+
+    const favorite: QuickPhraseFavorite = {
+      id: crypto.randomUUID(),
       userId,
       quickPhraseId,
-    }),
+    };
+
+    await db.quickPhraseFavorites.add(favorite);
+
+    return favorite;
   });
-
-  if (!response.ok) {
-    throw new Error("Erro ao adicionar frase aos favoritos");
-  }
-
-  const favorite: QuickPhraseFavorite = await response.json();
-
-  return favorite;
 }
 
 export async function removeQuickPhraseFavorite(
   favoriteId: string,
 ): Promise<void> {
-  const response = await fetch(
-    `${API_URL}/quickPhraseFavorites/${favoriteId}`,
-    {
-      method: "DELETE",
-    },
-  );
-
-  if (!response.ok) {
-    throw new Error("Erro ao remover frase dos favoritos");
-  }
+  await db.quickPhraseFavorites.delete(favoriteId);
 }
