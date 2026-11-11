@@ -3,6 +3,7 @@ import type { SubmitEvent } from "react";
 interface PinSetupFormProps {
   pin: string;
   confirmPin: string;
+  mode?: "setup" | "change";
   pinError: string;
   savingPin: boolean;
   onPinChange: (value: string) => void;
@@ -12,6 +13,7 @@ interface PinSetupFormProps {
 
 export function PinSetupForm({
   pin,
+  mode = "setup",
   confirmPin,
   pinError,
   savingPin,
@@ -22,7 +24,7 @@ export function PinSetupForm({
   return (
     <section className="rounded-xl bg-white p-4">
       <h2 className="mb-4 text-lg font-semibold text-[#383838]">
-        Configurar PIN de acesso
+        {mode === "setup" ? "Definir PIN" : "Salvar novo PIN"}
       </h2>
 
       <form onSubmit={onSubmit} className="flex flex-col gap-4">

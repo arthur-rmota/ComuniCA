@@ -1,21 +1,24 @@
-
-import {
-  createContext,
-  useContext,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, type ReactNode } from "react";
+import { useLocation } from "react-router";
 import { useProfile } from "../hooks/useProfile";
 
 type ProfileContextValue = ReturnType<typeof useProfile>;
 
 const ProfileContext = createContext<ProfileContextValue | null>(null);
 
-export function ProfileProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export function ProfileProvider({ children }: { children: ReactNode }) {
   const profile = useProfile();
+  const location = useLocation();
+
+  const { setIsPinVerified, setEnteredPin, setAccessPinError } = profile;
+
+  useEffect(() => {
+    if (location.pathname !== "/perfil/gerenciar") {
+      setIsPinVerified(false);
+      setEnteredPin("");
+      setAccessPinError("");
+    }
+  }, [location.pathname, setIsPinVerified, setEnteredPin, setAccessPinError]);
 
   return (
     <ProfileContext.Provider value={profile}>
@@ -29,7 +32,7 @@ export function useProfileContext() {
 
   if (!context) {
     throw new Error(
-      "useProfileContext deve ser usado dentro de ProfileProvider."
+      "useProfileContext deve ser usado dentro de ProfileProvider.",
     );
   }
 

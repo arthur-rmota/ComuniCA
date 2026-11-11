@@ -13,8 +13,6 @@ export function useProfile() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [isPinVerified, setIsPinVerified] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [showPinPrompt, setShowPinPrompt] = useState(false);
   const [enteredPin, setEnteredPin] = useState("");
   const [verifyingPin, setVerifyingPin] = useState(false);
   const [accessPinError, setAccessPinError] = useState("");
@@ -22,12 +20,20 @@ export function useProfile() {
   const [confirmPin, setConfirmPin] = useState("");
   const [pinError, setPinError] = useState("");
   const [savingPin, setSavingPin] = useState(false);
+  const [pinSuccess, setPinSuccess] = useState("");
 
   useEffect(() => {
     async function loadUser() {
       try {
         const users = await userService.getAll();
         const savedUser = users[0] ?? null;
+
+        setUser(savedUser);
+
+        if (savedUser) {
+          setName(savedUser.name);
+          setEmail(savedUser.email);
+        }
 
         setUser(savedUser);
       } catch (error) {
@@ -85,8 +91,6 @@ export function useProfile() {
 
     if (user.pinHash && !isPinVerified) {
       setError("Informe o PIN para editar o perfil.");
-      setIsEditing(false);
-      setShowPinPrompt(true);
       return;
     }
 
@@ -117,7 +121,6 @@ export function useProfile() {
         updatedAt,
       });
 
-      setIsEditing(false);
       setIsPinVerified(false);
       navigate("/perfil", { replace: true });
     } catch (err) {
@@ -210,13 +213,10 @@ export function useProfile() {
 
       setAccessPinError("");
       setIsPinVerified(true);
-      setShowPinPrompt(false);
       setEnteredPin("");
 
       setName(user.name);
       setEmail(user.email);
-      setIsEditing(false);
-
     } catch (error) {
       console.error("Erro ao verificar PIN:", error);
       setAccessPinError("Não foi possível verificar o PIN.");
@@ -266,11 +266,66 @@ export function useProfile() {
       setPin("");
       setConfirmPin("");
       setIsPinVerified(false);
-      setIsEditing(false);
-      setShowPinPrompt(false);
     } catch (error) {
       console.error("Erro ao salvar PIN:", error);
       setPinError("Não foi possível salvar o PIN.");
+    } finally {
+      setSavingPin(false);
+    }
+  }
+
+  async function handleChangePin(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!user?.pinHash || !isPinVerified || savingPin) {
+      return;
+    }
+
+    setPinError("");
+    setPinSuccess("");
+
+    if (!/^\d{4,6}$/.test(pin)) {
+      setPinError("O PIN deve conter de 4 a 6 dígitos.");
+      return;
+    }
+
+    if (pin !== confirmPin) {
+      setPinError("Os PINs não coincidem.");
+      return;
+    }
+
+    setSavingPin(true);
+    setPinSuccess("PIN alterado com sucesso!");
+
+    try {
+      const pinHash = await pinService.hash(pin);
+      const updatedAt = new Date().toISOString();
+
+      const updated = await userService.update(user.id, {
+        pinHash,
+        failedPinAttempts: 0,
+        pinLockedUntil: null,
+        updatedAt,
+      });
+
+      if (updated === 0) {
+        throw new Error("Usuário não encontrado.");
+      }
+
+      setUser({
+        ...user,
+        pinHash,
+        failedPinAttempts: 0,
+        pinLockedUntil: null,
+        updatedAt,
+      });
+
+      setPin("");
+      setConfirmPin("");
+      setIsPinVerified(false);
+    } catch (error) {
+      console.error("Erro ao alterar PIN:", error);
+      setPinError("Não foi possível alterar o PIN.");
     } finally {
       setSavingPin(false);
     }
@@ -291,10 +346,6 @@ export function useProfile() {
     handleRegister,
     isPinVerified,
     setIsPinVerified,
-    isEditing,
-    setIsEditing,
-    showPinPrompt,
-    setShowPinPrompt,
     handleUpdate,
     enteredPin,
     setEnteredPin,
@@ -310,5 +361,9 @@ export function useProfile() {
     pinError,
     savingPin,
     handleSavePin,
+    handleChangePin,
+    setPinError,
+    pinSuccess,
+    setPinSuccess,
   };
 }

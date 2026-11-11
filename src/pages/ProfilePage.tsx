@@ -1,41 +1,28 @@
+import { useNavigate } from "react-router";
+import { UserCircle, LockKeyhole, Bell, CircleHelp } from "lucide-react";
+
 import { ProfileInfo } from "../components/profile/ProfileInfo";
 import { PinSetupForm } from "../components/profile/PinSetupForm";
-import { PinVerificationForm } from "../components/profile/PinVerificationForm";
 import { ProfileForm } from "../components/profile/ProfileForm";
-import { useProfileContext } from "../contexts/ProfileContext";
-import { UserCircle, LockKeyhole, Bell, CircleHelp } from "lucide-react";
 import { ProfileMenuItem } from "../components/profile/ProfileMenuItem";
-import { useNavigate } from "react-router";
+import { useProfileContext } from "../contexts/ProfileContext";
 
 function ProfilePage() {
   const navigate = useNavigate();
+
   const {
     user,
-    setUser,
     loading,
     name,
     setName,
     email,
     setEmail,
     saving,
-    setSaving,
     error,
-    setError,
     handleRegister,
-    isPinVerified,
     setIsPinVerified,
-    isEditing,
-    setIsEditing,
-    showPinPrompt,
-    setShowPinPrompt,
-    handleUpdate,
-    enteredPin,
     setEnteredPin,
-    verifyingPin,
-    setVerifyingPin,
-    accessPinError,
     setAccessPinError,
-    handleVerifyPin,
     pin,
     setPin,
     confirmPin,
@@ -44,6 +31,19 @@ function ProfilePage() {
     savingPin,
     handleSavePin,
   } = useProfileContext();
+
+  function handleManageProfile() {
+    if (!user) return;
+
+    setIsPinVerified(false);
+    setEnteredPin("");
+    setAccessPinError("");
+
+    setName(user.name);
+    setEmail(user.email);
+
+    navigate("/perfil/gerenciar");
+  }
 
   return (
     <main className="min-h-screen bg-[#E5E5E5] p-4 pb-28">
@@ -80,20 +80,10 @@ function ProfilePage() {
               <ProfileMenuItem
                 icon={UserCircle}
                 label="Gerenciar perfil"
-                onClick={() => {
-                  setIsPinVerified(false);
-                  setShowPinPrompt(false);
-                  setEnteredPin("");
-                  setName(user.name);
-                  setEmail(user.email);
-                  navigate("/perfil/gerenciar");
-                }}
+                onClick={handleManageProfile}
               />
 
-              <div
-                className="mx-4"
-                style={{ height: 1, backgroundColor: "#E5E5E5" }}
-              />
+              <div className="mx-4 h-px bg-[#E5E5E5]" />
 
               <ProfileMenuItem
                 icon={LockKeyhole}
@@ -101,59 +91,15 @@ function ProfilePage() {
                 disabled
               />
 
-              <div
-                className="mx-4"
-                style={{ height: 1, backgroundColor: "#E5E5E5" }}
-              />
+              <div className="mx-4 h-px bg-[#E5E5E5]" />
 
               <ProfileMenuItem icon={Bell} label="Notificações" disabled />
 
-              <div
-                className="mx-4"
-                style={{ height: 1, backgroundColor: "#E5E5E5" }}
-              />
+              <div className="mx-4 h-px bg-[#E5E5E5]" />
 
               <ProfileMenuItem icon={CircleHelp} label="Idioma" disabled />
             </div>
           </section>
-
-          {showPinPrompt && user.pinHash && (
-            <section className="rounded-xl bg-white p-4">
-              <h2 className="mb-4 text-lg font-semibold text-[#383838]">
-                Verificar PIN de acesso
-              </h2>
-
-              <PinVerificationForm
-                enteredPin={enteredPin}
-                accessPinError={accessPinError}
-                verifyingPin={verifyingPin}
-                onPinChange={setEnteredPin}
-                onSubmit={handleVerifyPin}
-                onCancel={() => {
-                  setShowPinPrompt(false);
-                  setEnteredPin("");
-                }}
-              />
-            </section>
-          )}
-
-          {isEditing && (
-            <ProfileForm
-              mode="edit"
-              name={name}
-              email={email}
-              error={error}
-              saving={saving}
-              onNameChange={setName}
-              onEmailChange={setEmail}
-              onSubmit={handleUpdate}
-              onCancel={() => {
-                setIsEditing(false);
-                setIsPinVerified(false);
-                setError("");
-              }}
-            />
-          )}
         </div>
       ) : (
         <ProfileForm

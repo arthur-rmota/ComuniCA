@@ -1,16 +1,17 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useProfileContext } from "../contexts/ProfileContext";
 import { ProfileForm } from "../components/profile/ProfileForm";
 import { PinVerificationForm } from "../components/profile/PinVerificationForm";
+import { PinSetupForm } from "../components/profile/PinSetupForm";
+
+type ManageSection = "personal" | "pin";
 
 export default function ManageProfilePage() {
   const navigate = useNavigate();
-  const authorizationRef = useRef({
-    setIsPinVerified: () => {},
-    setIsEditing: () => {},
-  });
+
+  const [activeSection, setActiveSection] = useState<ManageSection>("personal");
 
   const {
     user,
@@ -24,28 +25,23 @@ export default function ManageProfilePage() {
     handleUpdate,
     isPinVerified,
     setIsPinVerified,
-    setIsEditing,
     enteredPin,
     setEnteredPin,
     verifyingPin,
     accessPinError,
     handleVerifyPin,
-    setShowPinPrompt,
+    pin,
+    setPin,
+    confirmPin,
+    setConfirmPin,
+    pinError,
+    savingPin,
+    handleChangePin,
+    setPinError,
+    setAccessPinError,
+    setPinSuccess,
+    pinSuccess,
   } = useProfileContext();
-
-  authorizationRef.current = {
-    setIsPinVerified: () => setIsPinVerified(false),
-    setIsEditing: () => setIsEditing(false),
-  };
-
-  useEffect(() => {
-    return () => {
-      authorizationRef.current.setIsPinVerified();
-      authorizationRef.current.setIsEditing();
-    };
-  }, []);
-
-  const needsPin = Boolean(user?.pinHash && !isPinVerified);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -53,12 +49,24 @@ export default function ManageProfilePage() {
     }
   }, [loading, user, navigate]);
 
+  const needsPin = Boolean(user?.pinHash && !isPinVerified);
+
   function handleBack() {
     setIsPinVerified(false);
-    setIsEditing(false);
-    setShowPinPrompt(false);
     setEnteredPin("");
+    setAccessPinError("");
+    setPin("");
+    setConfirmPin("");
+    setPinError("");
     navigate("/perfil", { replace: true });
+  }
+
+  function handleSelectSection(section: ManageSection) {
+    setActiveSection(section);
+    setPin("");
+    setConfirmPin("");
+    setPinError("");
+    setPinSuccess("");
   }
 
   if (loading || !user) {
@@ -83,6 +91,14 @@ export default function ManageProfilePage() {
       </header>
 
       <section className="mt-4 rounded-2xl bg-white p-5">
+        {pinSuccess && (
+          <p
+            role="status"
+            className="mb-4 rounded-xl bg-green-100 p-3 text-green-800"
+          >
+            {pinSuccess}
+          </p>
+        )}
         {needsPin ? (
           <>
             <h2 className="mb-4 text-lg font-semibold text-[#383838]">
@@ -100,21 +116,66 @@ export default function ManageProfilePage() {
           </>
         ) : (
           <>
-            <h2 className="mb-4 text-lg font-semibold text-[#383838]">
-              Dados pessoais
-            </h2>
+            {user.pinHash && (
+              <div className="mb-6 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleSelectSection("personal")}
+                  aria-pressed={activeSection === "personal"}
+                  className={`rounded-xl p-3 text-sm font-semibold ${
+                    activeSection === "personal"
+                      ? "bg-[#383838] text-white"
+                      : "bg-gray-100 text-[#383838]"
+                  }`}
+                >
+                  Dados pessoais
+                </button>
 
-            <ProfileForm
-              mode="edit"
-              name={name}
-              email={email}
-              error={error}
-              saving={saving}
-              onNameChange={setName}
-              onEmailChange={setEmail}
-              onSubmit={handleUpdate}
-              onCancel={handleBack}
-            />
+                <button
+                  type="button"
+                  onClick={() => handleSelectSection("pin")}
+                  aria-pressed={activeSection === "pin"}
+                  className={`rounded-xl p-3 text-sm font-semibold ${
+                    activeSection === "pin"
+                      ? "bg-[#383838] text-white"
+                      : "bg-gray-100 text-[#383838]"
+                  }`}
+                >
+                  Alterar PIN
+                </button>
+              </div>
+            )}
+
+            {activeSection === "personal" || !user.pinHash ? (
+              <>
+                <h2 className="mb-4 text-lg font-semibold text-[#383838]">
+                  Dados pessoais
+                </h2>
+
+                <ProfileForm
+                  mode="edit"
+                  name={name}
+                  email={email}
+                  error={error}
+                  saving={saving}
+                  onNameChange={setName}
+                  onEmailChange={setEmail}
+                  onSubmit={handleUpdate}
+                  onCancel={handleBack}
+                />
+              </>
+            ) : (
+              <PinSetupForm
+                mode="change"
+                pin={pin}
+                confirmPin={confirmPin}
+                pinError={pinError}
+                savingPin={savingPin}
+                onPinChange={setPin}
+                onConfirmPinChange={setConfirmPin}
+                onSubmit={handleChangePin}
+              />
+            )}
           </>
         )}
       </section>
