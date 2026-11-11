@@ -2,9 +2,13 @@ import { ProfileInfo } from "../components/profile/ProfileInfo";
 import { PinSetupForm } from "../components/profile/PinSetupForm";
 import { PinVerificationForm } from "../components/profile/PinVerificationForm";
 import { ProfileForm } from "../components/profile/ProfileForm";
-import { useProfile } from "../hooks/useProfile";
+import { useProfileContext } from "../contexts/ProfileContext";
+import { UserCircle, LockKeyhole, Bell, CircleHelp } from "lucide-react";
+import { ProfileMenuItem } from "../components/profile/ProfileMenuItem";
+import { useNavigate } from "react-router";
 
 function ProfilePage() {
+  const navigate = useNavigate();
   const {
     user,
     setUser,
@@ -39,11 +43,15 @@ function ProfilePage() {
     pinError,
     savingPin,
     handleSavePin,
-  } = useProfile();
+  } = useProfileContext();
 
   return (
     <main className="min-h-screen bg-[#E5E5E5] p-4 pb-28">
-      <h1 className="text-2xl font-semibold text-[#383838]">Perfil</h1>
+      <header className="mb-6 pt-6">
+        <h1 className="text-center text-2xl font-semibold text-[#383838]">
+          Perfil
+        </h1>
+      </header>
 
       {loading ? (
         <p className="mt-4 text-[#383838]">Carregando perfil...</p>
@@ -63,22 +71,51 @@ function ProfilePage() {
             />
           )}
 
-          <button
-            type="button"
-            onClick={() => {
-              if (user.pinHash && !isPinVerified) {
-                setShowPinPrompt(true);
-                return;
-              }
+          <section className="mt-2">
+            <h2 className="mb-3 px-3 text-lg font-medium text-[#888888]">
+              Conta
+            </h2>
 
-              setName(user.name);
-              setEmail(user.email);
-              setIsEditing(true);
-            }}
-            className="rounded-xl bg-[#383838] p-3 font-semibold text-white"
-          >
-            Editar perfil
-          </button>
+            <div className="overflow-hidden rounded-2xl bg-white">
+              <ProfileMenuItem
+                icon={UserCircle}
+                label="Gerenciar perfil"
+                onClick={() => {
+                  setIsPinVerified(false);
+                  setShowPinPrompt(false);
+                  setEnteredPin("");
+                  setName(user.name);
+                  setEmail(user.email);
+                  navigate("/perfil/gerenciar");
+                }}
+              />
+
+              <div
+                className="mx-4"
+                style={{ height: 1, backgroundColor: "#E5E5E5" }}
+              />
+
+              <ProfileMenuItem
+                icon={LockKeyhole}
+                label="Senha e Segurança"
+                disabled
+              />
+
+              <div
+                className="mx-4"
+                style={{ height: 1, backgroundColor: "#E5E5E5" }}
+              />
+
+              <ProfileMenuItem icon={Bell} label="Notificações" disabled />
+
+              <div
+                className="mx-4"
+                style={{ height: 1, backgroundColor: "#E5E5E5" }}
+              />
+
+              <ProfileMenuItem icon={CircleHelp} label="Idioma" disabled />
+            </div>
+          </section>
 
           {showPinPrompt && user.pinHash && (
             <section className="rounded-xl bg-white p-4">

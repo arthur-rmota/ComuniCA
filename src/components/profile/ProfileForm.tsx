@@ -45,7 +45,7 @@ export function ProfileForm({
           value={name}
           onChange={(event) => onNameChange(event.target.value)}
           placeholder={isEditing ? undefined : "Digite seu nome"}
-          className="w-full rounded-xl bg-white p-3 text-[#383838]"
+          className="w-full rounded-xl border border-[#E5E5E5] bg-[#F7F7F7] p-3 text-[#383838] outline-none focus:border-[#6254A3]"
         />
       </div>
 
@@ -63,7 +63,7 @@ export function ProfileForm({
           value={email}
           onChange={(event) => onEmailChange(event.target.value)}
           placeholder={isEditing ? undefined : "Digite seu e-mail"}
-          className="w-full rounded-xl bg-white p-3 text-[#383838]"
+          className="w-full rounded-xl border border-[#E5E5E5] bg-[#F7F7F7] p-3 text-[#383838] outline-none focus:border-[#6254A3]"
         />
       </div>
 

@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { userService } from "../services/userService";
 import type { User } from "../types/user";
 import { pinService } from "../services/pinService";
+import { useNavigate } from "react-router";
 
 export function useProfile() {
+  const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
@@ -117,6 +119,7 @@ export function useProfile() {
 
       setIsEditing(false);
       setIsPinVerified(false);
+      navigate("/perfil", { replace: true });
     } catch (err) {
       console.error("Erro ao atualizar perfil:", err);
       setError("Não foi possível atualizar o perfil.");
@@ -212,7 +215,8 @@ export function useProfile() {
 
       setName(user.name);
       setEmail(user.email);
-      setIsEditing(true);
+      setIsEditing(false);
+
     } catch (error) {
       console.error("Erro ao verificar PIN:", error);
       setAccessPinError("Não foi possível verificar o PIN.");
