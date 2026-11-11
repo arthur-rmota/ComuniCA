@@ -8,6 +8,7 @@ import ProfilePage from "./pages/ProfilePage";
 import BottomNavigation from "./components/layout/BottomNavigation";
 import ManageProfilePage from "./pages/ManageProfilePage";
 import ManageCategoriesPage from "./pages/ManageCategoriesPage";
+import ManageQuickPhrasesPage from "./pages/ManageQuickPhrasesPage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/rapidos" element={<QuickPhrasesPage />} />
+        <Route path="/rapidos/gerenciar" element={<ManageQuickPhrasesPage />} />
         <Route path="/favoritos" element={<FavoritesPage />} />
         <Route path="/agenda" element={<AgendaPage />} />
         <Route path="/perfil" element={<ProfilePage />} />

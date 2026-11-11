@@ -15,7 +15,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const isProtectedRoute =
       location.pathname === "/perfil/gerenciar" ||
-      location.pathname === "/perfil/categorias";
+      location.pathname === "/perfil/categorias" ||
+      location.pathname === "/rapidos/gerenciar";
 
     if (!isProtectedRoute) {
       setIsPinVerified(false);
