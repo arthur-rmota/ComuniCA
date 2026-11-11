@@ -292,10 +292,7 @@ export function useProfile() {
       return;
     }
 
-    setPin("");
-    setConfirmPin("");
-    setIsPinVerified(false);
-    setPinSuccess("PIN alterado com sucesso!");
+    setSavingPin(true);
 
     try {
       const pinHash = await pinService.hash(pin);
@@ -323,9 +320,67 @@ export function useProfile() {
       setPin("");
       setConfirmPin("");
       setIsPinVerified(false);
+      setPinSuccess("PIN alterado com sucesso!");
     } catch (error) {
       console.error("Erro ao alterar PIN:", error);
       setPinError("Não foi possível alterar o PIN.");
+    } finally {
+      setSavingPin(false);
+    }
+  }
+
+  async function handleResetPin(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!user?.pinHash || savingPin) return;
+
+    setPinError("");
+    setPinSuccess("");
+
+    if (!/^\d{4,6}$/.test(pin)) {
+      setPinError("O PIN deve conter de 4 a 6 dígitos.");
+      return;
+    }
+
+    if (pin !== confirmPin) {
+      setPinError("Os PINs não coincidem.");
+      return;
+    }
+
+    setSavingPin(true);
+
+    try {
+      const pinHash = await pinService.hash(pin);
+      const updatedAt = new Date().toISOString();
+
+      const updated = await userService.update(user.id, {
+        pinHash,
+        failedPinAttempts: 0,
+        pinLockedUntil: null,
+        updatedAt,
+      });
+
+      if (updated === 0) {
+        throw new Error("Usuário não encontrado.");
+      }
+
+      setUser({
+        ...user,
+        pinHash,
+        failedPinAttempts: 0,
+        pinLockedUntil: null,
+        updatedAt,
+      });
+
+      setPin("");
+      setConfirmPin("");
+      setIsPinVerified(false);
+      setPinSuccess("PIN redefinido com sucesso!");
+
+      navigate("/perfil/gerenciar", { replace: true, state: null });
+    } catch (error) {
+      console.error("Erro ao redefinir PIN:", error);
+      setPinError("Não foi possível redefinir o PIN.");
     } finally {
       setSavingPin(false);
     }
@@ -365,5 +420,6 @@ export function useProfile() {
     setPinError,
     pinSuccess,
     setPinSuccess,
+    handleResetPin,
   };
 }

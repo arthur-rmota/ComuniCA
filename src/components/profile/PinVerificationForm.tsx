@@ -1,4 +1,3 @@
-
 import type { SubmitEvent } from "react";
 
 interface PinVerificationFormProps {
@@ -10,6 +9,16 @@ interface PinVerificationFormProps {
   onCancel: () => void;
 }
 
+interface PinVerificationFormProps {
+  enteredPin: string;
+  accessPinError: string;
+  verifyingPin: boolean;
+  onPinChange: (value: string) => void;
+  onSubmit: (event: SubmitEvent<HTMLFormElement>) => void;
+  onCancel: () => void;
+  onForgotPin: () => void;
+}
+
 export function PinVerificationForm({
   enteredPin,
   accessPinError,
@@ -17,6 +26,7 @@ export function PinVerificationForm({
   onPinChange,
   onSubmit,
   onCancel,
+  onForgotPin,
 }: PinVerificationFormProps) {
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
@@ -70,6 +80,13 @@ export function PinVerificationForm({
           Cancelar
         </button>
       </div>
+      <button
+        type="button"
+        onClick={onForgotPin}
+        className="text-center text-sm font-semibold text-[#B86B00] underline underline-offset-4"
+      >
+        Esqueceu o PIN?
+      </button>
     </form>
   );
 }

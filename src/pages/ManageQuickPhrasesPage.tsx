@@ -197,6 +197,7 @@ export default function ManageQuickPhrasesPage() {
               onPinChange={setEnteredPin}
               onSubmit={handleVerifyPin}
               onCancel={handleBack}
+              onForgotPin={() => navigate("/perfil/recuperar-pin")}
             />
           </>
         ) : (

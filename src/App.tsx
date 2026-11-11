@@ -9,6 +9,7 @@ import BottomNavigation from "./components/layout/BottomNavigation";
 import ManageProfilePage from "./pages/ManageProfilePage";
 import ManageCategoriesPage from "./pages/ManageCategoriesPage";
 import ManageQuickPhrasesPage from "./pages/ManageQuickPhrasesPage";
+import RecoverPinPage from "./pages/RecoverPinPage";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/perfil" element={<ProfilePage />} />
         <Route path="/perfil/gerenciar" element={<ManageProfilePage />} />
         <Route path="/perfil/categorias" element={<ManageCategoriesPage />} />
+        <Route path="/perfil/recuperar-pin" element={<RecoverPinPage />} />
       </Routes>
 
       <BottomNavigation />

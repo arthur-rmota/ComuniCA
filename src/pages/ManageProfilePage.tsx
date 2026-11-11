@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { useProfileContext } from "../contexts/ProfileContext";
 import { ProfileForm } from "../components/profile/ProfileForm";
 import { PinVerificationForm } from "../components/profile/PinVerificationForm";
@@ -10,8 +10,11 @@ type ManageSection = "personal" | "pin";
 
 export default function ManageProfilePage() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [activeSection, setActiveSection] = useState<ManageSection>("personal");
+  const [activeSection, setActiveSection] = useState<ManageSection>(
+    location.state?.recoveringPin === true ? "pin" : "personal",
+  );
 
   const {
     user,
@@ -37,11 +40,17 @@ export default function ManageProfilePage() {
     pinError,
     savingPin,
     handleChangePin,
+    handleResetPin,
     setPinError,
     setAccessPinError,
     setPinSuccess,
     pinSuccess,
+    isPinRecoveryAuthorized,
+    clearPinRecovery,
   } = useProfileContext();
+
+  const isRecoveringPin =
+    isPinRecoveryAuthorized && location.state?.recoveringPin === true;
 
   useEffect(() => {
     if (!loading && !user) {
@@ -49,15 +58,17 @@ export default function ManageProfilePage() {
     }
   }, [loading, user, navigate]);
 
-  const needsPin = Boolean(user?.pinHash && !isPinVerified);
+  const needsPin = Boolean(user?.pinHash && !isPinVerified && !isRecoveringPin);
 
   function handleBack() {
+    clearPinRecovery();
     setIsPinVerified(false);
     setEnteredPin("");
     setAccessPinError("");
     setPin("");
     setConfirmPin("");
     setPinError("");
+    setPinSuccess("");
     navigate("/perfil", { replace: true });
   }
 
@@ -68,6 +79,22 @@ export default function ManageProfilePage() {
     setPinError("");
     setPinSuccess("");
   }
+
+  async function handlePinSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+    if (isRecoveringPin) {
+      await handleResetPin(event);
+      clearPinRecovery();
+      return;
+    }
+
+    await handleChangePin(event);
+  }
+
+  useEffect(() => {
+    return () => {
+      setPinSuccess("");
+    };
+  }, [setPinSuccess]);
 
   if (loading || !user) {
     return null;
@@ -112,11 +139,12 @@ export default function ManageProfilePage() {
               onPinChange={setEnteredPin}
               onSubmit={handleVerifyPin}
               onCancel={handleBack}
+              onForgotPin={() => navigate("/perfil/recuperar-pin")}
             />
           </>
         ) : (
           <>
-            {user.pinHash && (
+            {user.pinHash && !isRecoveringPin && (
               <div className="mb-6 grid grid-cols-2 gap-2">
                 <button
                   type="button"
@@ -173,7 +201,7 @@ export default function ManageProfilePage() {
                 savingPin={savingPin}
                 onPinChange={setPin}
                 onConfirmPinChange={setConfirmPin}
-                onSubmit={handleChangePin}
+                onSubmit={handlePinSubmit}
               />
             )}
           </>

@@ -105,6 +105,7 @@ export default function ManageCategoriesPage() {
               onPinChange={setEnteredPin}
               onSubmit={handleVerifyPin}
               onCancel={handleBack}
+              onForgotPin={() => navigate("/perfil/recuperar-pin")}
             />
           </>
         ) : (

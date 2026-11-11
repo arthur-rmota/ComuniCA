@@ -1,14 +1,33 @@
-import { createContext, useContext, useEffect, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import { useLocation } from "react-router";
 import { useProfile } from "../hooks/useProfile";
 
-type ProfileContextValue = ReturnType<typeof useProfile>;
-
+type ProfileContextValue = ReturnType<typeof useProfile> & {
+  isPinRecoveryAuthorized: boolean;
+  authorizePinRecovery: () => void;
+  clearPinRecovery: () => void;
+};
 const ProfileContext = createContext<ProfileContextValue | null>(null);
 
 export function ProfileProvider({ children }: { children: ReactNode }) {
   const profile = useProfile();
   const location = useLocation();
+
+  const [isPinRecoveryAuthorized, setIsPinRecoveryAuthorized] = useState(false);
+
+  function authorizePinRecovery() {
+    setIsPinRecoveryAuthorized(true);
+  }
+
+  function clearPinRecovery() {
+    setIsPinRecoveryAuthorized(false);
+  }
 
   const { setIsPinVerified, setEnteredPin, setAccessPinError } = profile;
 
@@ -25,8 +44,26 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     }
   }, [location.pathname, setIsPinVerified, setEnteredPin, setAccessPinError]);
 
+  useEffect(() => {
+    const isRecoveryRoute =
+      location.pathname === "/perfil/recuperar-pin" ||
+      (location.pathname === "/perfil/gerenciar" &&
+        location.state?.recoveringPin === true);
+
+    if (!isRecoveryRoute) {
+      setIsPinRecoveryAuthorized(false);
+    }
+  }, [location.pathname, location.state]);
+
   return (
-    <ProfileContext.Provider value={profile}>
+    <ProfileContext.Provider
+      value={{
+        ...profile,
+        isPinRecoveryAuthorized,
+        authorizePinRecovery,
+        clearPinRecovery,
+      }}
+    >
       {children}
     </ProfileContext.Provider>
   );
