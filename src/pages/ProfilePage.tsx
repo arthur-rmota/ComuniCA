@@ -1,5 +1,11 @@
 import { useNavigate } from "react-router";
-import { UserCircle, LockKeyhole, Bell, CircleHelp } from "lucide-react";
+import {
+  UserCircle,
+  LockKeyhole,
+  Bell,
+  CircleHelp,
+  LayoutGrid,
+} from "lucide-react";
 
 import { ProfileInfo } from "../components/profile/ProfileInfo";
 import { PinSetupForm } from "../components/profile/PinSetupForm";
@@ -45,6 +51,16 @@ function ProfilePage() {
     navigate("/perfil/gerenciar");
   }
 
+  function handleManageCategories() {
+    if (!user) return;
+
+    setIsPinVerified(false);
+    setEnteredPin("");
+    setAccessPinError("");
+
+    navigate("/perfil/categorias");
+  }
+
   return (
     <main className="min-h-screen bg-[#E5E5E5] p-4 pb-28">
       <header className="mb-6 pt-6">
@@ -82,6 +98,14 @@ function ProfilePage() {
                 label="Gerenciar perfil"
                 onClick={handleManageProfile}
               />
+
+              <ProfileMenuItem
+                icon={LayoutGrid}
+                label="Gerenciar categorias"
+                onClick={handleManageCategories}
+              />
+
+              <div className="mx-4 h-px bg-[#E5E5E5]" />
 
               <div className="mx-4 h-px bg-[#E5E5E5]" />
 

@@ -34,8 +34,6 @@ export function useProfile() {
           setName(savedUser.name);
           setEmail(savedUser.email);
         }
-
-        setUser(savedUser);
       } catch (error) {
         console.error("Erro ao carregar usuário:", error);
       } finally {
@@ -294,7 +292,9 @@ export function useProfile() {
       return;
     }
 
-    setSavingPin(true);
+    setPin("");
+    setConfirmPin("");
+    setIsPinVerified(false);
     setPinSuccess("PIN alterado com sucesso!");
 
     try {

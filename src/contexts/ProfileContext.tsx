@@ -13,7 +13,11 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   const { setIsPinVerified, setEnteredPin, setAccessPinError } = profile;
 
   useEffect(() => {
-    if (location.pathname !== "/perfil/gerenciar") {
+    const isProtectedRoute =
+      location.pathname === "/perfil/gerenciar" ||
+      location.pathname === "/perfil/categorias";
+
+    if (!isProtectedRoute) {
       setIsPinVerified(false);
       setEnteredPin("");
       setAccessPinError("");
