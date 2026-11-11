@@ -3,6 +3,7 @@ import { getCategories } from "../../services/categoryService";
 import type { Category } from "../../types/category";
 import { getCards } from "../../services/cardService";
 import type { Card } from "../../types/card";
+import { speak } from "../../utils/speech";
 
 function HomeSections() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -80,16 +81,19 @@ function HomeSections() {
           ) : (
             <div className="grid grid-cols-2 gap-3">
               {cards.map((card) => (
-                <article
+                <button
                   key={card.id}
-                  className="rounded-xl border bg-white p-4"
+                  type="button"
+                  onClick={() => speak(card.speechText)}
+                  aria-label={`Falar: ${card.speechText}`}
+                  className="rounded-xl border bg-white p-4 text-left transition active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#383838]"
                 >
                   <h3 className="font-semibold text-[#383838]">{card.title}</h3>
 
                   <p className="mt-1 text-sm text-gray-600">
                     {card.speechText}
                   </p>
-                </article>
+                </button>
               ))}
             </div>
           )}
