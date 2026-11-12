@@ -106,7 +106,7 @@ function QuickPhraseForm({
       >
         <h2
           id="add-phrase-title"
-          className="mb-4 text-xl font-bold text-[#383838]"
+          className="mb-4 text-xl font-bold text-app-text"
         >
           {isEditing ? "Editar frase" : "Adicionar frase"}
         </h2>
@@ -114,7 +114,7 @@ function QuickPhraseForm({
           <div className="mb-6">
             <label
               htmlFor="phrase-text"
-              className="mb-2 block text-sm font-semibold text-[#383838]"
+              className="mb-2 block text-sm font-semibold text-app-text"
             >
               Texto da frase <span className="text-red-600">*</span>
             </label>
@@ -128,7 +128,7 @@ function QuickPhraseForm({
               onChange={(event) => setPhraseText(event.target.value)}
               placeholder="Ex.: Quero brincar"
               maxLength={100}
-              className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-[#383838] outline-none focus:border-[#FFA726]"
+              className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-app-text outline-none focus:border-[#FFA726]"
             />
 
             <p className="mt-2 text-right text-xs text-gray-500">
@@ -137,7 +137,7 @@ function QuickPhraseForm({
           </div>
 
           <div className="mb-6">
-            <p className="mb-3 text-sm font-semibold text-[#383838]">
+            <p className="mb-3 text-sm font-semibold text-app-text">
               Escolha um ícone
             </p>
             <input
@@ -146,7 +146,7 @@ function QuickPhraseForm({
               onChange={(event) => setIconSearch(event.target.value)}
               placeholder="Pesquisar ícone..."
               aria-label="Pesquisar ícones"
-              className="mb-3 w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-[#383838] outline-none focus:border-[#FFA726]"
+              className="mb-3 w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-app-text outline-none focus:border-[#FFA726]"
             />
 
             <div
@@ -163,7 +163,7 @@ function QuickPhraseForm({
                   className={`shrink-0 rounded-full border px-3 py-2 text-xs font-semibold transition-colors ${
                     selectedIconCategory === category
                       ? "border-[#FFA726] bg-[#FFF3E0] text-[#A86400]"
-                      : "border-gray-200 bg-gray-50 text-[#383838]"
+                      : "border-gray-200 bg-gray-50 text-app-text"
                   }`}
                 >
                   {category}
@@ -199,7 +199,7 @@ function QuickPhraseForm({
           </div>
 
           <div className="mb-6">
-            <p className="mb-3 text-sm font-semibold text-[#383838]">
+            <p className="mb-3 text-sm font-semibold text-app-text">
               Escolha uma cor
             </p>
 
@@ -219,7 +219,7 @@ function QuickPhraseForm({
                   style={{ backgroundColor: color }}
                 >
                   {selectedColor === color && (
-                    <span className="text-lg font-bold text-[#383838]">✓</span>
+                    <span className="text-lg font-bold text-app-text">✓</span>
                   )}
                 </button>
               ))}
@@ -237,7 +237,7 @@ function QuickPhraseForm({
               type="button"
               onClick={onClose}
               disabled={isSaving}
-              className="flex-1 rounded-xl bg-[#E5E5E5] px-4 py-3 font-semibold text-[#383838] disabled:opacity-50"
+              className="flex-1 rounded-xl bg-stone-100 px-4 py-3 font-semibold text-app-text disabled:opacity-50"
             >
               Cancelar
             </button>
@@ -245,7 +245,7 @@ function QuickPhraseForm({
             <button
               type="submit"
               disabled={isSaving || !isPhraseValid}
-              className="flex-1 rounded-xl bg-[#FFA726] px-4 py-3 font-semibold text-white disabled:opacity-50"
+              className="flex-1 rounded-xl bg-brand-primary hover:bg-brand-hover transition-colors px-4 py-3 font-semibold text-white disabled:opacity-50"
             >
               {isSaving
                 ? "Salvando..."

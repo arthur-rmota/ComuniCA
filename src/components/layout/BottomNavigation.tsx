@@ -4,14 +4,14 @@ function BottomNavigation() {
   return (
     <nav
       aria-label="Navegação principal"
-      className="fixed bottom-0 left-0 flex w-full items-center justify-around bg-[#E5E5E5] px-3 py-3"
+      className="fixed bottom-0 left-0 z-40 flex w-full items-center justify-around border-t border-app-border bg-white px-3 py-3 shadow-[0_-3px_12px_rgba(41,37,36,0.06)]"
     >
       <NavLink
         to="/"
         end
         className={({ isActive }) =>
           `flex flex-col items-center gap-1 ${
-            isActive ? "font-bold text-[#383838]" : "text-gray-500"
+            isActive ? "font-bold text-app-text" : "text-gray-500"
           }`
         }
       >
@@ -23,7 +23,7 @@ function BottomNavigation() {
         to="/rapidos"
         className={({ isActive }) =>
           `flex flex-col items-center gap-1 ${
-            isActive ? "font-bold text-[#383838]" : "text-gray-500"
+            isActive ? "font-bold text-app-text" : "text-gray-500"
           }`
         }
       >
@@ -34,7 +34,7 @@ function BottomNavigation() {
       <NavLink
         to="/favoritos"
         aria-label="Frases rápidas favoritas"
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-[#FFA726] text-3xl text-white shadow-md"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-primary text-3xl text-white shadow-md"
       >
         ★
       </NavLink>
@@ -43,7 +43,7 @@ function BottomNavigation() {
         to="/agenda"
         className={({ isActive }) =>
           `flex flex-col items-center gap-1 ${
-            isActive ? "font-bold text-[#383838]" : "text-gray-500"
+            isActive ? "font-bold text-app-text" : "text-gray-500"
           }`
         }
       >
@@ -55,7 +55,7 @@ function BottomNavigation() {
         to="/perfil"
         className={({ isActive }) =>
           `flex flex-col items-center gap-1 ${
-            isActive ? "font-bold text-[#383838]" : "text-gray-500"
+            isActive ? "font-bold text-app-text" : "text-gray-500"
           }`
         }
       >

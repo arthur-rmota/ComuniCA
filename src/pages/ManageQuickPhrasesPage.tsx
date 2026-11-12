@@ -167,7 +167,7 @@ export default function ManageQuickPhrasesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#E5E5E5] p-4 pb-28">
+    <main className="min-h-screen bg-app-background p-4 pb-28">
       <header className="relative flex items-center justify-center py-6">
         <button
           type="button"
@@ -178,7 +178,7 @@ export default function ManageQuickPhrasesPage() {
           <ArrowLeft size={22} color="#383838" />
         </button>
 
-        <h1 className="text-xl font-semibold text-[#383838]">
+        <h1 className="text-xl font-semibold text-app-text">
           Gerenciar frases rápidas
         </h1>
       </header>
@@ -186,7 +186,7 @@ export default function ManageQuickPhrasesPage() {
       <section className="mt-4 rounded-2xl bg-white p-5">
         {needsPin ? (
           <>
-            <h2 className="mb-4 text-lg font-semibold text-[#383838]">
+            <h2 className="mb-4 text-lg font-semibold text-app-text">
               Verificar PIN de acesso
             </h2>
 
@@ -203,14 +203,14 @@ export default function ManageQuickPhrasesPage() {
         ) : (
           <>
             <div className="mb-4 flex items-center justify-between gap-3">
-              <h2 className="text-lg font-semibold text-[#383838]">
+              <h2 className="text-lg font-semibold text-app-text">
                 Frases cadastradas
               </h2>
 
               <button
                 type="button"
                 onClick={() => setIsAddPhraseOpen(true)}
-                className="flex items-center gap-2 rounded-xl bg-[#FFA726] px-3 py-2 text-sm font-semibold text-white"
+                className="flex items-center gap-2 rounded-xl bg-brand-primary hover:bg-brand-hover transition-colors px-3 py-2 text-sm font-semibold text-white"
               >
                 <Plus size={18} />
                 Nova frase
@@ -232,7 +232,7 @@ export default function ManageQuickPhrasesPage() {
                     key={phrase.id}
                     className="rounded-xl border border-gray-200 p-3"
                   >
-                    <p className="font-medium text-[#383838]">{phrase.text}</p>
+                    <p className="font-medium text-app-text">{phrase.text}</p>
 
                     <p className="mt-1 text-xs text-gray-500">
                       {phrase.userId === "local-user"
@@ -243,7 +243,7 @@ export default function ManageQuickPhrasesPage() {
                       <button
                         type="button"
                         onClick={() => setEditingPhrase(phrase)}
-                        className="mt-3 flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-[#383838] hover:bg-gray-200"
+                        className="mt-3 flex items-center gap-2 rounded-lg bg-stone-100 px-3 py-2 text-sm font-medium text-app-text hover:bg-stone-200"
                       >
                         <Pencil size={16} />
                         Editar
@@ -256,7 +256,7 @@ export default function ManageQuickPhrasesPage() {
             <button
               type="button"
               onClick={handleBack}
-              className="mt-6 w-full rounded-xl bg-[#FFA726] px-4 py-3 font-semibold text-white transition-colors hover:bg-[#FB8C00]"
+              className="mt-6 w-full rounded-xl bg-brand-primary hover:bg-brand-hover transition-colors px-4 py-3 font-semibold text-white transition-colors hover:bg-brand-hover"
             >
               Confirmar
             </button>
@@ -294,7 +294,7 @@ export default function ManageQuickPhrasesPage() {
           >
             <h2
               id="delete-phrase-title"
-              className="text-xl font-bold text-[#383838]"
+              className="text-xl font-bold text-app-text"
             >
               Excluir frase?
             </h2>
@@ -319,7 +319,7 @@ export default function ManageQuickPhrasesPage() {
                 type="button"
                 disabled={isDeletingPhrase}
                 onClick={() => setIsDeleteConfirmationOpen(false)}
-                className="flex-1 rounded-xl bg-gray-100 px-4 py-3 font-semibold text-[#383838]"
+                className="flex-1 rounded-xl bg-stone-100 px-4 py-3 font-semibold text-app-text"
               >
                 Cancelar
               </button>

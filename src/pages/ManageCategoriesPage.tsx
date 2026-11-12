@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { categoryService } from "../services/categoryService";
@@ -8,6 +8,8 @@ import { PinVerificationForm } from "../components/profile/PinVerificationForm";
 
 export default function ManageCategoriesPage() {
   const navigate = useNavigate();
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [categoryName, setCategoryName] = useState("");
   const {
     user,
     loading: profileLoading,
@@ -75,7 +77,7 @@ export default function ManageCategoriesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#E5E5E5] p-4 pb-28">
+    <main className="min-h-screen bg-app-background p-4 pb-28">
       <header className="relative flex items-center justify-center py-6">
         <button
           type="button"
@@ -86,15 +88,15 @@ export default function ManageCategoriesPage() {
           <ArrowLeft size={22} color="#383838" />
         </button>
 
-        <h1 className="text-xl font-semibold text-[#383838]">
-          Gerenciar categorias
+        <h1 className="text-xl font-semibold text-app-text">
+          Gerenciar Categorias
         </h1>
       </header>
 
       <section className="mt-4 rounded-2xl bg-white p-5">
         {needsPin ? (
           <>
-            <h2 className="mb-4 text-lg font-semibold text-[#383838]">
+            <h2 className="mb-4 text-lg font-semibold text-app-text">
               Verificar PIN de acesso
             </h2>
 
@@ -110,9 +112,74 @@ export default function ManageCategoriesPage() {
           </>
         ) : (
           <>
-            <h2 className="mb-4 text-lg font-semibold text-[#383838]">
-              Categorias cadastradas
-            </h2>
+            <div className="mb-4 flex items-center justify-between gap-2">
+              <h2 className="text-base font-semibold text-app-text sm:text-lg">
+                Categorias
+              </h2>
+
+              <button
+                type="button"
+                onClick={() => setShowCreateForm(true)}
+                className="flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-brand-primary hover:bg-brand-hover px-3 py-2.5 text-sm font-medium text-white transition-colors sm:px-4"
+              >
+                <Plus size={18} />
+                Nova categoria
+              </button>
+            </div>
+
+            {showCreateForm && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+                <div className="w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-2xl bg-white p-5 shadow-xl">
+                  <h3 className="mb-4 text-base font-semibold text-app-text">
+                    Criar categoria
+                  </h3>
+
+                  <form className="space-y-4">
+                    <div>
+                      <label
+                        htmlFor="category-name"
+                        className="mb-2 block text-sm font-medium text-gray-700"
+                      >
+                        Nome da categoria
+                      </label>
+
+                      <input
+                        id="category-name"
+                        type="text"
+                        value={categoryName}
+                        onChange={(event) =>
+                          setCategoryName(event.target.value)
+                        }
+                        placeholder="Ex.: Escola"
+                        maxLength={50}
+                        required
+                        className="w-full rounded-xl border border-app-border bg-white p-3"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 border-t border-app-border pt-4">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCategoryName("");
+                          setShowCreateForm(false);
+                        }}
+                        className="rounded-xl border border-app-border bg-stone-100 px-4 py-3 font-medium text-app-text transition-colors hover:bg-stone-200"
+                      >
+                        Cancelar
+                      </button>
+
+                      <button
+                        type="button"
+                        className="rounded-xl bg-brand-primary hover:bg-brand-hover px-4 py-3 font-medium text-white transition-colors"
+                      >
+                        Salvar categoria
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
 
             {loading ? (
               <p className="text-sm text-gray-600">Carregando categorias...</p>
@@ -138,7 +205,7 @@ export default function ManageCategoriesPage() {
                     />
 
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-[#383838]">
+                      <h3 className="font-semibold text-app-text">
                         {category.name}
                       </h3>
 

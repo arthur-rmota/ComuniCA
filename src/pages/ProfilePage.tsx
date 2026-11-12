@@ -62,15 +62,15 @@ function ProfilePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#E5E5E5] p-4 pb-28">
+    <main className="min-h-screen bg-app-background p-4 pb-28">
       <header className="mb-6 pt-6">
-        <h1 className="text-center text-2xl font-semibold text-[#383838]">
+        <h1 className="text-center text-2xl font-semibold text-app-text">
           Perfil
         </h1>
       </header>
 
       {loading ? (
-        <p className="mt-4 text-[#383838]">Carregando perfil...</p>
+        <p className="mt-4 text-app-text">Carregando perfil...</p>
       ) : user ? (
         <div className="mt-6 flex flex-col gap-4">
           <ProfileInfo user={user} />
@@ -105,9 +105,9 @@ function ProfilePage() {
                 onClick={handleManageCategories}
               />
 
-              <div className="mx-4 h-px bg-[#E5E5E5]" />
+              <div className="mx-4 h-px bg-app-background" />
 
-              <div className="mx-4 h-px bg-[#E5E5E5]" />
+              <div className="mx-4 h-px bg-app-background" />
 
               <ProfileMenuItem
                 icon={LockKeyhole}
@@ -115,11 +115,11 @@ function ProfilePage() {
                 disabled
               />
 
-              <div className="mx-4 h-px bg-[#E5E5E5]" />
+              <div className="mx-4 h-px bg-app-background" />
 
               <ProfileMenuItem icon={Bell} label="Notificações" disabled />
 
-              <div className="mx-4 h-px bg-[#E5E5E5]" />
+              <div className="mx-4 h-px bg-app-background" />
 
               <ProfileMenuItem icon={CircleHelp} label="Idioma" disabled />
             </div>

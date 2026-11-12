@@ -116,20 +116,20 @@ function QuickPhrasesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#E5E5E5] p-4 pb-28">
+    <main className="min-h-screen bg-app-background p-4 pb-28">
       <header className="mb-5 pt-3">
-        <h1 className="mb-6 text-center text-2xl font-bold tracking-tight text-[#383838]">
+        <h1 className="mb-6 text-center text-2xl font-bold tracking-tight text-app-text">
           Frases Rápidas
         </h1>
 
         <div className="flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
-          <p className="text-sm font-medium text-[#383838]">
+          <p className="text-sm font-medium text-app-text">
             Toque em uma frase para falar
           </p>
 
           <span
             aria-hidden="true"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFA726] text-lg"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-primary text-lg"
           >
             🔊
           </span>
@@ -162,7 +162,7 @@ function QuickPhrasesPage() {
         type="button"
         onClick={() => navigate("/rapidos/gerenciar")}
         aria-label="Gerenciar frases rápidas"
-        className="fixed bottom-24 right-4 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#383838] shadow-lg"
+        className="fixed bottom-24 right-4 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-white text-app-text shadow-lg"
       >
         <Pencil size={26} strokeWidth={2.5} />
       </button>

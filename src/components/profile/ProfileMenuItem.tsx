@@ -20,7 +20,7 @@ export function ProfileMenuItem({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="flex w-full items-center gap-3 px-4 text-left text-[#383838] disabled:opacity-50"
+      className="flex w-full items-center gap-3 px-4 text-left text-app-text disabled:opacity-50"
       style={{ minHeight: 52 }}
     >
       <Icon size={21} strokeWidth={2} />

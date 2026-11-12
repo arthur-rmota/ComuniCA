@@ -101,7 +101,7 @@ export default function ManageProfilePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#E5E5E5] p-4 pb-28">
+    <main className="min-h-screen bg-app-background p-4 pb-28">
       <header className="relative flex items-center justify-center py-6">
         <button
           type="button"
@@ -112,7 +112,7 @@ export default function ManageProfilePage() {
           <ArrowLeft size={22} color="#383838" />
         </button>
 
-        <h1 className="text-xl font-semibold text-[#383838]">
+        <h1 className="text-xl font-semibold text-app-text">
           Gerenciar perfil
         </h1>
       </header>
@@ -128,7 +128,7 @@ export default function ManageProfilePage() {
         )}
         {needsPin ? (
           <>
-            <h2 className="mb-4 text-lg font-semibold text-[#383838]">
+            <h2 className="mb-4 text-lg font-semibold text-app-text">
               Verificar PIN de acesso
             </h2>
 
@@ -152,8 +152,8 @@ export default function ManageProfilePage() {
                   aria-pressed={activeSection === "personal"}
                   className={`rounded-xl p-3 text-sm font-semibold ${
                     activeSection === "personal"
-                      ? "bg-[#383838] text-white"
-                      : "bg-gray-100 text-[#383838]"
+                      ? "bg-brand-primary hover:bg-brand-hover transition-colors text-white"
+                      : "bg-gray-100 text-app-text"
                   }`}
                 >
                   Dados pessoais
@@ -165,8 +165,8 @@ export default function ManageProfilePage() {
                   aria-pressed={activeSection === "pin"}
                   className={`rounded-xl p-3 text-sm font-semibold ${
                     activeSection === "pin"
-                      ? "bg-[#383838] text-white"
-                      : "bg-gray-100 text-[#383838]"
+                      ? "bg-brand-primary hover:bg-brand-hover transition-colors text-white"
+                      : "bg-gray-100 text-app-text"
                   }`}
                 >
                   Alterar PIN
@@ -176,7 +176,7 @@ export default function ManageProfilePage() {
 
             {activeSection === "personal" || !user.pinHash ? (
               <>
-                <h2 className="mb-4 text-lg font-semibold text-[#383838]">
+                <h2 className="mb-4 text-lg font-semibold text-app-text">
                   Dados pessoais
                 </h2>
 

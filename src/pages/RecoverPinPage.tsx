@@ -31,7 +31,7 @@ export default function RecoverPinPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#E5E5E5] p-4 pb-28">
+    <main className="min-h-screen bg-app-background p-4 pb-28">
       <header className="relative flex items-center justify-center py-6">
         <button
           type="button"
@@ -42,11 +42,11 @@ export default function RecoverPinPage() {
           <ArrowLeft size={22} color="#383838" />
         </button>
 
-        <h1 className="text-xl font-semibold text-[#383838]">Recuperar PIN</h1>
+        <h1 className="text-xl font-semibold text-app-text">Recuperar PIN</h1>
       </header>
 
       <section className="mt-4 rounded-2xl bg-white p-5">
-        <h2 className="mb-2 text-lg font-semibold text-[#383838]">
+        <h2 className="mb-2 text-lg font-semibold text-app-text">
           Esqueceu seu PIN?
         </h2>
 
@@ -59,7 +59,7 @@ export default function RecoverPinPage() {
           <div>
             <label
               htmlFor="recovery-password"
-              className="mb-2 block font-medium text-[#383838]"
+              className="mb-2 block font-medium text-app-text"
             >
               Senha de recuperação
             </label>
@@ -102,7 +102,7 @@ export default function RecoverPinPage() {
 
           <button
             type="submit"
-            className="rounded-xl bg-[#383838] p-3 font-semibold text-white"
+            className="rounded-xl bg-brand-primary hover:bg-brand-hover transition-colors p-3 font-semibold text-white"
           >
             Continuar
           </button>

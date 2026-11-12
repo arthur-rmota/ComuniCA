@@ -70,7 +70,7 @@ function QuickPhraseCard({
           )}
         </span>
 
-        <span className="text-sm font-semibold text-[#383838]">
+        <span className="text-sm font-semibold text-app-text">
           {phrase.text}
         </span>
 
@@ -79,7 +79,7 @@ function QuickPhraseCard({
             role="status"
             className="flex items-center gap-1 text-xs font-medium text-[#A86400]"
           >
-            <span className="h-2 w-2 animate-pulse rounded-full bg-[#FFA726]" />
+            <span className="h-2 w-2 animate-pulse rounded-full bg-brand-primary" />
             Falando...
           </span>
         )}
@@ -95,7 +95,7 @@ function QuickPhraseCard({
             : `Favoritar ${phrase.text}`
         }
         aria-pressed={isFavorite}
-        className="absolute right-3 top-3 rounded-full bg-white/80 p-2 text-[#383838] shadow-sm disabled:opacity-50"
+        className="absolute right-3 top-3 rounded-full bg-white/80 p-2 text-app-text shadow-sm disabled:opacity-50"
       >
         <Star
           size={20}

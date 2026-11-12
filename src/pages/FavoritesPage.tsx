@@ -81,9 +81,9 @@ function FavoritesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#E5E5E5] p-4 pb-28">
+    <main className="min-h-screen bg-app-background p-4 pb-28">
       <header className="mb-6 pt-3">
-        <h1 className="text-center text-2xl font-bold text-[#383838]">
+        <h1 className="text-center text-2xl font-bold text-app-text">
           Favoritos
         </h1>
       </header>
@@ -92,7 +92,7 @@ function FavoritesPage() {
 
       {!error && (
         <>
-          <p className="mb-4 text-center text-sm text-[#383838]">
+          <p className="mb-4 text-center text-sm text-app-text">
             {favoritePhrases.length}{" "}
             {favoritePhrases.length === 1
               ? "frase favorita"
@@ -101,7 +101,7 @@ function FavoritesPage() {
 
           {favoritePhrases.length === 0 ? (
             <div className="rounded-2xl bg-white p-6 text-center shadow-sm">
-              <p className="font-medium text-[#383838]">
+              <p className="font-medium text-app-text">
                 Você ainda não possui frases favoritas.
               </p>
 

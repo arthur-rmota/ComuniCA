@@ -1,7 +1,7 @@
 function HomeHeader() {
   return (
     <header className="flex items-center justify-between px-2 py-4">
-      <h1 className="text-2xl font-semibold text-[#383838]">
+      <h1 className="text-2xl font-semibold text-app-text">
         Olá, User
       </h1>
 

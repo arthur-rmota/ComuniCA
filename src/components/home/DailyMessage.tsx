@@ -15,7 +15,7 @@ function DailyMessage() {
   return (
     <section className="flex items-center justify-between rounded-xl bg-[#F1B5BD] px-4 py-3">
       <div className="flex items-center gap-3">
-        <h2 className="text-xl font-semibold text-[#383838]">
+        <h2 className="text-xl font-semibold text-app-text">
           {greeting}
         </h2>
 

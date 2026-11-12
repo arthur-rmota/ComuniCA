@@ -23,7 +23,7 @@ export function PinSetupForm({
 }: PinSetupFormProps) {
   return (
     <section className="rounded-xl bg-white p-4">
-      <h2 className="mb-4 text-lg font-semibold text-[#383838]">
+      <h2 className="mb-4 text-lg font-semibold text-app-text">
         {mode === "setup" ? "Definir PIN" : "Salvar novo PIN"}
       </h2>
 
@@ -31,7 +31,7 @@ export function PinSetupForm({
         <div>
           <label
             htmlFor="pin"
-            className="mb-2 block font-medium text-[#383838]"
+            className="mb-2 block font-medium text-app-text"
           >
             PIN
           </label>
@@ -55,7 +55,7 @@ export function PinSetupForm({
         <div>
           <label
             htmlFor="confirm-pin"
-            className="mb-2 block font-medium text-[#383838]"
+            className="mb-2 block font-medium text-app-text"
           >
             Confirmar PIN
           </label>
@@ -85,7 +85,7 @@ export function PinSetupForm({
         <button
           type="submit"
           disabled={savingPin}
-          className="rounded-xl bg-[#383838] p-3 font-semibold text-white disabled:opacity-50"
+          className="rounded-xl bg-brand-primary hover:bg-brand-hover transition-colors p-3 font-semibold text-white disabled:opacity-50"
         >
           Definir PIN
         </button>

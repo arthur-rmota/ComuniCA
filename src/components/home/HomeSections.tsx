@@ -37,7 +37,7 @@ function HomeSections() {
 
   return (
     <section className="mt-4">
-      <h2 className="mb-2 text-sm font-semibold text-[#383838]">Seções</h2>
+      <h2 className="mb-2 text-sm font-semibold text-app-text">Seções</h2>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 
@@ -49,16 +49,16 @@ function HomeSections() {
             style={{ backgroundColor: category.color }}
           >
             <div>
-              <h3 className="font-semibold text-[#383838]">{category.name}</h3>
+              <h3 className="font-semibold text-app-text">{category.name}</h3>
 
-              <p className="mt-1 text-xs text-[#383838]">
+              <p className="mt-1 text-xs text-app-text">
                 {category.description}
               </p>
             </div>
 
             <button
               onClick={() => handleOpenCategory(category.id)}
-              className="mt-3 self-start rounded-full bg-white px-4 py-1 text-xs font-medium text-[#383838]"
+              className="mt-3 self-start rounded-full bg-white px-4 py-1 text-xs font-medium text-app-text"
             >
               Abrir
             </button>
@@ -67,7 +67,7 @@ function HomeSections() {
       </div>
       {selectedCategory && (
         <div className="mt-5">
-          <h2 className="mb-3 text-lg font-semibold text-[#383838]">
+          <h2 className="mb-3 text-lg font-semibold text-app-text">
             {
               categories.find((category) => category.id === selectedCategory)
                 ?.name
@@ -88,7 +88,7 @@ function HomeSections() {
                   aria-label={`Falar: ${card.speechText}`}
                   className="rounded-xl border bg-white p-4 text-left transition active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#383838]"
                 >
-                  <h3 className="font-semibold text-[#383838]">{card.title}</h3>
+                  <h3 className="font-semibold text-app-text">{card.title}</h3>
 
                   <p className="mt-1 text-sm text-gray-600">
                     {card.speechText}

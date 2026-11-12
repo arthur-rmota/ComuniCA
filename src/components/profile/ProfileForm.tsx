@@ -34,7 +34,7 @@ export function ProfileForm({
       <div>
         <label
           htmlFor="profile-name"
-          className="mb-2 block font-medium text-[#383838]"
+          className="mb-2 block font-medium text-app-text"
         >
           Nome
         </label>
@@ -45,14 +45,14 @@ export function ProfileForm({
           value={name}
           onChange={(event) => onNameChange(event.target.value)}
           placeholder={isEditing ? undefined : "Digite seu nome"}
-          className="w-full rounded-xl border border-[#E5E5E5] bg-[#F7F7F7] p-3 text-[#383838] outline-none focus:border-[#6254A3]"
+          className="w-full rounded-xl border border-[#E5E5E5] bg-[#F7F7F7] p-3 text-app-text outline-none focus:border-[#6254A3]"
         />
       </div>
 
       <div>
         <label
           htmlFor="profile-email"
-          className="mb-2 block font-medium text-[#383838]"
+          className="mb-2 block font-medium text-app-text"
         >
           E-mail
         </label>
@@ -63,7 +63,7 @@ export function ProfileForm({
           value={email}
           onChange={(event) => onEmailChange(event.target.value)}
           placeholder={isEditing ? undefined : "Digite seu e-mail"}
-          className="w-full rounded-xl border border-[#E5E5E5] bg-[#F7F7F7] p-3 text-[#383838] outline-none focus:border-[#6254A3]"
+          className="w-full rounded-xl border border-[#E5E5E5] bg-[#F7F7F7] p-3 text-app-text outline-none focus:border-[#6254A3]"
         />
       </div>
 
@@ -77,7 +77,7 @@ export function ProfileForm({
         <button
           type="submit"
           disabled={saving}
-          className={`rounded-xl bg-[#383838] p-3 font-semibold text-white disabled:opacity-50 ${
+          className={`rounded-xl bg-brand-primary hover:bg-brand-hover transition-colors p-3 font-semibold text-white disabled:opacity-50 ${
             isEditing ? "flex-1" : "w-full"
           }`}
         >
@@ -94,7 +94,7 @@ export function ProfileForm({
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 rounded-xl bg-white p-3 font-semibold text-[#383838]"
+            className="flex-1 rounded-xl bg-white p-3 font-semibold text-app-text"
           >
             Cancelar
           </button>

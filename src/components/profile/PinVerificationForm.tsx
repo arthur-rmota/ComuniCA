@@ -33,7 +33,7 @@ export function PinVerificationForm({
       <div>
         <label
           htmlFor="access-pin"
-          className="mb-2 block font-medium text-[#383838]"
+          className="mb-2 block font-medium text-app-text"
         >
           PIN de acesso
         </label>
@@ -67,7 +67,7 @@ export function PinVerificationForm({
         <button
           type="submit"
           disabled={verifyingPin}
-          className="flex-1 rounded-xl bg-[#383838] p-3 font-semibold text-white disabled:opacity-50"
+          className="flex-1 rounded-xl bg-brand-primary hover:bg-brand-hover transition-colors p-3 font-semibold text-white disabled:opacity-50"
         >
           {verifyingPin ? "Verificando..." : "Confirmar"}
         </button>
@@ -75,7 +75,7 @@ export function PinVerificationForm({
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 rounded-xl bg-gray-200 p-3 font-semibold text-[#383838]"
+          className="flex-1 rounded-xl bg-gray-200 p-3 font-semibold text-app-text"
         >
           Cancelar
         </button>

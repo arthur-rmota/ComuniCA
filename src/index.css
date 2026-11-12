@@ -1,5 +1,33 @@
 @import "tailwindcss";
 
+@theme {
+  /* Identidade principal */
+  --color-brand-primary: #C2410C;
+  --color-brand-hover: #9A3412;
+  --color-brand-soft: #FFEDD5;
+
+  /* Interface */
+  --color-app-background: #FAFAF9;
+  --color-app-surface: #FFFFFF;
+  --color-app-text: #292524;
+  --color-app-muted: #78716C;
+  --color-app-border: #E7E5E4;
+
+  /* Categorias */
+  --color-category-green: #B8D8BA;
+  --color-category-blue: #BFD7EA;
+  --color-category-purple: #D8C8E8;
+  --color-category-peach: #F4C7AB;
+  --color-category-yellow: #F9E79F;
+  --color-category-pink: #F4B8C5;
+
+  /* Estados */
+  --color-app-success: #15803D;
+  --color-app-danger: #B91C1C;
+  --color-app-warning: #A16207;
+  --color-app-info: #1D4ED8;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -8,7 +36,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #E5E5E5;
-  color: #383838;
+  background-color: var(--color-app-background);
+  color: var(--color-app-text);
   font-family: Arial, sans-serif;
 }

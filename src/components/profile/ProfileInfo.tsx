@@ -23,7 +23,7 @@ export function ProfileInfo({ user }: ProfileInfoProps) {
       </div>
 
       <div className="min-w-0 flex-1">
-        <h2 className="truncate text-[18px] font-semibold leading-tight text-[#383838]">
+        <h2 className="truncate text-[18px] font-semibold leading-tight text-app-text">
           {user.name}
         </h2>
 
