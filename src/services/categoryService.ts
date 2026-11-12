@@ -1,4 +1,3 @@
-
 import { db } from "../database/db";
 import type { Category } from "../types/category";
 
@@ -15,15 +14,25 @@ export const categoryService = {
     return db.categories.orderBy("position").toArray();
   },
 
-  async update(
-    id: string,
-    changes: Partial<Category>,
-  ): Promise<number> {
+  async update(id: string, changes: Partial<Category>): Promise<number> {
     return db.categories.update(id, changes);
   },
 
-  async remove(id: string): Promise<void> {
-    await db.categories.delete(id);
+  async remove(id: string): Promise<boolean> {
+    return db.transaction("rw", db.categories, db.cards, async () => {
+      const associatedCards = await db.cards
+        .where("categoryId")
+        .equals(id)
+        .count();
+
+      if (associatedCards > 0) {
+        return false;
+      }
+
+      await db.categories.delete(id);
+
+      return true;
+    });
   },
 };
 

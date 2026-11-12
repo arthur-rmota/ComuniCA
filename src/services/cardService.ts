@@ -1,4 +1,3 @@
-
 import { db } from "../database/db";
 import type { Card } from "../types/card";
 
@@ -23,10 +22,13 @@ export const cardService = {
       .toArray();
   },
 
-  async update(
-    id: string,
-    changes: Partial<Card>,
-  ): Promise<number> {
+  async hasCardsInCategory(categoryId: string): Promise<boolean> {
+    const count = await db.cards.where("categoryId").equals(categoryId).count();
+
+    return count > 0;
+  },
+
+  async update(id: string, changes: Partial<Card>): Promise<number> {
     return db.cards.update(id, changes);
   },
 

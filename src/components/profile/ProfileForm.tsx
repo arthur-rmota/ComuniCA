@@ -86,7 +86,7 @@ export function ProfileForm({
               ? "Salvando..."
               : "Cadastrando..."
             : isEditing
-              ? "Salvar alterações"
+              ? "Salvar"
               : "Cadastrar perfil"}
         </button>
 
