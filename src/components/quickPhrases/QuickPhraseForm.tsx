@@ -91,7 +91,7 @@ function QuickPhraseForm({
 
   return (
     <div
-      className="fixed inset-0 z-30 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
       onClick={(event) => {
         if (event.target === event.currentTarget && !isSaving) {
           onClose();
@@ -250,7 +250,7 @@ function QuickPhraseForm({
               {isSaving
                 ? "Salvando..."
                 : isEditing
-                  ? "Salvar alterações"
+                  ? "Salvar"
                   : "Salvar frase"}
             </button>
           </div>
