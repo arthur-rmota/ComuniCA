@@ -63,7 +63,7 @@ function ProfilePage() {
 
   return (
     <main className="min-h-screen bg-app-background p-4 pb-28">
-      <header className="mb-6 pt-6">
+      <header className="mb-4 pt-2">
         <h1 className="text-center text-2xl font-semibold text-app-text">
           Perfil
         </h1>
@@ -72,7 +72,7 @@ function ProfilePage() {
       {loading ? (
         <p className="mt-4 text-app-text">Carregando perfil...</p>
       ) : user ? (
-        <div className="mt-6 flex flex-col gap-4">
+        <div className="mt-3 flex flex-col gap-4">
           <ProfileInfo user={user} />
 
           {!user.pinHash && (

@@ -4,7 +4,7 @@ function HomeHeader() {
   const { user } = useProfileContext();
   
   return (
-    <header className="flex items-center justify-between px-2 py-4">
+    <header className="flex items-center justify-between px-2 py-2">
       <h1 className="text-2xl font-semibold text-app-text">
         Olá, {user?.name ?? "Usuário"}
       </h1>

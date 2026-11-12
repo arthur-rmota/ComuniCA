@@ -1,0 +1,19 @@
+{
+  "name": "ComuniCA - Comunicação Aumentativa e Alternativa",
+  "short_name": "ComuniCA",
+  "description": "Aplicativo de Comunicação Aumentativa e Alternativa.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F1EFEB",
+  "theme_color": "#F1EFEB",
+  "icons": [
+    {
+      "src": "/comunica-icon.png",
+      "sizes": "2048x2048",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
