@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router";
 import { ProfileProvider } from "./contexts/ProfileContext";
 import HomePage from "./pages/HomePage";
 import QuickPhrasesPage from "./pages/QuickPhrasesPage";
-import FavoritesPage from "./pages/FavoritesPage";
 import AgendaPage from "./pages/AgendaPage";
 import ProfilePage from "./pages/ProfilePage";
 import BottomNavigation from "./components/layout/BottomNavigation";
@@ -13,6 +12,8 @@ import RecoverPinPage from "./pages/RecoverPinPage";
 import ManageCardsPage from "./pages/ManageCardsPage";
 import CategoryCardsPage from "./pages/CategoryCardsPage";
 import AboutPage from "./pages/AboutPage";
+import EmergencyPage from "./pages/EmergencyPage";
+import ManageEmergencyPhrasesPage from "./pages/ManageEmergencyPhrasesPage";
 
 function App() {
   return (
@@ -21,8 +22,9 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/rapidos" element={<QuickPhrasesPage />} />
         <Route path="/rapidos/gerenciar" element={<ManageQuickPhrasesPage />} />
-        <Route path="/favoritos" element={<FavoritesPage />} />
         <Route path="/agenda" element={<AgendaPage />} />
+        <Route path="/emergencia" element={<EmergencyPage />} />
+        <Route path="/emergencia/gerenciar" element={<ManageEmergencyPhrasesPage />}/>
         <Route path="/perfil" element={<ProfilePage />} />
         <Route path="/perfil/gerenciar" element={<ManageProfilePage />} />
         <Route path="/perfil/categorias" element={<ManageCategoriesPage />} />

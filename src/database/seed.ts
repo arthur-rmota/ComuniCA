@@ -2,6 +2,7 @@ import { db } from "./db";
 import { defaultCategories } from "./seeds/categories";
 import { defaultCards } from "./seeds/cards";
 import { defaultQuickPhrases } from "./seeds/quickPhrases";
+import { defaultEmergencyPhrases } from "./seeds/emergencyPhrases";
 
 export async function seedDatabase(): Promise<void> {
   await db.transaction(
@@ -10,6 +11,7 @@ export async function seedDatabase(): Promise<void> {
     db.cards,
     db.quickPhrases,
     db.seedMetadata,
+    db.emergencyPhrases,
     async () => {
       const categoriesInitialized = await db.seedMetadata.get(
         "categories-initialized",
@@ -127,6 +129,26 @@ export async function seedDatabase(): Promise<void> {
           position: defaultPhrase.position,
           icon: defaultPhrase.icon,
           color: defaultPhrase.color,
+        });
+      }
+
+      // Inicializa as frases de emergência apenas uma vez.
+      // Edições e exclusões posteriores são preservadas.
+      const emergencyInitialized = await db.seedMetadata.get(
+        "emergency-phrases-initialized",
+      );
+
+      if (!emergencyInitialized) {
+        for (const phrase of defaultEmergencyPhrases) {
+          const existingPhrase = await db.emergencyPhrases.get(phrase.id);
+
+          if (!existingPhrase) {
+            await db.emergencyPhrases.add(phrase);
+          }
+        }
+
+        await db.seedMetadata.put({
+          key: "emergency-phrases-initialized",
         });
       }
     },

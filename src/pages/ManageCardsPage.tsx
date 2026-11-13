@@ -1,5 +1,5 @@
 import { ArrowLeft, Plus, Pencil, Trash2 } from "lucide-react";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useProfileContext } from "../contexts/ProfileContext";
 import { PinVerificationForm } from "../components/profile/PinVerificationForm";
@@ -11,6 +11,7 @@ import { quickPhraseIcons } from "../constants/quickPhraseIcons";
 
 export default function ManageCardsPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { categoryId } = useParams<{ categoryId: string }>();
   const [cards, setCards] = useState<Card[]>([]);
   const [cardsLoading, setCardsLoading] = useState(true);
@@ -42,6 +43,11 @@ export default function ManageCardsPage() {
   }, [loading, user, navigate]);
 
   function handleBack() {
+    if (location.state?.origin === "category" && categoryId) {
+      navigate(`/categorias/${categoryId}`, { replace: true });
+      return;
+    }
+
     navigate("/perfil/categorias", { replace: true });
   }
 
@@ -93,6 +99,14 @@ export default function ManageCardsPage() {
     );
 
     setEditingCard(null);
+  }
+
+  function handleConfirm() {
+    setIsPinVerified(false);
+    setEnteredPin("");
+    setAccessPinError("");
+
+    navigate(categoryId ? `/categorias/${categoryId}` : "/", { replace: true });
   }
 
   async function handleDeleteCard(): Promise<void> {
@@ -285,6 +299,13 @@ export default function ManageCardsPage() {
                 })}
               </ul>
             )}
+            <button
+              type="button"
+              onClick={handleConfirm}
+              className="mt-6 w-full rounded-xl bg-brand-primary px-4 py-3 font-semibold text-white transition-colors hover:bg-brand-hover"
+            >
+              Confirmar
+            </button>
           </>
         )}
       </section>

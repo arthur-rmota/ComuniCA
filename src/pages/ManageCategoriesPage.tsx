@@ -694,6 +694,9 @@ export default function ManageCategoriesPage() {
                                   setOpenCategoryMenuId(null);
                                   navigate(
                                     `/perfil/categorias/${category.id}/cartoes`,
+                                    {
+                                      state: { origin: "manage-categories" },
+                                    },
                                   );
                                 }}
                                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-app-text transition-colors hover:bg-stone-100"
@@ -732,6 +735,13 @@ export default function ManageCategoriesPage() {
                 ))}
               </ul>
             )}
+            <button
+              type="button"
+              onClick={handleBack}
+              className="mt-6 w-full rounded-xl bg-brand-primary px-4 py-3 font-semibold text-white transition-colors hover:bg-brand-hover"
+            >
+              Confirmar
+            </button>
           </>
         )}
       </section>

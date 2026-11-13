@@ -203,7 +203,9 @@ export default function CategoryCardsPage() {
         type="button"
         onClick={() => {
           if (categoryId) {
-            navigate(`/perfil/categorias/${categoryId}/cartoes`);
+            navigate(`/perfil/categorias/${categoryId}/cartoes`, {
+              state: { origin: "category" },
+            });
           }
         }}
         aria-label="Gerenciar categorias"
