@@ -5,6 +5,7 @@ import {
   Bell,
   CircleHelp,
   LayoutGrid,
+  Info,
 } from "lucide-react";
 
 import { ProfileInfo } from "../components/profile/ProfileInfo";
@@ -122,6 +123,14 @@ function ProfilePage() {
               <div className="mx-4 h-px bg-app-background" />
 
               <ProfileMenuItem icon={CircleHelp} label="Idioma" disabled />
+
+              <div className="mx-4 h-px bg-app-background" />
+
+              <ProfileMenuItem
+                icon={Info}
+                label="Sobre o ComuniCA"
+                onClick={() => navigate("/sobre")}
+              />
             </div>
           </section>
         </div>

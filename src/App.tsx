@@ -12,6 +12,7 @@ import ManageQuickPhrasesPage from "./pages/ManageQuickPhrasesPage";
 import RecoverPinPage from "./pages/RecoverPinPage";
 import ManageCardsPage from "./pages/ManageCardsPage";
 import CategoryCardsPage from "./pages/CategoryCardsPage";
+import AboutPage from "./pages/AboutPage";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           element={<ManageCardsPage />}
         />
         <Route path="/categorias/:categoryId" element={<CategoryCardsPage />} />
+        <Route path="/sobre" element={<AboutPage />} />
       </Routes>
 
       <BottomNavigation />
