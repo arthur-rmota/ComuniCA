@@ -43,9 +43,11 @@ export default function AboutPage() {
           </p>
 
           <p className="mt-5 text-sm leading-relaxed text-app-muted">
-            O ComuniCA é um aplicativo desenvolvido para facilitar a comunicação
-            por meio de símbolos, palavras e reprodução de voz, oferecendo uma
-            experiência acessível e personalizável.
+            O ComuniCA é um aplicativo em desenvolvimento que busca facilitar a
+            comunicação de crianças com dificuldades na fala por meio de
+            símbolos, palavras e reprodução de voz. Seu objetivo é tornar a
+            comunicação mais simples, acessível e personalizada, atendendo às
+            necessidades de cada usuário.
           </p>
         </div>
       </section>
