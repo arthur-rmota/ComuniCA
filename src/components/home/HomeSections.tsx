@@ -1,57 +1,104 @@
 import { useEffect, useState } from "react";
+import { ArrowUpRight, Folder } from "lucide-react";
+import { useNavigate } from "react-router";
+
 import { getCategories } from "../../services/categoryService";
 import type { Category } from "../../types/category";
-import { useNavigate } from "react-router";
+import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
 
 function HomeSections() {
   const navigate = useNavigate();
+
   const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
+    let active = true;
+
     async function loadCategories() {
       try {
         const data = await getCategories();
-        setCategories(data);
-      } catch {
-        setError("Não foi possível carregar as categorias.");
+
+        if (active) {
+          setCategories(data);
+          setError("");
+        }
+      } catch (error) {
+        console.error("Erro ao carregar categorias:", error);
+
+        if (active) {
+          setError("Não foi possível carregar as categorias.");
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
       }
     }
 
-    loadCategories();
+    void loadCategories();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   return (
-    <section className="mt-4">
-      <h2 className="mb-2 text-sm font-semibold text-app-text">Seções</h2>
-
-      {error && <p className="text-sm text-red-600">{error}</p>}
-
-      <div className="grid grid-cols-2 gap-3">
-        {categories.map((category) => (
-          <article
-            key={category.id}
-            className="flex min-h-32 flex-col justify-between rounded-xl p-3"
-            style={{ backgroundColor: category.color }}
-          >
-            <div>
-              <h3 className="font-semibold text-app-text">{category.name}</h3>
-
-              <p className="mt-1 text-xs text-app-text">
-                {category.description}
-              </p>
-            </div>
-
-            <button
-              onClick={() => navigate(`/categorias/${category.id}`)}
-              className="mt-3 self-start rounded-full bg-white px-4 py-1 text-xs font-medium text-app-text"
-            >
-              Abrir
-            </button>
-          </article>
-        ))}
+    <section className="mt-6">
+      <div className="mb-4">
+        <h2 className="text-xl font-bold text-app-text">Categorias</h2>
       </div>
+
+      {error && (
+        <p role="alert" className="mb-4 text-sm text-app-danger">
+          {error}
+        </p>
+      )}
+
+      {loading ? (
+        <p className="text-sm text-app-muted">Carregando categorias...</p>
+      ) : categories.length === 0 ? (
+        <div className="rounded-2xl bg-white p-5">
+          <p className="text-sm text-app-muted">
+            Nenhuma categoria disponível.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-3">
+          {categories.map((category) => {
+            const selectedIcon = quickPhraseIcons.find(
+              (item) => item.id === category.icon,
+            );
+
+            const Icon = selectedIcon?.Icon ?? Folder;
+
+            return (
+              <button
+                key={category.id}
+                type="button"
+                onClick={() => navigate(`/categorias/${category.id}`)}
+                aria-label={`Abrir categoria ${category.name}`}
+                className="flex min-h-40 min-w-0 flex-col items-center justify-center gap-4 rounded-2xl p-4 text-center transition-transform duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+                style={{
+                  backgroundColor: category.color,
+                }}
+              >
+                <Icon
+                  size={48}
+                  color="#292524"
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+
+                <span className="break-words text-base font-bold leading-tight text-app-text">
+                  {category.name}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }
