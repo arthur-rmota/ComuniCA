@@ -44,7 +44,7 @@ function HomeSections() {
             </div>
 
             <button
-              onClick={() => navigate(`/categorias/&{category.id}`)}
+              onClick={() => navigate(`/categorias/${category.id}`)}
               className="mt-3 self-start rounded-full bg-white px-4 py-1 text-xs font-medium text-app-text"
             >
               Abrir
