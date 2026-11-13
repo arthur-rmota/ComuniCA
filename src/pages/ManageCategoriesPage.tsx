@@ -17,6 +17,7 @@ import {
   EllipsisVertical,
   Pencil,
   Trash2,
+  LayoutGrid,
 } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
@@ -687,7 +688,19 @@ export default function ManageCategoriesPage() {
                                   : "bottom-full mb-2"
                               }`}
                             >
-                              {" "}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenCategoryMenuId(null);
+                                  navigate(
+                                    `/perfil/categorias/${category.id}/cartoes`,
+                                  );
+                                }}
+                                className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-app-text transition-colors hover:bg-stone-100"
+                              >
+                                <LayoutGrid size={16} aria-hidden="true" />
+                                Gerenciar cartões
+                              </button>{" "}
                               <button
                                 type="button"
                                 onClick={() => {
@@ -697,7 +710,7 @@ export default function ManageCategoriesPage() {
                                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-app-text transition-colors hover:bg-stone-100"
                               >
                                 <Pencil size={16} aria-hidden="true" />
-                                Editar
+                                Editar Categoria
                               </button>
                               <button
                                 type="button"

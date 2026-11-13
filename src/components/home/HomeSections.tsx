@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import { getCategories } from "../../services/categoryService";
 import type { Category } from "../../types/category";
-import { getCards } from "../../services/cardService";
-import type { Card } from "../../types/card";
-import { speak } from "../../utils/speech";
+import { useNavigate } from "react-router";
 
 function HomeSections() {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [cards, setCards] = useState<Card[]>([]);
 
   useEffect(() => {
     async function loadCategories() {
@@ -23,17 +21,6 @@ function HomeSections() {
 
     loadCategories();
   }, []);
-
-  async function handleOpenCategory(categoryId: string) {
-    try {
-      const data = await getCards();
-
-      setCards(data.filter((card) => card.categoryId === categoryId));
-      setSelectedCategory(categoryId);
-    } catch {
-      setError("Não foi possível carregar os cartões.");
-    }
-  }
 
   return (
     <section className="mt-4">
@@ -57,7 +44,7 @@ function HomeSections() {
             </div>
 
             <button
-              onClick={() => handleOpenCategory(category.id)}
+              onClick={() => navigate(`/categorias/&{category.id}`)}
               className="mt-3 self-start rounded-full bg-white px-4 py-1 text-xs font-medium text-app-text"
             >
               Abrir
@@ -65,40 +52,6 @@ function HomeSections() {
           </article>
         ))}
       </div>
-      {selectedCategory && (
-        <div className="mt-5">
-          <h2 className="mb-3 text-lg font-semibold text-app-text">
-            {
-              categories.find((category) => category.id === selectedCategory)
-                ?.name
-            }
-          </h2>
-
-          {cards.length === 0 ? (
-            <p className="text-sm text-gray-600">
-              Ainda não existem cartões nesta categoria.
-            </p>
-          ) : (
-            <div className="grid grid-cols-2 gap-3">
-              {cards.map((card) => (
-                <button
-                  key={card.id}
-                  type="button"
-                  onClick={() => speak(card.speechText)}
-                  aria-label={`Falar: ${card.speechText}`}
-                  className="rounded-xl border bg-white p-4 text-left transition active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#383838]"
-                >
-                  <h3 className="font-semibold text-app-text">{card.title}</h3>
-
-                  <p className="mt-1 text-sm text-gray-600">
-                    {card.speechText}
-                  </p>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
     </section>
   );
 }
