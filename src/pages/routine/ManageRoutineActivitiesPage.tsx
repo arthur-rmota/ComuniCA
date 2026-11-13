@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { ArrowLeft, CalendarCheck2, Pencil, Plus, Trash2 } from "lucide-react";
-import { getCards } from "../services/cardService";
-import { getQuickPhrases } from "../services/quickPhraseService";
-import { getCategories } from "../services/categoryService";
-import type { Card } from "../types/card";
-import type { QuickPhrase } from "../types/quickPhrase";
-import { useProfileContext } from "../contexts/ProfileContext";
-import { PinVerificationForm } from "../components/profile/PinVerificationForm";
-import { quickPhraseIcons } from "../constants/quickPhraseIcons";
-import { routineService } from "../services/routineService";
+import { getCards } from "../../services/cardService";
+import { getQuickPhrases } from "../../services/quickPhraseService";
+import { getCategories } from "../../services/categoryService";
+import type { Card } from "../../types/card";
+import type { QuickPhrase } from "../../types/quickPhrase";
+import { useProfileContext } from "../../contexts/ProfileContext";
+import { PinVerificationForm } from "../../components/profile/PinVerificationForm";
+import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
+import { routineService } from "../../services/routineService";
 
 import type {
   RoutineActivity,
   RoutinePeriod,
   RoutineSection,
-} from "../types/routine";
+} from "../../types/routine";
 
 type ActivityFormData = Pick<
   RoutineActivity,

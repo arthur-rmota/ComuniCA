@@ -9,14 +9,14 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-import { routineService } from "../services/routineService";
-import { quickPhraseIcons } from "../constants/quickPhraseIcons";
+import { routineService } from "../../services/routineService";
+import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
 
 import type {
   RoutineActivity,
   RoutinePeriod,
   RoutineSection,
-} from "../types/routine";
+} from "../../types/routine";
 
 const periods = [
   {

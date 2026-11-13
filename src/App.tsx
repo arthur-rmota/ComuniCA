@@ -1,23 +1,23 @@
 import { Routes, Route } from "react-router";
 import { ProfileProvider } from "./contexts/ProfileContext";
-import HomePage from "./pages/HomePage";
-import QuickPhrasesPage from "./pages/QuickPhrasesPage";
-import AgendaPage from "./pages/AgendaPage";
-import ProfilePage from "./pages/ProfilePage";
+import HomePage from "./pages/home/HomePage";
+import QuickPhrasesPage from "./pages/phrases/QuickPhrasesPage";
+import AgendaPage from "./pages/routine/AgendaPage";
+import ProfilePage from "./pages/profile/ProfilePage";
 import BottomNavigation from "./components/layout/BottomNavigation";
-import ManageProfilePage from "./pages/ManageProfilePage";
-import ManageCategoriesPage from "./pages/ManageCategoriesPage";
-import ManageQuickPhrasesPage from "./pages/ManageQuickPhrasesPage";
-import RecoverPinPage from "./pages/RecoverPinPage";
-import ManageCardsPage from "./pages/ManageCardsPage";
-import CategoryCardsPage from "./pages/CategoryCardsPage";
-import AboutPage from "./pages/AboutPage";
-import EmergencyPage from "./pages/EmergencyPage";
-import ManageEmergencyPhrasesPage from "./pages/ManageEmergencyPhrasesPage";
-import RoutineSectionPage from "./pages/RoutineSectionPage";
-import ManageRoutinePage from "./pages/ManageRoutinePage";
-import ManageRoutineActivitiesPage from "./pages/ManageRoutineActivitiesPage";
-import RoutineActivityPage from "./pages/RoutineActivityPage";
+import ManageProfilePage from "./pages/profile/ManageProfilePage";
+import ManageCategoriesPage from "./pages/categories/ManageCategoriesPage";
+import ManageQuickPhrasesPage from "./pages/phrases/ManageQuickPhrasesPage";
+import RecoverPinPage from "./pages/profile/RecoverPinPage";
+import ManageCardsPage from "./pages/categories/ManageCardsPage";
+import CategoryCardsPage from "./pages/categories/CategoryCardsPage";
+import AboutPage from "./pages/about/AboutPage";
+import EmergencyPage from "./pages/emergency/EmergencyPage";
+import ManageEmergencyPhrasesPage from "./pages/emergency/ManageEmergencyPhrasesPage";
+import RoutineSectionPage from "./pages/routine/RoutineSectionPage";
+import ManageRoutinePage from "./pages/routine/ManageRoutinePage";
+import ManageRoutineActivitiesPage from "./pages/routine/ManageRoutineActivitiesPage";
+import RoutineActivityPage from "./pages/routine/RoutineActivityPage";
 
 function App() {
   return (

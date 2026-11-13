@@ -8,22 +8,22 @@ import {
   Volume2,
 } from "lucide-react";
 
-import { routineService } from "../services/routineService";
-import { getCards, recordCardUse } from "../services/cardService";
+import { routineService } from "../../services/routineService";
+import { getCards, recordCardUse } from "../../services/cardService";
 import {
   getQuickPhrases,
   recordQuickPhraseUse,
-} from "../services/quickPhraseService";
-import { getCategories } from "../services/categoryService";
+} from "../../services/quickPhraseService";
+import { getCategories } from "../../services/categoryService";
 
-import { quickPhraseIcons } from "../constants/quickPhraseIcons";
-import QuickPhraseCard from "../components/common/QuickPhraseCard";
-import { speak } from "../utils/speech";
+import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
+import QuickPhraseCard from "../../components/common/QuickPhraseCard";
+import { speak } from "../../utils/speech";
 
-import type { RoutineActivity, RoutineSection } from "../types/routine";
-import type { Card } from "../types/card";
-import type { QuickPhrase } from "../types/quickPhrase";
-import type { Category } from "../types/category";
+import type { RoutineActivity, RoutineSection } from "../../types/routine";
+import type { Card } from "../../types/card";
+import type { QuickPhrase } from "../../types/quickPhrase";
+import type { Category } from "../../types/category";
 
 function RoutineActivityPage() {
   const navigate = useNavigate();

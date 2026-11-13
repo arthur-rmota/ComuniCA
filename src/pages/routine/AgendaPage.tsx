@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { AlertCircle, CalendarCheck2, Pencil } from "lucide-react";
 
-import { routineService } from "../services/routineService";
-import { quickPhraseIcons } from "../constants/quickPhraseIcons";
-import type { RoutineSection } from "../types/routine";
+import { routineService } from "../../services/routineService";
+import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
+import type { RoutineSection } from "../../types/routine";
 
 function AgendaPage() {
   const navigate = useNavigate();

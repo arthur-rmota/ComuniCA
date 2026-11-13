@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { ArrowLeft, CalendarCheck2, Pencil, Plus, Trash2 } from "lucide-react";
 
-import { useProfileContext } from "../contexts/ProfileContext";
-import { PinVerificationForm } from "../components/profile/PinVerificationForm";
-import { quickPhraseIcons } from "../constants/quickPhraseIcons";
-import { routineService } from "../services/routineService";
+import { useProfileContext } from "../../contexts/ProfileContext";
+import { PinVerificationForm } from "../../components/profile/PinVerificationForm";
+import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
+import { routineService } from "../../services/routineService";
 
-import type { RoutineSection } from "../types/routine";
+import type { RoutineSection } from "../../types/routine";
 
 const sectionColors = [
   "#DDEBFA",
