@@ -28,11 +28,11 @@ export default function AboutPage() {
 
       <section className="mt-4 rounded-2xl bg-white p-6">
         <div className="flex flex-col items-center text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-app-background">
-            <MessageCircleHeart
-              size={44}
-              className="text-brand-primary"
-              aria-hidden="true"
+          <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-2xl bg-app-background p-2">
+            <img
+              src="/comunica2-icon.png"
+              alt="Logo do ComuniCA"
+              className="h-full w-full object-contain"
             />
           </div>
 
