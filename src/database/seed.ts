@@ -68,6 +68,67 @@ export async function seedDatabase(): Promise<void> {
 
         await db.seedMetadata.put({ key: "quick-phrases-initialized" });
       }
+
+      // Migração: manter apenas quatro frases rápidas fixas.
+      const quickPhrasesMigration =
+        await db.seedMetadata.get("quick-phrases-v2");
+
+      if (!quickPhrasesMigration) {
+        const fixedPhraseIds = new Set(
+          defaultQuickPhrases.map((phrase) => phrase.id),
+        );
+
+        const existingPhrases = await db.quickPhrases.toArray();
+
+        // Transforma antigas frases predefinidas em personalizadas.
+        for (const phrase of existingPhrases) {
+          if (fixedPhraseIds.has(phrase.id)) {
+            continue;
+          }
+
+          if (phrase.userId === null) {
+            await db.quickPhrases.update(phrase.id, {
+              userId: "local-user",
+            });
+          }
+        }
+
+        // Insere ou atualiza as quatro frases fixas.
+        for (const defaultPhrase of defaultQuickPhrases) {
+          const existingPhrase = await db.quickPhrases.get(defaultPhrase.id);
+
+          if (existingPhrase) {
+            await db.quickPhrases.put(defaultPhrase);
+          } else {
+            await db.quickPhrases.add(defaultPhrase);
+          }
+        }
+
+        // Registra que a migração foi concluída.
+        await db.seedMetadata.put({
+          key: "quick-phrases-v2",
+        });
+      }
+
+      // Sincroniza as quatro frases rápidas fixas com o seed.
+      // As frases personalizadas não são modificadas.
+      for (const defaultPhrase of defaultQuickPhrases) {
+        const existingPhrase = await db.quickPhrases.get(defaultPhrase.id);
+
+        if (!existingPhrase) {
+          await db.quickPhrases.add(defaultPhrase);
+          continue;
+        }
+
+        await db.quickPhrases.update(defaultPhrase.id, {
+          userId: null,
+          text: defaultPhrase.text,
+          categoryId: defaultPhrase.categoryId,
+          position: defaultPhrase.position,
+          icon: defaultPhrase.icon,
+          color: defaultPhrase.color,
+        });
+      }
     },
   );
 }

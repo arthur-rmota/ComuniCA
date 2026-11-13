@@ -8,4 +8,5 @@ export interface Card {
   ownerId: string | null;
   keywords: string[];
   isActive: boolean;
+  icon?: string;
 }

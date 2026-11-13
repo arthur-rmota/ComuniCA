@@ -35,6 +35,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     const isProtectedRoute =
       location.pathname === "/perfil/gerenciar" ||
       location.pathname === "/perfil/categorias" ||
+      location.pathname.startsWith("/perfil/categorias/") ||
       location.pathname === "/rapidos/gerenciar";
 
     if (!isProtectedRoute) {

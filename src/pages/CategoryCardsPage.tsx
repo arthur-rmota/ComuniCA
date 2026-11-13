@@ -1,13 +1,12 @@
-
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
-
 import { categoryService } from "../services/categoryService";
 import { cardService } from "../services/cardService";
 import type { Category } from "../types/category";
 import type { Card } from "../types/card";
 import { speak } from "../utils/speech";
+import { quickPhraseIcons } from "../constants/quickPhraseIcons";
 
 export default function CategoryCardsPage() {
   const navigate = useNavigate();
@@ -28,16 +27,13 @@ export default function CategoryCardsPage() {
         }
 
         const categories = await categoryService.getAll();
-        const selected = categories.find(
-          (item) => item.id === categoryId,
-        );
+        const selected = categories.find((item) => item.id === categoryId);
 
         if (!selected) {
           throw new Error("Categoria não encontrada.");
         }
 
-        const categoryCards =
-          await cardService.getByCategory(categoryId);
+        const categoryCards = await cardService.getByCategory(categoryId);
 
         if (active) {
           setCategory(selected);
@@ -80,9 +76,7 @@ export default function CategoryCardsPage() {
 
       <section className="mt-4 rounded-2xl bg-white p-5">
         {loading ? (
-          <p className="text-sm text-app-muted">
-            Carregando cartões...
-          </p>
+          <p className="text-sm text-app-muted">Carregando cartões...</p>
         ) : error ? (
           <p role="alert" className="text-sm text-app-danger">
             {error}
@@ -93,23 +87,42 @@ export default function CategoryCardsPage() {
           </p>
         ) : (
           <div className="grid grid-cols-2 gap-3">
-            {cards.map((card) => (
-              <button
-                key={card.id}
-                type="button"
-                onClick={() => speak(card.speechText)}
-                aria-label={`Falar: ${card.speechText}`}
-                className="rounded-xl border border-app-border bg-white p-4 text-left transition active:scale-95"
-              >
-                <h2 className="font-semibold text-app-text">
-                  {card.title}
-                </h2>
+            {cards.map((card) => {
+              const selectedIcon = quickPhraseIcons.find(
+                (item) => item.id === (card.icon ?? "message-circle"),
+              );
 
-                <p className="mt-1 text-sm text-app-muted">
-                  {card.speechText}
-                </p>
-              </button>
-            ))}
+              const Icon = selectedIcon?.Icon;
+
+              return (
+                <button
+                  key={card.id}
+                  type="button"
+                  onClick={() => speak(card.speechText)}
+                  aria-label={`Falar: ${card.speechText}`}
+                  className="flex min-h-36 flex-col items-center justify-center gap-3 rounded-xl border border-app-border bg-white p-4 text-center transition active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+                >
+                  {Icon ? (
+                    <Icon
+                      size={44}
+                      color="#383838"
+                      strokeWidth={1.8}
+                      aria-hidden="true"
+                    />
+                  ) : card.image ? (
+                    <img
+                      src={card.image}
+                      alt=""
+                      className="h-16 w-16 object-contain"
+                    />
+                  ) : null}
+
+                  <span className="font-semibold text-app-text">
+                    {card.title}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         )}
       </section>

@@ -3,6 +3,7 @@ import { ArrowLeft, Plus, Pencil } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useProfileContext } from "../contexts/ProfileContext";
 import { PinVerificationForm } from "../components/profile/PinVerificationForm";
+import { quickPhraseIcons } from "../constants/quickPhraseIcons";
 import {
   getQuickPhrases,
   createQuickPhrase,
@@ -227,30 +228,62 @@ export default function ManageQuickPhrasesPage() {
               <p className="text-sm text-gray-600">Nenhuma frase cadastrada.</p>
             ) : (
               <ul className="flex flex-col gap-3">
-                {phrases.map((phrase) => (
-                  <li
-                    key={phrase.id}
-                    className="rounded-xl border border-gray-200 p-3"
-                  >
-                    <p className="font-medium text-app-text">{phrase.text}</p>
+                {phrases.map((phrase) => {
+                  const selectedIcon = quickPhraseIcons.find(
+                    (item) => item.id === phrase.icon,
+                  );
 
-                    <p className="mt-1 text-xs text-gray-500">
-                      {phrase.userId === "local-user"
-                        ? "Frase personalizada"
-                        : "Frase predefinida"}
-                    </p>
-                    {phrase.userId === "local-user" && (
-                      <button
-                        type="button"
-                        onClick={() => setEditingPhrase(phrase)}
-                        className="mt-3 flex items-center gap-2 rounded-lg bg-stone-100 px-3 py-2 text-sm font-medium text-app-text hover:bg-stone-200"
-                      >
-                        <Pencil size={16} />
-                        Editar
-                      </button>
-                    )}
-                  </li>
-                ))}
+                  const Icon = selectedIcon?.Icon;
+
+                  const isCustom = phrase.userId === "local-user";
+
+                  return (
+                    <li
+                      key={phrase.id}
+                      className="rounded-xl border border-app-border bg-white p-3 sm:p-4"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl"
+                          style={{ backgroundColor: phrase.color }}
+                        >
+                          {Icon && (
+                            <Icon
+                              size={28}
+                              color="#383838"
+                              aria-hidden="true"
+                            />
+                          )}
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <h3 className="break-words font-semibold text-app-text">
+                            {phrase.text}
+                          </h3>
+
+                          <p className="mt-1 text-xs text-app-muted">
+                            {isCustom
+                              ? "Frase personalizada"
+                              : "Frase predefinida"}
+                          </p>
+                        </div>
+                      </div>
+
+                      {isCustom && (
+                        <div className="mt-3 flex justify-end border-t border-app-border pt-3">
+                          <button
+                            type="button"
+                            onClick={() => setEditingPhrase(phrase)}
+                            className="flex items-center justify-center gap-2 rounded-xl bg-stone-100 px-4 py-2 text-sm font-medium text-app-text transition-colors hover:bg-stone-200"
+                          >
+                            <Pencil size={16} aria-hidden="true" />
+                            Editar
+                          </button>
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             )}
             <button
