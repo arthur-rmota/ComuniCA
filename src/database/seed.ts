@@ -4,6 +4,7 @@ import { defaultCards } from "./seeds/cards";
 import { defaultQuickPhrases } from "./seeds/quickPhrases";
 import { defaultEmergencyPhrases } from "./seeds/emergencyPhrases";
 import { defaultRoutineSections } from "./seeds/routineSections";
+import { defaultRoutineActivities } from "./seeds/routineActivities";
 
 export async function seedDatabase(): Promise<void> {
   await db.transaction(
@@ -15,6 +16,7 @@ export async function seedDatabase(): Promise<void> {
       "seedMetadata",
       "emergencyPhrases",
       "routineSections",
+      "routineActivities",
     ],
     async () => {
       const categoriesInitialized = await db.seedMetadata.get(
@@ -172,6 +174,60 @@ export async function seedDatabase(): Promise<void> {
 
         await db.seedMetadata.put({
           key: "routine-sections-initialized",
+        });
+      }
+
+      // Inicializa atividades demonstrativas apenas uma vez.
+      // Não altera atividades já cadastradas pelo responsável.
+      const demoActivitiesInitialized = await db.seedMetadata.get(
+        "routine-demo-activities-v1",
+      );
+
+      if (!demoActivitiesInitialized) {
+        const existingSections = await db.routineSections.toArray();
+        const existingActivities = await db.routineActivities.toArray();
+        const existingCards = await db.cards.toArray();
+        const existingPhrases = await db.quickPhrases.toArray();
+
+        const sectionIds = new Set(
+          existingSections.map((section) => section.id),
+        );
+
+        const cardIds = new Set(
+          existingCards.filter((card) => card.isActive).map((card) => card.id),
+        );
+
+        const phraseIds = new Set(existingPhrases.map((phrase) => phrase.id));
+
+        // Preserva seções que já possuem atividades personalizadas.
+        const sectionsWithActivities = new Set(
+          existingActivities.map((activity) => activity.sectionId),
+        );
+
+        for (const activity of defaultRoutineActivities) {
+          if (!sectionIds.has(activity.sectionId)) continue;
+
+          if (sectionsWithActivities.has(activity.sectionId)) {
+            continue;
+          }
+
+          const existing = await db.routineActivities.get(activity.id);
+
+          if (existing) continue;
+
+          await db.routineActivities.add({
+            ...activity,
+            linkedCardIds: activity.linkedCardIds.filter((id) =>
+              cardIds.has(id),
+            ),
+            linkedQuickPhraseIds: activity.linkedQuickPhraseIds.filter((id) =>
+              phraseIds.has(id),
+            ),
+          });
+        }
+
+        await db.seedMetadata.put({
+          key: "routine-demo-activities-v1",
         });
       }
     },
