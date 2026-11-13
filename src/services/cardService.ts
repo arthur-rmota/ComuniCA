@@ -43,3 +43,21 @@ export async function getCards(): Promise<Card[]> {
 
   return cards.filter((card) => card.isActive);
 }
+
+export async function recordCardUse(id: string): Promise<number> {
+  return db.transaction("rw", db.cards, async () => {
+    const card = await db.cards.get(id);
+
+    if (!card || !card.isActive) {
+      throw new Error("Cartão não encontrado.");
+    }
+
+    const nextCount = (card.usageCount ?? 0) + 1;
+
+    await db.cards.update(id, {
+      usageCount: nextCount,
+    });
+
+    return nextCount;
+  });
+}

@@ -46,3 +46,21 @@ export async function deleteQuickPhrase(id: string): Promise<void> {
 
   await db.quickPhrases.delete(id);
 }
+
+export async function recordQuickPhraseUse(id: string): Promise<number> {
+  return db.transaction("rw", db.quickPhrases, async () => {
+    const phrase = await db.quickPhrases.get(id);
+
+    if (!phrase) {
+      throw new Error("Frase não encontrada.");
+    }
+
+    const nextCount = (phrase.usageCount ?? 0) + 1;
+
+    await db.quickPhrases.update(id, {
+      usageCount: nextCount,
+    });
+
+    return nextCount;
+  });
+}

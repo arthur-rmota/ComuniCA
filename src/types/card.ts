@@ -9,4 +9,5 @@ export interface Card {
   keywords: string[];
   isActive: boolean;
   icon?: string;
+  usageCount?: number;
 }

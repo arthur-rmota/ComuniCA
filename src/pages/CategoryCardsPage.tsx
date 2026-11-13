@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, Smile, Volume2, Pencil } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
-
+import { recordCardUse } from "../services/cardService";
 import { categoryService } from "../services/categoryService";
 import { cardService } from "../services/cardService";
 import type { Category } from "../types/category";
@@ -70,7 +70,30 @@ export default function CategoryCardsPage() {
 
     speak(
       card.speechText,
-      () => setSpeakingCardId(card.id),
+      () => {
+        setSpeakingCardId(card.id);
+
+        // Cartões de emergência ficam fora das estatísticas gerais.
+        const isEmergency =
+          category?.name
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLocaleLowerCase("pt-BR") === "emergencia";
+
+        if (isEmergency) return;
+
+        void recordCardUse(card.id)
+          .then((nextCount) => {
+            setCards((currentCards) =>
+              currentCards.map((item) =>
+                item.id === card.id ? { ...item, usageCount: nextCount } : item,
+              ),
+            );
+          })
+          .catch((error) => {
+            console.error("Erro ao registrar uso do cartão:", error);
+          });
+      },
       () =>
         setSpeakingCardId((currentId) =>
           currentId === card.id ? null : currentId,

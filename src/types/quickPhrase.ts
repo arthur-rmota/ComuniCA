@@ -6,4 +6,5 @@ export interface QuickPhrase {
   position: number;
   icon: string;
   color: string;
+  usageCount?: number;
 }
