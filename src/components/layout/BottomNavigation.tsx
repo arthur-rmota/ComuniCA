@@ -1,4 +1,3 @@
-
 import { NavLink } from "react-router";
 import {
   House,
@@ -19,7 +18,7 @@ function BottomNavigation() {
     },
     {
       to: "/agenda",
-      label: "Agenda",
+      label: "Rotina",
       icon: CalendarDays,
       end: false,
     },
@@ -46,9 +45,7 @@ function BottomNavigation() {
             end={item.end}
             className={({ isActive }) =>
               `flex min-w-0 flex-col items-center gap-1 px-1 ${
-                isActive
-                  ? "font-bold text-brand-primary"
-                  : "text-gray-500"
+                isActive ? "font-bold text-brand-primary" : "text-gray-500"
               }`
             }
           >
@@ -81,9 +78,7 @@ function BottomNavigation() {
             end={item.end}
             className={({ isActive }) =>
               `flex min-w-0 flex-col items-center gap-1 px-1 ${
-                isActive
-                  ? "font-bold text-brand-primary"
-                  : "text-gray-500"
+                isActive ? "font-bold text-brand-primary" : "text-gray-500"
               }`
             }
           >

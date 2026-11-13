@@ -37,7 +37,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       location.pathname === "/perfil/categorias" ||
       location.pathname.startsWith("/perfil/categorias/") ||
       location.pathname === "/rapidos/gerenciar" ||
-      location.pathname === "/emergencia/gerenciar";
+      location.pathname === "/emergencia/gerenciar" ||
+      location.pathname.startsWith("/rotina/gerenciar");
 
     if (!isProtectedRoute) {
       setIsPinVerified(false);

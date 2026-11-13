@@ -5,6 +5,7 @@ import type { Card } from "../types/card";
 import type { QuickPhrase } from "../types/quickPhrase";
 import type { QuickPhraseFavorite } from "../types/quickPhraseFavorite";
 import type { EmergencyPhrase } from "../types/emergencyPhrase";
+import type { RoutineSection, RoutineActivity } from "../types/routine";
 
 export class ComuniCADatabase extends Dexie {
   users!: Table<User, string>;
@@ -14,6 +15,8 @@ export class ComuniCADatabase extends Dexie {
   quickPhraseFavorites!: Table<QuickPhraseFavorite, string>;
   seedMetadata!: Table<{ key: string }, string>;
   emergencyPhrases!: Table<EmergencyPhrase, string>;
+  routineSections!: Table<RoutineSection, string>;
+  routineActivities!: Table<RoutineActivity, string>;
 
   constructor() {
     super("ComuniCADatabase");
@@ -63,6 +66,18 @@ export class ComuniCADatabase extends Dexie {
       quickPhraseFavorites: "id, userId, quickPhraseId, [userId+quickPhraseId]",
       seedMetadata: "key",
       emergencyPhrases: "id, position",
+    });
+
+    this.version(8).stores({
+      users: "id, email",
+      categories: "id, name, ownerId, position",
+      cards: "id, categoryId, ownerId, isActive",
+      quickPhrases: "id, userId, categoryId, position",
+      quickPhraseFavorites: "id, userId, quickPhraseId, [userId+quickPhraseId]",
+      seedMetadata: "key",
+      emergencyPhrases: "id, position",
+      routineSections: "id, position",
+      routineActivities: "id, sectionId, period, position",
     });
   }
 }

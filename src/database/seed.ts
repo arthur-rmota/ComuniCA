@@ -3,15 +3,19 @@ import { defaultCategories } from "./seeds/categories";
 import { defaultCards } from "./seeds/cards";
 import { defaultQuickPhrases } from "./seeds/quickPhrases";
 import { defaultEmergencyPhrases } from "./seeds/emergencyPhrases";
+import { defaultRoutineSections } from "./seeds/routineSections";
 
 export async function seedDatabase(): Promise<void> {
   await db.transaction(
     "rw",
-    db.categories,
-    db.cards,
-    db.quickPhrases,
-    db.seedMetadata,
-    db.emergencyPhrases,
+    [
+      "categories",
+      "cards",
+      "quickPhrases",
+      "seedMetadata",
+      "emergencyPhrases",
+      "routineSections",
+    ],
     async () => {
       const categoriesInitialized = await db.seedMetadata.get(
         "categories-initialized",
@@ -149,6 +153,25 @@ export async function seedDatabase(): Promise<void> {
 
         await db.seedMetadata.put({
           key: "emergency-phrases-initialized",
+        });
+      }
+
+      // Inicializa as seções da rotina apenas uma vez.
+      const routineInitialized = await db.seedMetadata.get(
+        "routine-sections-initialized",
+      );
+
+      if (!routineInitialized) {
+        for (const section of defaultRoutineSections) {
+          const existingSection = await db.routineSections.get(section.id);
+
+          if (!existingSection) {
+            await db.routineSections.add(section);
+          }
+        }
+
+        await db.seedMetadata.put({
+          key: "routine-sections-initialized",
         });
       }
     },
