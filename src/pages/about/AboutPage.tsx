@@ -55,7 +55,7 @@ export default function AboutPage() {
             <span>Comunicação Aumentativa e Alternativa</span>
           </div>
 
-          <p className="mt-5 text-left text-sm leading-7 text-[#775F54]">
+          <p className="mt-5 text-center text-sm leading-7 text-[#775F54]">
             O ComuniCA é um aplicativo em desenvolvimento que busca facilitar a
             comunicação de crianças com dificuldades na fala por meio de
             símbolos, palavras e reprodução de voz. Seu objetivo é tornar a
