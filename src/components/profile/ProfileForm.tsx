@@ -1,4 +1,3 @@
-
 import type { SubmitEvent } from "react";
 
 interface ProfileFormProps {
@@ -26,15 +25,18 @@ export function ProfileForm({
 }: ProfileFormProps) {
   const isEditing = mode === "edit";
 
+  const inputClassName =
+    "min-h-12 w-full rounded-xl border border-[#E7D5C8] bg-[#FFFCF9] px-4 py-3 text-base text-[#42251D] outline-none transition-colors focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]";
+
   return (
     <form
       onSubmit={onSubmit}
-      className={`${isEditing ? "" : "mt-6 "}flex flex-col gap-4`}
+      className={`${isEditing ? "" : "mt-6 "}flex flex-col gap-5`}
     >
       <div>
         <label
           htmlFor="profile-name"
-          className="mb-2 block font-medium text-app-text"
+          className="mb-2 block text-sm font-bold text-[#42251D]"
         >
           Nome
         </label>
@@ -45,14 +47,14 @@ export function ProfileForm({
           value={name}
           onChange={(event) => onNameChange(event.target.value)}
           placeholder={isEditing ? undefined : "Digite seu nome"}
-          className="w-full rounded-xl border border-[#E5E5E5] bg-[#F7F7F7] p-3 text-app-text outline-none focus:border-[#6254A3]"
+          className={inputClassName}
         />
       </div>
 
       <div>
         <label
           htmlFor="profile-email"
-          className="mb-2 block font-medium text-app-text"
+          className="mb-2 block text-sm font-bold text-[#42251D]"
         >
           E-mail
         </label>
@@ -63,12 +65,12 @@ export function ProfileForm({
           value={email}
           onChange={(event) => onEmailChange(event.target.value)}
           placeholder={isEditing ? undefined : "Digite seu e-mail"}
-          className="w-full rounded-xl border border-[#E5E5E5] bg-[#F7F7F7] p-3 text-app-text outline-none focus:border-[#6254A3]"
+          className={inputClassName}
         />
       </div>
 
       {error && (
-        <p role="alert" className="text-red-700">
+        <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
           {error}
         </p>
       )}
@@ -77,7 +79,7 @@ export function ProfileForm({
         <button
           type="submit"
           disabled={saving}
-          className={`rounded-xl bg-brand-primary hover:bg-brand-hover transition-colors p-3 font-semibold text-white disabled:opacity-50 ${
+          className={`min-h-12 rounded-xl bg-brand-primary px-4 py-3 font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-50 ${
             isEditing ? "flex-1" : "w-full"
           }`}
         >
@@ -94,7 +96,8 @@ export function ProfileForm({
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 rounded-xl bg-white p-3 font-semibold text-app-text"
+            disabled={saving}
+            className="min-h-12 flex-1 rounded-xl border border-[#E7D5C8] bg-white px-4 py-3 font-bold text-[#42251D] disabled:opacity-50"
           >
             Cancelar
           </button>

@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router";
 import {
-  UserCircle,
-  LockKeyhole,
   Bell,
   CircleHelp,
-  LayoutGrid,
   Info,
+  LayoutGrid,
+  LockKeyhole,
+  ShieldCheck,
+  UserRound,
+  UserRoundCog,
 } from "lucide-react";
 
 import { ProfileInfo } from "../../components/profile/ProfileInfo";
@@ -39,113 +41,149 @@ function ProfilePage() {
     handleSavePin,
   } = useProfileContext();
 
-  function handleManageProfile() {
-    if (!user) return;
-
+  function resetProtectedAccess() {
     setIsPinVerified(false);
     setEnteredPin("");
     setAccessPinError("");
+  }
 
+  function handleManageProfile() {
+    if (!user) return;
+
+    resetProtectedAccess();
     setName(user.name);
     setEmail(user.email);
-
     navigate("/perfil/gerenciar");
   }
 
   function handleManageCategories() {
     if (!user) return;
 
-    setIsPinVerified(false);
-    setEnteredPin("");
-    setAccessPinError("");
-
+    resetProtectedAccess();
     navigate("/perfil/categorias");
   }
 
   return (
-    <main className="min-h-screen bg-app-background p-4 pb-28">
-      <header className="mb-4 pt-2">
-        <h1 className="text-center text-2xl font-semibold text-app-text">
-          Perfil
-        </h1>
-      </header>
+    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-20 top-80 h-44 w-44 rounded-full bg-[#FFF0BB]/30"
+      />
 
-      {loading ? (
-        <p className="mt-4 text-app-text">Carregando perfil...</p>
-      ) : user ? (
-        <div className="mt-3 flex flex-col gap-4">
-          <ProfileInfo user={user} />
+      <div className="relative mx-auto w-full max-w-lg">
+        <header className="mb-6 flex items-center justify-center gap-3 pt-3">
+          <span
+            aria-hidden="true"
+            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFE0BD] text-brand-primary"
+          >
+            <UserRound size={27} strokeWidth={2.4} />
+          </span>
+          <h1 className="text-2xl font-extrabold tracking-tight text-[#42251D]">
+            Perfil
+          </h1>
+        </header>
 
-          {!user.pinHash && (
-            <PinSetupForm
-              pin={pin}
-              confirmPin={confirmPin}
-              pinError={pinError}
-              savingPin={savingPin}
-              onPinChange={setPin}
-              onConfirmPinChange={setConfirmPin}
-              onSubmit={handleSavePin}
-            />
-          )}
+        {loading ? (
+          <p className="rounded-3xl bg-white p-5 text-sm text-[#80685D] shadow-sm">
+            Carregando perfil...
+          </p>
+        ) : user ? (
+          <div className="flex flex-col gap-5">
+            <ProfileInfo user={user} />
 
-          <section className="mt-2">
-            <h2 className="mb-3 px-3 text-lg font-medium text-[#888888]">
-              Conta
+            {!user.pinHash && (
+              <section aria-label="Configuração de segurança">
+                <div className="mb-3 flex items-center gap-2 px-1">
+                  <ShieldCheck
+                    size={21}
+                    className="text-brand-primary"
+                    aria-hidden="true"
+                  />
+                  <h2 className="text-lg font-extrabold text-[#42251D]">
+                    Proteja suas configurações
+                  </h2>
+                </div>
+                <PinSetupForm
+                  pin={pin}
+                  confirmPin={confirmPin}
+                  pinError={pinError}
+                  savingPin={savingPin}
+                  onPinChange={setPin}
+                  onConfirmPinChange={setConfirmPin}
+                  onSubmit={handleSavePin}
+                />
+              </section>
+            )}
+
+            <section aria-label="Opções da conta">
+              <h2 className="mb-3 px-1 text-lg font-extrabold text-[#42251D]">
+                Minha conta
+              </h2>
+              <div className="divide-y divide-[#F1E4D9] overflow-hidden rounded-3xl border border-[#F5E9DF] bg-white shadow-[0_5px_14px_rgba(41,37,36,0.05)]">
+                <ProfileMenuItem
+                  icon={UserRoundCog}
+                  label="Gerenciar perfil"
+                  onClick={handleManageProfile}
+                  accent="orange"
+                />
+                <ProfileMenuItem
+                  icon={LayoutGrid}
+                  label="Gerenciar categorias"
+                  onClick={handleManageCategories}
+                  accent="green"
+                />
+                <ProfileMenuItem
+                  icon={LockKeyhole}
+                  label="Senha e Segurança"
+                  accent="purple"
+                  disabled
+                />
+                <ProfileMenuItem
+                  icon={Bell}
+                  label="Notificações"
+                  accent="blue"
+                  disabled
+                />
+                <ProfileMenuItem
+                  icon={CircleHelp}
+                  label="Idioma"
+                  accent="orange"
+                  disabled
+                />
+                <ProfileMenuItem
+                  icon={Info}
+                  label="Sobre o ComuniCA"
+                  onClick={() => navigate("/sobre")}
+                  accent="purple"
+                />
+              </div>
+            </section>
+          </div>
+        ) : (
+          <section className="rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_5px_14px_rgba(41,37,36,0.06)]">
+            <h2 className="text-lg font-extrabold text-[#42251D]">
+              Vamos criar seu perfil?
             </h2>
-
-            <div className="overflow-hidden rounded-2xl bg-white">
-              <ProfileMenuItem
-                icon={UserCircle}
-                label="Gerenciar perfil"
-                onClick={handleManageProfile}
-              />
-
-              <ProfileMenuItem
-                icon={LayoutGrid}
-                label="Gerenciar categorias"
-                onClick={handleManageCategories}
-              />
-
-              <div className="mx-4 h-px bg-app-background" />
-
-              <div className="mx-4 h-px bg-app-background" />
-
-              <ProfileMenuItem
-                icon={LockKeyhole}
-                label="Senha e Segurança"
-                disabled
-              />
-
-              <div className="mx-4 h-px bg-app-background" />
-
-              <ProfileMenuItem icon={Bell} label="Notificações" disabled />
-
-              <div className="mx-4 h-px bg-app-background" />
-
-              <ProfileMenuItem icon={CircleHelp} label="Idioma" disabled />
-
-              <div className="mx-4 h-px bg-app-background" />
-
-              <ProfileMenuItem
-                icon={Info}
-                label="Sobre o ComuniCA"
-                onClick={() => navigate("/sobre")}
-              />
-            </div>
+            <p className="mt-1 text-sm leading-relaxed text-[#80685D]">
+              Cadastre seus dados para personalizar o ComuniCA.
+            </p>
+            <ProfileForm
+              mode="register"
+              name={name}
+              email={email}
+              error={error}
+              saving={saving}
+              onNameChange={setName}
+              onEmailChange={setEmail}
+              onSubmit={handleRegister}
+            />
           </section>
-        </div>
-      ) : (
-        <ProfileForm
-          mode="register"
-          name={name}
-          email={email}
-          error={error}
-          saving={saving}
-          onNameChange={setName}
-          onEmailChange={setEmail}
-          onSubmit={handleRegister}
-        />
-      )}
+        )}
+      </div>
     </main>
   );
 }

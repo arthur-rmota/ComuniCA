@@ -1,33 +1,33 @@
 import type { User } from "../../types/user";
-import { UserRound } from "lucide-react";
 
 interface ProfileInfoProps {
   user: User;
 }
 
 export function ProfileInfo({ user }: ProfileInfoProps) {
+  const initial = user.name.trim().charAt(0).toLocaleUpperCase("pt-BR") || "U";
+
   return (
-    <section
-      className="flex items-center gap-4 rounded-2xl bg-white px-4 py-4 shadow-sm"
-      style={{ minHeight: 88 }}
-    >
+    <section className="relative flex min-h-28 items-center gap-4 overflow-hidden rounded-3xl border-2 border-white/70 bg-[#FBDDBA] px-4 py-5 shadow-[0_5px_14px_rgba(41,37,36,0.06)]">
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-5 -top-6 h-24 w-24 rounded-full bg-white/20"
+      />
       <div
-        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full"
-        style={{
-          width: 56,
-          height: 56,
-          backgroundColor: "#E3DDF8",
-        }}
+        aria-hidden="true"
+        className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-white bg-white/75 text-2xl font-extrabold text-[#9A3412] shadow-sm"
       >
-        <UserRound size={30} strokeWidth={2} color="#6254A3" />
+        {initial}
       </div>
 
-      <div className="min-w-0 flex-1">
-        <h2 className="truncate text-[18px] font-semibold leading-tight text-app-text">
+      <div className="relative min-w-0 flex-1">
+        
+        <h2 className="break-words text-lg font-extrabold leading-tight text-[#42251D]">
           {user.name}
         </h2>
-
-        <p className="mt-1 truncate text-[13px] text-[#858585]">{user.email}</p>
+        <p className="mt-1 break-all text-sm text-[#775A49]">
+          {user.email}
+        </p>
       </div>
     </section>
   );
