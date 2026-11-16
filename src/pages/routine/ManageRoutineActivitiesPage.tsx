@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import RoutineModal from "../../components/routine/RoutineModal";
 import { useNavigate, useParams } from "react-router";
 import { ArrowLeft, CalendarCheck2, Pencil, Plus, Trash2 } from "lucide-react";
 import { getCards } from "../../services/cardService";
@@ -294,21 +295,21 @@ function ManageRoutineActivitiesPage() {
   if (profileLoading || !user) return null;
 
   return (
-    <main className="min-h-screen bg-app-background p-4 pb-28">
+    <main className="min-h-screen bg-[#FFF9F3] px-4 pb-28 pt-4">
       <button
         type="button"
         onClick={handleBack}
-        className="mb-5 flex items-center gap-2 text-app-text"
+        className="mb-5 flex min-h-11 items-center gap-2 rounded-2xl text-[#592B1D]"
       >
         <ArrowLeft size={20} />
         Voltar
       </button>
 
-      <h1 className="mb-5 text-2xl font-bold text-app-text">
+      <h1 className="mb-5 text-2xl font-extrabold tracking-tight text-[#42251D]">
         Atividades — {section?.name ?? "Rotina"}
       </h1>
 
-      <section className="rounded-2xl bg-white p-4 shadow-sm">
+      <section className="rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_5px_14px_rgba(41,37,36,0.06)]">
         {needsPin ? (
           <PinVerificationForm
             enteredPin={enteredPin}
@@ -361,7 +362,7 @@ function ManageRoutineActivitiesPage() {
                   return (
                     <li
                       key={activity.id}
-                      className="rounded-xl border border-app-border p-3"
+                      className="rounded-2xl border border-[#F1E4D9] bg-[#FFFCF9] p-4"
                     >
                       <div className="flex items-center gap-3">
                         <div
@@ -422,21 +423,40 @@ function ManageRoutineActivitiesPage() {
       </section>
 
       {!needsPin && formOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="activity-form-title"
-            className="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-2xl bg-white p-5 shadow-xl"
-          >
-            <h2
-              id="activity-form-title"
-              className="mb-5 text-xl font-bold text-app-text"
-            >
-              {editingActivity ? "Editar atividade" : "Nova atividade"}
-            </h2>
-
-            <form
+        <RoutineModal
+          title={editingActivity ? "Editar atividade" : "Nova atividade"}
+          titleId="activity-form-title"
+          busy={saving}
+          footer={
+            <div className="flex gap-3">
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => {
+                  setFormOpen(false);
+                  setError("");
+                }}
+                className="min-h-12 flex-1 rounded-xl border border-[#E7D5C8] bg-white px-4 py-3 font-semibold text-[#42251D]"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                form="routine-activity-form"
+                disabled={saving || !form.title.trim()}
+                className="min-h-12 flex-1 rounded-xl bg-brand-primary px-4 py-3 font-semibold text-white disabled:opacity-50"
+              >
+                {saving ? "Salvando..." : "Salvar"}
+              </button>
+            </div>
+          }
+          onClose={() => {
+            setFormOpen(false);
+            setError("");
+          }}
+        >
+          <form
+              id="routine-activity-form"
               onSubmit={(event) => void handleSave(event)}
               className="space-y-5"
             >
@@ -459,7 +479,7 @@ function ManageRoutineActivitiesPage() {
                     }))
                   }
                   placeholder="Ex.: Hora do lanche"
-                  className="w-full rounded-xl border border-gray-300 p-3 text-base"
+                  className="w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
                 />
                 <p className="mt-1 text-right text-xs text-gray-500">
                   {form.title.length}/60 caracteres
@@ -482,7 +502,7 @@ function ManageRoutineActivitiesPage() {
                       period: event.target.value as RoutinePeriod,
                     }))
                   }
-                  className="w-full rounded-xl border border-gray-300 bg-white p-3 text-base"
+                  className="w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
                 >
                   <option value="morning">Manhã</option>
                   <option value="afternoon">Tarde</option>
@@ -507,7 +527,7 @@ function ManageRoutineActivitiesPage() {
                       time: event.target.value || null,
                     }))
                   }
-                  className="w-full rounded-xl border border-gray-300 p-3 text-base"
+                  className="w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
                 />
               </div>
 
@@ -520,10 +540,10 @@ function ManageRoutineActivitiesPage() {
                   placeholder="Pesquisar ícone..."
                   value={iconSearch}
                   onChange={(event) => setIconSearch(event.target.value)}
-                  className="mb-3 w-full rounded-xl border border-gray-300 p-3 text-base"
+                  className="mb-3 w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
                 />
 
-                <div className="mb-3 flex gap-2 overflow-x-auto pb-2">
+                <div className="mb-3 flex min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-2">
                   {iconCategories.map((category) => (
                     <button
                       key={category}
@@ -541,7 +561,7 @@ function ManageRoutineActivitiesPage() {
                   ))}
                 </div>
 
-                <div className="max-h-52 overflow-y-auto rounded-xl border border-gray-200 p-2">
+                <div className="max-h-52 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-2">
                   <div className="grid grid-cols-4 gap-2">
                     {filteredIcons.map(({ id, label, Icon }) => (
                       <button
@@ -593,7 +613,7 @@ function ManageRoutineActivitiesPage() {
                       Cartões de comunicação
                     </legend>
 
-                    <div className="max-h-48 space-y-2 overflow-y-auto rounded-xl border border-gray-200 p-3">
+                    <div className="max-h-48 space-y-2 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-3">
                       {availableCards.length === 0 ? (
                         <p className="text-sm text-app-muted">
                           Nenhum cartão disponível.
@@ -634,7 +654,7 @@ function ManageRoutineActivitiesPage() {
                       Frases cadastradas
                     </legend>
 
-                    <div className="max-h-48 space-y-2 overflow-y-auto rounded-xl border border-gray-200 p-3">
+                    <div className="max-h-48 space-y-2 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-3">
                       {availablePhrases.length === 0 ? (
                         <p className="text-sm text-app-muted">
                           Nenhuma frase disponível.
@@ -676,49 +696,39 @@ function ManageRoutineActivitiesPage() {
                   </fieldset>
                 </div>
               </div>
-
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => {
-                    setFormOpen(false);
-                    setError("");
-                  }}
-                  className="flex-1 rounded-xl bg-stone-100 px-4 py-3 font-semibold"
-                >
-                  Cancelar
-                </button>
-
-                <button
-                  type="submit"
-                  disabled={saving || !form.title.trim()}
-                  className="flex-1 rounded-xl bg-brand-primary px-4 py-3 font-semibold text-white disabled:opacity-50"
-                >
-                  {saving ? "Salvando..." : "Salvar atividade"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+          </form>
+        </RoutineModal>
       )}
 
       {!needsPin && activityToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="delete-activity-title"
-            className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl"
-          >
-            <h2
-              id="delete-activity-title"
-              className="text-xl font-bold text-app-text"
-            >
-              Excluir atividade?
-            </h2>
-
-            <p className="my-4 text-sm text-app-muted">
+        <RoutineModal
+          title="Excluir atividade?"
+          titleId="delete-activity-title"
+          busy={saving}
+          destructive
+          footer={
+            <div className="flex gap-3">
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => setActivityToDelete(null)}
+                className="min-h-12 flex-1 rounded-xl border border-[#E7D5C8] bg-white px-4 py-3 font-semibold text-[#42251D]"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => void handleDelete()}
+                className="min-h-12 flex-1 rounded-xl bg-red-600 px-4 py-3 font-semibold text-white disabled:opacity-50"
+              >
+                {saving ? "Excluindo..." : "Excluir"}
+              </button>
+            </div>
+          }
+          onClose={() => setActivityToDelete(null)}
+        >
+          <p className="my-4 text-sm text-app-muted">
               Deseja excluir "{activityToDelete.title}"?
             </p>
 
@@ -727,28 +737,7 @@ function ManageRoutineActivitiesPage() {
                 {error}
               </p>
             )}
-
-            <div className="flex gap-3">
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() => setActivityToDelete(null)}
-                className="flex-1 rounded-xl bg-stone-100 px-4 py-3 font-semibold"
-              >
-                Cancelar
-              </button>
-
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() => void handleDelete()}
-                className="flex-1 rounded-xl bg-red-600 px-4 py-3 font-semibold text-white disabled:opacity-50"
-              >
-                {saving ? "Excluindo..." : "Excluir"}
-              </button>
-            </div>
-          </div>
-        </div>
+        </RoutineModal>
       )}
     </main>
   );

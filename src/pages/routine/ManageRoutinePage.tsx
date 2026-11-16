@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import RoutineModal from "../../components/routine/RoutineModal";
 import { useNavigate } from "react-router";
 import { ArrowLeft, CalendarCheck2, Pencil, Plus, Trash2 } from "lucide-react";
 
@@ -228,21 +229,21 @@ function ManageRoutinePage() {
   if (profileLoading || !user) return null;
 
   return (
-    <main className="min-h-screen bg-app-background p-4 pb-28">
+    <main className="min-h-screen bg-[#FFF9F3] px-4 pb-28 pt-4">
       <button
         type="button"
         onClick={handleBack}
-        className="mb-5 flex items-center gap-2 text-app-text"
+        className="mb-5 flex min-h-11 items-center gap-2 rounded-2xl text-[#592B1D]"
       >
         <ArrowLeft size={20} />
         Voltar
       </button>
 
-      <h1 className="mb-5 text-2xl font-bold text-app-text">
+      <h1 className="mb-5 text-2xl font-extrabold tracking-tight text-[#42251D]">
         Gerenciar Rotina
       </h1>
 
-      <section className="rounded-2xl bg-white p-4 shadow-sm">
+      <section className="rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_5px_14px_rgba(41,37,36,0.06)]">
         {needsPin ? (
           <>
             <h2 className="mb-4 text-lg font-semibold text-app-text">
@@ -301,7 +302,7 @@ function ManageRoutinePage() {
                   return (
                     <li
                       key={section.id}
-                      className="rounded-xl border border-app-border p-3"
+                      className="rounded-2xl border border-[#F1E4D9] bg-[#FFFCF9] p-4"
                     >
                       <div className="flex items-center gap-3">
                         <div
@@ -376,21 +377,40 @@ function ManageRoutinePage() {
       </section>
 
       {!needsPin && formOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="routine-form-title"
-            className="max-h-[90dvh] w-full max-w-md overflow-x-hidden overflow-y-auto rounded-2xl bg-white p-4 shadow-xl sm:p-6"
-          >
-            <h2
-              id="routine-form-title"
-              className="mb-4 text-xl font-bold text-app-text"
-            >
-              {editingSection ? "Editar seção" : "Nova seção"}
-            </h2>
-
-            <form
+        <RoutineModal
+          title={editingSection ? "Editar seção" : "Nova seção"}
+          titleId="routine-form-title"
+          busy={saving}
+          footer={
+            <div className="flex gap-3">
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => {
+                  setFormOpen(false);
+                  setError("");
+                }}
+                className="min-h-12 flex-1 rounded-xl border border-[#E7D5C8] bg-white px-4 py-3 font-semibold text-[#42251D]"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                form="routine-section-form"
+                disabled={saving || !form.name.trim()}
+                className="min-h-12 flex-1 rounded-xl bg-brand-primary px-4 py-3 font-semibold text-white disabled:opacity-50"
+              >
+                {saving ? "Salvando..." : "Salvar"}
+              </button>
+            </div>
+          }
+          onClose={() => {
+            setFormOpen(false);
+            setError("");
+          }}
+        >
+          <form
+              id="routine-section-form"
               onSubmit={(event) => void handleSave(event)}
               className="space-y-5"
             >
@@ -414,7 +434,7 @@ function ManageRoutinePage() {
                     }))
                   }
                   placeholder="Ex.: Escola"
-                  className="w-full rounded-xl border border-gray-300 p-3 text-base"
+                  className="w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
                 />
               </div>
 
@@ -437,7 +457,7 @@ function ManageRoutinePage() {
                     }))
                   }
                   placeholder="Ex.: Aulas e atividades"
-                  className="w-full rounded-xl border border-gray-300 p-3 text-base"
+                  className="w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
                 />
               </div>
 
@@ -481,10 +501,10 @@ function ManageRoutinePage() {
                   onChange={(event) => setIconSearch(event.target.value)}
                   placeholder="Pesquisar ícone..."
                   aria-label="Pesquisar ícones"
-                  className="mb-3 w-full rounded-xl border border-gray-300 p-3 text-base"
+                  className="mb-3 w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
                 />
 
-                <div className="mb-3 flex gap-2 overflow-x-auto pb-2">
+                <div className="mb-3 flex min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-2">
                   {iconCategories.map((category) => (
                     <button
                       key={category}
@@ -502,7 +522,7 @@ function ManageRoutinePage() {
                   ))}
                 </div>
 
-                <div className="max-h-52 overflow-y-auto rounded-xl border border-gray-200 p-2">
+                <div className="max-h-52 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-2">
                   <div className="grid grid-cols-4 gap-2">
                     {filteredIcons.map(({ id, label, Icon }) => (
                       <button
@@ -535,72 +555,47 @@ function ManageRoutinePage() {
                 </div>
               </div>
 
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => {
-                    setFormOpen(false);
-                    setError("");
-                  }}
-                  className="flex-1 rounded-xl bg-stone-100 px-4 py-3 font-semibold text-app-text"
-                >
-                  Cancelar
-                </button>
-
-                <button
-                  type="submit"
-                  disabled={saving || !form.name.trim()}
-                  className="flex-1 rounded-xl bg-brand-primary px-4 py-3 font-semibold text-white disabled:opacity-50"
-                >
-                  {saving ? "Salvando..." : "Salvar seção"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+              {error && (
+                <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
+                  {error}
+                </p>
+              )}
+          </form>
+        </RoutineModal>
       )}
 
       {!needsPin && sectionToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="delete-routine-title"
-            className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl"
-          >
-            <h2
-              id="delete-routine-title"
-              className="text-xl font-bold text-app-text"
-            >
-              Excluir seção?
-            </h2>
-
-            <p className="my-4 text-sm text-app-muted">
-              Deseja excluir "{sectionToDelete.name}"?
-            </p>
-
+        <RoutineModal
+          title="Excluir seção?"
+          titleId="delete-routine-title"
+          busy={saving}
+          destructive
+          footer={
             <div className="flex gap-3">
               <button
                 type="button"
                 disabled={saving}
                 onClick={() => setSectionToDelete(null)}
-                className="flex-1 rounded-xl bg-stone-100 px-4 py-3 font-semibold text-app-text"
+                className="min-h-12 flex-1 rounded-xl border border-[#E7D5C8] bg-white px-4 py-3 font-semibold text-[#42251D]"
               >
                 Cancelar
               </button>
-
               <button
                 type="button"
                 disabled={saving}
                 onClick={() => void handleDelete()}
-                className="flex-1 rounded-xl bg-red-600 px-4 py-3 font-semibold text-white disabled:opacity-50"
+                className="min-h-12 flex-1 rounded-xl bg-red-600 px-4 py-3 font-semibold text-white disabled:opacity-50"
               >
                 {saving ? "Excluindo..." : "Excluir"}
               </button>
             </div>
-          </div>
-        </div>
+          }
+          onClose={() => setSectionToDelete(null)}
+        >
+          <p className="my-4 text-sm text-app-muted">
+              Deseja excluir "{sectionToDelete.name}"?
+          </p>
+        </RoutineModal>
       )}
     </main>
   );
