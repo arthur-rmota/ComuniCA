@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import RoutineModal from "../../components/routine/RoutineModal";
 import { useNavigate } from "react-router";
 import { ArrowLeft, CalendarCheck2, Pencil, Plus, Trash2 } from "lucide-react";
-
+import PinAccessPage from "../../components/profile/PinAccessPage";
 import { useProfileContext } from "../../contexts/ProfileContext";
 import { PinVerificationForm } from "../../components/profile/PinVerificationForm";
 import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
@@ -228,6 +228,10 @@ function ManageRoutinePage() {
 
   if (profileLoading || !user) return null;
 
+  if (needsPin) {
+    return <PinAccessPage title="Gerenciar Rotina" onBack={handleBack} />;
+  }
+
   return (
     <main className="min-h-screen bg-[#FFF9F3] px-4 pb-28 pt-4">
       <button
@@ -410,156 +414,159 @@ function ManageRoutinePage() {
           }}
         >
           <form
-              id="routine-section-form"
-              onSubmit={(event) => void handleSave(event)}
-              className="space-y-5"
-            >
-              <div>
-                <label
-                  htmlFor="routine-name"
-                  className="mb-2 block text-sm font-semibold text-app-text"
-                >
-                  Nome da seção
-                </label>
+            id="routine-section-form"
+            onSubmit={(event) => void handleSave(event)}
+            className="space-y-5"
+          >
+            <div>
+              <label
+                htmlFor="routine-name"
+                className="mb-2 block text-sm font-semibold text-app-text"
+              >
+                Nome da seção
+              </label>
 
-                <input
-                  id="routine-name"
-                  required
-                  maxLength={40}
-                  value={form.name}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      name: event.target.value,
-                    }))
-                  }
-                  placeholder="Ex.: Escola"
-                  className="w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
-                />
+              <input
+                id="routine-name"
+                required
+                maxLength={40}
+                value={form.name}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    name: event.target.value,
+                  }))
+                }
+                placeholder="Ex.: Escola"
+                className="w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="routine-description"
+                className="mb-2 block text-sm font-semibold text-app-text"
+              >
+                Descrição
+              </label>
+
+              <input
+                id="routine-description"
+                maxLength={100}
+                value={form.description}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    description: event.target.value,
+                  }))
+                }
+                placeholder="Ex.: Aulas e atividades"
+                className="w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
+              />
+            </div>
+
+            <div>
+              <p className="mb-3 text-sm font-semibold text-app-text">
+                Cor da seção
+              </p>
+
+              <div className="flex flex-wrap gap-3">
+                {sectionColors.map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() =>
+                      setForm((current) => ({
+                        ...current,
+                        color,
+                      }))
+                    }
+                    aria-label={`Selecionar cor ${color}`}
+                    aria-pressed={form.color === color}
+                    className={`h-11 w-11 rounded-xl border-2 ${
+                      form.color === color
+                        ? "border-brand-primary ring-2 ring-orange-200"
+                        : "border-gray-200"
+                    }`}
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-3 text-sm font-semibold text-app-text">
+                Ícone da seção
+              </p>
+
+              <input
+                type="search"
+                value={iconSearch}
+                onChange={(event) => setIconSearch(event.target.value)}
+                placeholder="Pesquisar ícone..."
+                aria-label="Pesquisar ícones"
+                className="mb-3 w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
+              />
+
+              <div className="mb-3 flex min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-2">
+                {iconCategories.map((category) => (
+                  <button
+                    key={category}
+                    type="button"
+                    onClick={() => setIconCategory(category)}
+                    aria-pressed={iconCategory === category}
+                    className={`shrink-0 rounded-full border px-3 py-2 text-xs font-semibold ${
+                      iconCategory === category
+                        ? "border-[#FFA726] bg-[#FFF3E0] text-[#A86400]"
+                        : "border-gray-200 bg-gray-50 text-app-text"
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
               </div>
 
-              <div>
-                <label
-                  htmlFor="routine-description"
-                  className="mb-2 block text-sm font-semibold text-app-text"
-                >
-                  Descrição
-                </label>
-
-                <input
-                  id="routine-description"
-                  maxLength={100}
-                  value={form.description}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      description: event.target.value,
-                    }))
-                  }
-                  placeholder="Ex.: Aulas e atividades"
-                  className="w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
-                />
-              </div>
-
-              <div>
-                <p className="mb-3 text-sm font-semibold text-app-text">
-                  Cor da seção
-                </p>
-
-                <div className="flex flex-wrap gap-3">
-                  {sectionColors.map((color) => (
+              <div className="max-h-52 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-2">
+                <div className="grid grid-cols-4 gap-2">
+                  {filteredIcons.map(({ id, label, Icon }) => (
                     <button
-                      key={color}
+                      key={id}
                       type="button"
                       onClick={() =>
                         setForm((current) => ({
                           ...current,
-                          color,
+                          icon: id,
                         }))
                       }
-                      aria-label={`Selecionar cor ${color}`}
-                      aria-pressed={form.color === color}
-                      className={`h-11 w-11 rounded-xl border-2 ${
-                        form.color === color
-                          ? "border-brand-primary ring-2 ring-orange-200"
-                          : "border-gray-200"
-                      }`}
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <p className="mb-3 text-sm font-semibold text-app-text">
-                  Ícone da seção
-                </p>
-
-                <input
-                  type="search"
-                  value={iconSearch}
-                  onChange={(event) => setIconSearch(event.target.value)}
-                  placeholder="Pesquisar ícone..."
-                  aria-label="Pesquisar ícones"
-                  className="mb-3 w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
-                />
-
-                <div className="mb-3 flex min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-2">
-                  {iconCategories.map((category) => (
-                    <button
-                      key={category}
-                      type="button"
-                      onClick={() => setIconCategory(category)}
-                      aria-pressed={iconCategory === category}
-                      className={`shrink-0 rounded-full border px-3 py-2 text-xs font-semibold ${
-                        iconCategory === category
-                          ? "border-[#FFA726] bg-[#FFF3E0] text-[#A86400]"
-                          : "border-gray-200 bg-gray-50 text-app-text"
+                      aria-label={label}
+                      aria-pressed={form.icon === id}
+                      className={`flex aspect-square items-center justify-center rounded-xl border-2 ${
+                        form.icon === id
+                          ? "border-[#FFA726] bg-[#FFF3E0]"
+                          : "border-gray-200 bg-gray-50"
                       }`}
                     >
-                      {category}
+                      <Icon size={28} color="#383838" />
                     </button>
                   ))}
                 </div>
 
-                <div className="max-h-52 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-2">
-                  <div className="grid grid-cols-4 gap-2">
-                    {filteredIcons.map(({ id, label, Icon }) => (
-                      <button
-                        key={id}
-                        type="button"
-                        onClick={() =>
-                          setForm((current) => ({
-                            ...current,
-                            icon: id,
-                          }))
-                        }
-                        aria-label={label}
-                        aria-pressed={form.icon === id}
-                        className={`flex aspect-square items-center justify-center rounded-xl border-2 ${
-                          form.icon === id
-                            ? "border-[#FFA726] bg-[#FFF3E0]"
-                            : "border-gray-200 bg-gray-50"
-                        }`}
-                      >
-                        <Icon size={28} color="#383838" />
-                      </button>
-                    ))}
-                  </div>
-
-                  {filteredIcons.length === 0 && (
-                    <p className="py-4 text-center text-sm text-app-muted">
-                      Nenhum ícone encontrado.
-                    </p>
-                  )}
-                </div>
+                {filteredIcons.length === 0 && (
+                  <p className="py-4 text-center text-sm text-app-muted">
+                    Nenhum ícone encontrado.
+                  </p>
+                )}
               </div>
+            </div>
 
-              {error && (
-                <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
-                  {error}
-                </p>
-              )}
+            {error && (
+              <p
+                role="alert"
+                className="rounded-xl bg-red-50 p-3 text-sm text-red-700"
+              >
+                {error}
+              </p>
+            )}
           </form>
         </RoutineModal>
       )}
@@ -593,7 +600,7 @@ function ManageRoutinePage() {
           onClose={() => setSectionToDelete(null)}
         >
           <p className="my-4 text-sm text-app-muted">
-              Deseja excluir "{sectionToDelete.name}"?
+            Deseja excluir "{sectionToDelete.name}"?
           </p>
         </RoutineModal>
       )}

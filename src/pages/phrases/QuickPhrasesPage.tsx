@@ -6,6 +6,7 @@ import {
   Pencil,
   TrendingUp,
   Volume2,
+  MessageCircleHeartIcon
 } from "lucide-react";
 
 import {
@@ -208,9 +209,22 @@ function QuickPhrasesPage() {
 
       <div className="relative mx-auto w-full max-w-lg">
         <header className="mb-7 pt-3">
-          <h1 className="mb-6 text-center text-2xl font-extrabold tracking-tight text-[#42251D]">
-            Minhas Frases
-          </h1>
+          <div className="mb-5 flex items-center justify-center gap-3">
+            <span
+              aria-hidden="true"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FFE0BD]"
+            >
+              <MessageCircleHeartIcon
+                size={29}
+                strokeWidth={2.4}
+                color="#C2410C"
+              />
+            </span>
+
+            <h1 className="text-2xl font-extrabold tracking-tight text-[#42251D]">
+              Minhas Frases
+            </h1>
+          </div>
 
           <div className="flex items-center justify-between gap-3 rounded-3xl bg-white px-4 py-3 shadow-[0_5px_14px_rgba(41,37,36,0.05)]">
             <p className="text-sm font-semibold text-[#592B1D]">

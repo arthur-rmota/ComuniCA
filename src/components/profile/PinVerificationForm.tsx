@@ -7,15 +7,6 @@ interface PinVerificationFormProps {
   onPinChange: (value: string) => void;
   onSubmit: (event: SubmitEvent<HTMLFormElement>) => void;
   onCancel: () => void;
-}
-
-interface PinVerificationFormProps {
-  enteredPin: string;
-  accessPinError: string;
-  verifyingPin: boolean;
-  onPinChange: (value: string) => void;
-  onSubmit: (event: SubmitEvent<HTMLFormElement>) => void;
-  onCancel: () => void;
   onForgotPin: () => void;
 }
 
@@ -29,15 +20,14 @@ export function PinVerificationForm({
   onForgotPin,
 }: PinVerificationFormProps) {
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4">
+    <form onSubmit={onSubmit} className="flex flex-col gap-5">
       <div>
         <label
           htmlFor="access-pin"
-          className="mb-2 block font-medium text-app-text"
+          className="mb-2 block text-sm font-bold text-[#42251D]"
         >
           PIN de acesso
         </label>
-
         <input
           id="access-pin"
           type="password"
@@ -50,14 +40,14 @@ export function PinVerificationForm({
             onPinChange(event.target.value.replace(/\D/g, ""))
           }
           placeholder="Digite seu PIN"
-          className="w-full rounded-xl border border-gray-300 p-3"
+          className="min-h-12 w-full rounded-xl border border-[#E7D5C8] bg-[#FFFCF9] px-4 py-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
         />
       </div>
 
       {accessPinError && (
         <p
           role="alert"
-          className="rounded-lg bg-red-100 p-3 text-sm font-medium text-red-700"
+          className="rounded-xl bg-red-50 p-3 text-sm font-medium text-red-700"
         >
           {accessPinError}
         </p>
@@ -65,25 +55,27 @@ export function PinVerificationForm({
 
       <div className="flex gap-3">
         <button
-          type="submit"
-          disabled={verifyingPin}
-          className="flex-1 rounded-xl bg-brand-primary hover:bg-brand-hover transition-colors p-3 font-semibold text-white disabled:opacity-50"
-        >
-          {verifyingPin ? "Verificando..." : "Confirmar"}
-        </button>
-
-        <button
           type="button"
           onClick={onCancel}
-          className="flex-1 rounded-xl bg-gray-200 p-3 font-semibold text-app-text"
+          disabled={verifyingPin}
+          className="min-h-12 min-w-0 flex-1 rounded-xl border border-[#E7D5C8] bg-white px-3 py-3 font-bold text-[#42251D] disabled:opacity-50"
         >
           Cancelar
         </button>
+        <button
+          type="submit"
+          disabled={verifyingPin}
+          className="min-h-12 min-w-0 flex-1 rounded-xl bg-brand-primary px-3 py-3 font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-50"
+        >
+          {verifyingPin ? "Verificando..." : "Confirmar"}
+        </button>
       </div>
+
       <button
         type="button"
         onClick={onForgotPin}
-        className="text-center text-sm font-semibold text-[#B86B00] underline underline-offset-4"
+        disabled={verifyingPin}
+        className="min-h-11 self-center px-3 text-center text-sm font-bold text-brand-primary underline underline-offset-4 disabled:opacity-50"
       >
         Esqueceu o PIN?
       </button>

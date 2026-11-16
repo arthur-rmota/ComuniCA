@@ -95,7 +95,7 @@ export default function CardForm({
           id="card-form-title"
           className="mb-4 text-xl font-bold text-app-text"
         >
-          {initialCard ? "Editar cartãao" : "Adicionar cartão"}
+          {initialCard ? "Editar cartão" : "Adicionar cartão"}
         </h2>
 
         <form onSubmit={handleSubmit}>
