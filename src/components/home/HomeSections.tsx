@@ -1,5 +1,6 @@
+
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Folder } from "lucide-react";
+import { Folder, MessageCircleHeart } from "lucide-react";
 import { useNavigate } from "react-router";
 
 import { getCategories } from "../../services/categoryService";
@@ -45,21 +46,35 @@ function HomeSections() {
   }, []);
 
   return (
-    <section className="mt-6">
-      <div className="mb-4">
-        <h2 className="text-xl font-bold text-app-text">Categorias</h2>
+    <section className="mt-8">
+      <div className="mb-5 flex items-center gap-2">
+        <MessageCircleHeart
+          size={25}
+          strokeWidth={2.2}
+          className="text-brand-primary"
+          aria-hidden="true"
+        />
+
+        <h2 className="text-xl font-extrabold tracking-tight text-[#42251D]">
+          Quero me comunicar
+        </h2>
       </div>
 
       {error && (
-        <p role="alert" className="mb-4 text-sm text-app-danger">
+        <p
+          role="alert"
+          className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-700"
+        >
           {error}
         </p>
       )}
 
       {loading ? (
-        <p className="text-sm text-app-muted">Carregando categorias...</p>
+        <p className="text-sm text-app-muted">
+          Carregando categorias...
+        </p>
       ) : categories.length === 0 ? (
-        <div className="rounded-2xl bg-white p-5">
+        <div className="rounded-3xl bg-white p-6 text-center shadow-sm">
           <p className="text-sm text-app-muted">
             Nenhuma categoria disponível.
           </p>
@@ -77,21 +92,29 @@ function HomeSections() {
               <button
                 key={category.id}
                 type="button"
-                onClick={() => navigate(`/categorias/${category.id}`)}
+                onClick={() =>
+                  navigate(`/categorias/${category.id}`)
+                }
                 aria-label={`Abrir categoria ${category.name}`}
-                className="flex min-h-40 min-w-0 flex-col items-center justify-center gap-4 rounded-2xl p-4 text-center transition-transform duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+                className="group relative flex min-h-44 min-w-0 flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border-2 border-white/60 p-4 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-transform duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
                 style={{
                   backgroundColor: category.color,
                 }}
               >
-                <Icon
-                  size={48}
-                  color="#292524"
-                  strokeWidth={2}
+                <span
                   aria-hidden="true"
+                  className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
                 />
 
-                <span className="break-words text-base font-bold leading-tight text-app-text">
+                <Icon
+                  size={58}
+                  color="#42251D"
+                  strokeWidth={2.2}
+                  aria-hidden="true"
+                  className="relative"
+                />
+
+                <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
                   {category.name}
                 </span>
               </button>

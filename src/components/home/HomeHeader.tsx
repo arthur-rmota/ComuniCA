@@ -1,21 +1,47 @@
+import { useNavigate } from "react-router";
 import { useProfileContext } from "../../contexts/ProfileContext";
-import { Navigate, useNavigate } from "react-router";
 
 function HomeHeader() {
   const { user } = useProfileContext();
   const navigate = useNavigate();
 
-  return (
-    <header className="flex items-center justify-between px-2 py-2">
-      <h1 className="text-2xl font-semibold text-app-text">
-        Olá, {user?.name ?? "Usuário"}
-      </h1>
+  const firstName = user?.name?.trim().split(/\s+/)[0] || "Olá";
 
-      <button onClick={() => navigate("/perfil")}>
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#A9B8E8] text-sm font-semibold text-white">
-          {user?.name.charAt(0).toUpperCase() ?? "U"}
+  return (
+    <header className="relative mb-6 pt-2">
+      <div className="mb-3 flex items-center justify-center gap-2">
+        <img
+          src="/comunica2-icon.png"
+          alt=""
+          aria-hidden="true"
+          className="h-14 w-14 object-contain"
+        />
+
+        <span className="text-3xl font-black tracking-tight text-[#592B1D]">
+          Comuni<span className="text-brand-primary">CA</span>
+        </span>
+      </div>
+
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="break-words text-2xl font-extrabold tracking-tight text-[#42251D]">
+            Olá, {firstName}! 👋
+          </h1>
+
+          <p className="mt-1 text-sm font-medium text-[#80685D]">
+            Vamos nos comunicar?
+          </p>
         </div>
-      </button>
+
+        <button
+          type="button"
+          onClick={() => navigate("/perfil")}
+          aria-label="Abrir perfil"
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-white bg-[#F8D8BF] text-lg font-bold text-[#9A3412] shadow-sm transition-transform active:scale-95"
+        >
+          {user?.name?.trim().charAt(0).toUpperCase() || "U"}
+        </button>
+      </div>
     </header>
   );
 }
