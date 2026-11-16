@@ -23,16 +23,22 @@ const periods = [
     id: "morning",
     label: "Manhã",
     Icon: Sunrise,
+    background: "#FFF0CE",
+    iconColor: "#B76B13",
   },
   {
     id: "afternoon",
     label: "Tarde",
     Icon: Sun,
+    background: "#FFE0BD",
+    iconColor: "#C2410C",
   },
   {
     id: "night",
     label: "Noite",
     Icon: Moon,
+    background: "#E8DEFA",
+    iconColor: "#7552A2",
   },
 ] as const;
 
@@ -49,6 +55,9 @@ function RoutineSectionPage() {
     let active = true;
 
     async function loadSection() {
+      setLoading(true);
+      setError("");
+
       if (!sectionId) {
         setError("Seção inválida.");
         setLoading(false);
@@ -70,7 +79,6 @@ function RoutineSectionPage() {
 
         setSection(sectionData);
         setActivities(activitiesData);
-        setError("");
       } catch (err) {
         console.error("Erro ao carregar atividades:", err);
 
@@ -106,130 +114,172 @@ function RoutineSectionPage() {
       });
   }
 
+  const selectedSectionIcon = quickPhraseIcons.find(
+    (item) => item.id === section?.icon,
+  );
+
+  const SectionIcon = selectedSectionIcon?.Icon ?? CalendarCheck2;
+
   return (
-    <main className="min-h-screen bg-app-background p-4 pb-28">
-      <header className="mb-6 pt-3">
-        <button
-          type="button"
-          onClick={() => navigate("/agenda")}
-          aria-label="Voltar para Minha Rotina"
-          className="mb-5 flex items-center gap-2 text-app-text"
-        >
-          <ArrowLeft size={22} />
-          <span className="font-medium">Voltar</span>
-        </button>
+    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
+      />
 
-        <h1 className="text-center text-2xl font-bold tracking-tight text-app-text">
-          {section?.name ?? "Minha Rotina"}
-        </h1>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-20 top-80 h-48 w-48 rounded-full bg-[#FFF0BB]/30"
+      />
 
-        <div className="mt-5 flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
-          <p className="text-sm font-medium text-app-text">
-            Veja o que vamos fazer
-          </p>
+      <div className="relative mx-auto w-full max-w-lg">
+        <header className="mb-7 pt-3">
+          <div className="relative flex min-h-14 items-center justify-center">
+            <button
+              type="button"
+              onClick={() => navigate("/agenda")}
+              aria-label="Voltar para Minha Rotina"
+              className="absolute left-0 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#42251D] shadow-sm transition-transform active:scale-95"
+            >
+              <ArrowLeft size={24} strokeWidth={2.5} />
+            </button>
 
-          <span
-            aria-hidden="true"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-primary text-white"
+            <h1 className="break-words px-14 text-center text-2xl font-extrabold tracking-tight text-[#42251D]">
+              {section?.name ?? "Minha Rotina"}
+            </h1>
+          </div>
+
+          <div className="mt-4 flex items-center justify-between gap-3 rounded-3xl bg-white px-4 py-3 shadow-[0_5px_14px_rgba(41,37,36,0.05)]">
+            <p className="text-sm font-semibold text-[#592B1D]">
+              Escolha uma atividade
+            </p>
+
+            <span
+              aria-hidden="true"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFE0BD]"
+            >
+              <CalendarCheck2 size={23} strokeWidth={2.5} color="#C2410C" />
+            </span>
+          </div>
+        </header>
+
+        {loading ? (
+          <p className="text-sm text-app-muted">Carregando atividades...</p>
+        ) : error ? (
+          <div
+            role="alert"
+            className="flex items-center gap-2 rounded-2xl bg-red-50 p-4 text-sm font-medium text-red-700"
           >
-            <CalendarCheck2 size={20} />
-          </span>
-        </div>
-      </header>
+            <AlertCircle size={20} aria-hidden="true" />
+            {error}
+          </div>
+        ) : activities.length === 0 ? (
+          <div className="rounded-3xl bg-white p-6 text-center shadow-sm">
+            <CalendarCheck2
+              size={44}
+              className="mx-auto mb-3 text-brand-primary"
+              aria-hidden="true"
+            />
 
-      {loading ? (
-        <p className="text-sm text-app-muted">Carregando atividades...</p>
-      ) : error ? (
-        <div
-          role="alert"
-          className="flex items-center gap-2 rounded-xl bg-red-50 p-4 text-sm text-red-700"
-        >
-          <AlertCircle size={20} />
-          {error}
-        </div>
-      ) : activities.length === 0 ? (
-        <div className="rounded-2xl bg-white p-6 text-center shadow-sm">
-          <CalendarCheck2
-            size={44}
-            className="mx-auto mb-3 text-brand-primary"
-          />
+            <p className="font-extrabold text-[#42251D]">
+              Ainda não há atividades
+            </p>
 
-          <p className="font-semibold text-app-text">Ainda não há atividades</p>
+            <p className="mt-2 text-sm leading-relaxed text-[#80685D]">
+              As atividades desta rotina aparecerão aqui quando forem
+              cadastradas.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {periods.map(
+              ({ id, label, Icon: PeriodIcon, background, iconColor }) => {
+                const periodActivities = getActivitiesByPeriod(id);
 
-          <p className="mt-2 text-sm text-app-muted">
-            As atividades desta rotina aparecerão aqui quando forem cadastradas.
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-7">
-          {periods.map(({ id, label, Icon: PeriodIcon }) => {
-            const periodActivities = getActivitiesByPeriod(id);
+                if (periodActivities.length === 0) return null;
 
-            if (periodActivities.length === 0) return null;
-
-            return (
-              <section
-                key={id}
-                aria-label={`Atividades da ${label.toLowerCase()}`}
-              >
-                <div className="mb-3 flex items-center gap-2">
-                  <PeriodIcon
-                    size={24}
-                    className="text-brand-primary"
-                    aria-hidden="true"
-                  />
-
-                  <h2 className="text-lg font-bold text-app-text">{label}</h2>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  {periodActivities.map((activity) => {
-                    const selectedIcon = quickPhraseIcons.find(
-                      (item) => item.id === activity.icon,
-                    );
-
-                    const ActivityIcon = selectedIcon?.Icon ?? CalendarCheck2;
-
-                    return (
-                      <button
-                        key={activity.id}
-                        type="button"
-                        onClick={() =>
-                          navigate(
-                            `/rotina/${sectionId}/atividades/${activity.id}`,
-                          )
-                        }
-                        aria-label={`Abrir atividade: ${activity.title}`}
-                        className="flex min-h-40 min-w-0 flex-col items-center justify-center gap-3 rounded-2xl p-4 text-center transition-transform active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
-                        style={{
-                          backgroundColor: section?.color ?? "#FFF0D6",
-                        }}
+                return (
+                  <section
+                    key={id}
+                    aria-label={`Atividades da ${label.toLowerCase()}`}
+                  >
+                    <div className="mb-4 flex items-center gap-3">
+                      <span
+                        aria-hidden="true"
+                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
+                        style={{ backgroundColor: background }}
                       >
-                        <ActivityIcon
-                          size={48}
-                          strokeWidth={2.2}
-                          color="#292524"
-                          aria-hidden="true"
+                        <PeriodIcon
+                          size={26}
+                          strokeWidth={2.3}
+                          color={iconColor}
                         />
+                      </span>
 
-                        <h3 className="break-words text-base font-bold text-app-text">
-                          {activity.title}
-                        </h3>
+                      <h2 className="text-xl font-extrabold text-[#42251D]">
+                        {label}
+                      </h2>
+                    </div>
 
-                        {activity.time && (
-                          <span className="rounded-full bg-white/70 px-3 py-1 text-sm font-semibold text-app-text">
-                            {activity.time}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
-            );
-          })}
-        </div>
-      )}
+                    <div className="grid grid-cols-2 gap-3">
+                      {periodActivities.map((activity) => {
+                        const selectedIcon = quickPhraseIcons.find(
+                          (item) => item.id === activity.icon,
+                        );
+
+                        const ActivityIcon =
+                          selectedIcon?.Icon ?? CalendarCheck2;
+
+                        return (
+                          <button
+                            key={activity.id}
+                            type="button"
+                            onClick={() =>
+                              navigate(
+                                `/rotina/${sectionId}/atividades/${activity.id}`,
+                              )
+                            }
+                            aria-label={`Abrir atividade: ${activity.title}${
+                              activity.time ? `, às ${activity.time}` : ""
+                            }`}
+                            className="group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-3 overflow-hidden rounded-3xl border-2 border-white/60 p-4 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+                            style={{
+                              backgroundColor: section?.color ?? "#FFF0D6",
+                            }}
+                          >
+                            <span
+                              aria-hidden="true"
+                              className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
+                            />
+
+                            <ActivityIcon
+                              size={56}
+                              strokeWidth={2.2}
+                              color="#42251D"
+                              aria-hidden="true"
+                              className="relative"
+                            />
+
+                            <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
+                              {activity.title}
+                            </span>
+
+                            {activity.time && (
+                              <span className="relative rounded-full bg-white/75 px-3 py-1 text-xs font-bold text-[#592B1D]">
+                                {activity.time}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </section>
+                );
+              },
+            )}
+          </div>
+        )}
+      </div>
     </main>
   );
 }

@@ -1,6 +1,12 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { AlertCircle, CalendarCheck2, Pencil } from "lucide-react";
+import {
+  AlertCircle,
+  CalendarCheck2,
+  Pencil,
+  ChevronRight,
+} from "lucide-react";
 
 import { routineService } from "../../services/routineService";
 import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
@@ -45,94 +51,144 @@ function AgendaPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-app-background p-4 pb-28">
-      <header className="mb-6 pt-3">
-        <h1 className="mb-5 text-center text-2xl font-bold tracking-tight text-app-text">
-          Minha Rotina
-        </h1>
+    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
+      />
 
-        <div className="flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
-          <p className="text-sm font-medium text-app-text">
-            Escolha uma parte da sua rotina
-          </p>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-20 top-80 h-48 w-48 rounded-full bg-[#FFF0BB]/30"
+      />
 
-          <span
-            aria-hidden="true"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-primary text-white"
+      <div className="relative mx-auto w-full max-w-lg">
+        <header className="mb-7 pt-3">
+          <div className="mb-5 flex items-center justify-center gap-3">
+            <span
+              aria-hidden="true"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FFE0BD]"
+            >
+              <CalendarCheck2
+                size={29}
+                strokeWidth={2.4}
+                color="#C2410C"
+              />
+            </span>
+
+            <h1 className="text-2xl font-extrabold tracking-tight text-[#42251D]">
+              Minha Rotina
+            </h1>
+          </div>
+
+          <div className="flex items-center justify-between gap-3 rounded-3xl bg-white px-4 py-3 shadow-[0_5px_14px_rgba(41,37,36,0.05)]">
+            <p className="text-sm font-semibold leading-relaxed text-[#592B1D]">
+              Escolha uma parte da sua rotina
+            </p>
+
+            <span
+              aria-hidden="true"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFE0BD]"
+            >
+              <ChevronRight
+                size={23}
+                strokeWidth={2.5}
+                color="#C2410C"
+              />
+            </span>
+          </div>
+        </header>
+
+        {error && (
+          <div
+            role="alert"
+            className="mb-4 flex items-center gap-2 rounded-2xl bg-red-50 p-4 text-sm text-red-700"
           >
-            <CalendarCheck2 size={20} />
-          </span>
-        </div>
-      </header>
+            <AlertCircle size={20} aria-hidden="true" />
+            {error}
+          </div>
+        )}
 
-      {error && (
-        <div
-          role="alert"
-          className="mb-4 flex items-center gap-2 rounded-xl bg-red-50 p-3 text-sm text-red-700"
-        >
-          <AlertCircle size={18} aria-hidden="true" />
-          {error}
-        </div>
-      )}
-
-      {loading ? (
-        <p className="text-sm text-app-muted">Carregando rotina...</p>
-      ) : sections.length === 0 ? (
-        <div className="rounded-2xl bg-white p-5 text-center">
-          <CalendarCheck2
-            size={40}
-            className="mx-auto mb-3 text-brand-primary"
-            aria-hidden="true"
-          />
-
+        {loading ? (
           <p className="text-sm text-app-muted">
-            Sua rotina ainda não tem seções.
+            Carregando rotina...
           </p>
-        </div>
-      ) : (
-        <section
-          aria-label="Seções da rotina"
-          className="grid grid-cols-2 gap-3"
-        >
-          {sections.map((section) => {
-            const selectedIcon = quickPhraseIcons.find(
-              (item) => item.id === section.icon,
-            );
+        ) : error ? null : sections.length === 0 ? (
+          <div className="rounded-3xl bg-white p-6 text-center shadow-sm">
+            <CalendarCheck2
+              size={44}
+              className="mx-auto mb-3 text-brand-primary"
+              aria-hidden="true"
+            />
 
-            const Icon = selectedIcon?.Icon ?? CalendarCheck2;
+            <p className="font-bold text-[#42251D]">
+              Nenhuma rotina cadastrada
+            </p>
 
-            return (
-              <button
-                key={section.id}
-                type="button"
-                onClick={() => navigate(`/rotina/${section.id}`)}
-                aria-label={`Abrir rotina: ${section.name}`}
-                className="flex min-h-40 w-full min-w-0 flex-col items-center justify-center gap-4 rounded-2xl border-2 border-transparent p-4 text-center transition-transform active:scale-[0.98] focus-visible:border-brand-primary focus-visible:outline-none"
-                style={{ backgroundColor: section.color }}
-              >
-                <Icon
-                  size={56}
-                  strokeWidth={2.2}
-                  color="#292524"
-                  aria-hidden="true"
-                />
+            <p className="mt-2 text-sm leading-relaxed text-[#80685D]">
+              As partes da sua rotina aparecerão aqui
+              quando forem cadastradas.
+            </p>
+          </div>
+        ) : (
+          <section
+            aria-label="Seções da rotina"
+            className="grid grid-cols-2 gap-3"
+          >
+            {sections.map((section) => {
+              const selectedIcon = quickPhraseIcons.find(
+                (item) => item.id === section.icon,
+              );
 
-                <span className="break-words text-base font-bold text-app-text">
-                  {section.name}
-                </span>
-              </button>
-            );
-          })}
-        </section>
-      )}
+              const Icon = selectedIcon?.Icon ?? CalendarCheck2;
+
+              return (
+                <button
+                  key={section.id}
+                  type="button"
+                  onClick={() =>
+                    navigate(`/rotina/${section.id}`)
+                  }
+                  aria-label={`Abrir rotina: ${section.name}`}
+                  className="group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border-2 border-white/60 p-4 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+                  style={{
+                    backgroundColor: section.color,
+                  }}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
+                  />
+
+                  <Icon
+                    size={58}
+                    strokeWidth={2.2}
+                    color="#42251D"
+                    aria-hidden="true"
+                    className="relative"
+                  />
+
+                  <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
+                    {section.name}
+                  </span>
+                </button>
+              );
+            })}
+          </section>
+        )}
+      </div>
 
       <button
         type="button"
         onClick={() => navigate("/rotina/gerenciar")}
         aria-label="Gerenciar rotina"
-        className="fixed bottom-24 right-4 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-white text-app-text shadow-lg transition-transform active:scale-95"
+        className="fixed bottom-24 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full border border-[#F8E5D8] bg-white text-[#592B1D] shadow-lg transition-transform active:scale-95"
       >
-        <Pencil size={26} strokeWidth={2.5} />
+        <Pencil
+          size={24}
+          strokeWidth={2.5}
+          aria-hidden="true"
+        />
       </button>
     </main>
   );
