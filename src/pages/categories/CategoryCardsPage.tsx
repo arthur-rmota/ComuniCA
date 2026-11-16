@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, Smile, Volume2, Pencil } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
-import { recordCardUse } from "../../services/cardService";
+
+import { recordCardUse, cardService } from "../../services/cardService";
 import { categoryService } from "../../services/categoryService";
-import { cardService } from "../../services/cardService";
 import type { Category } from "../../types/category";
 import type { Card } from "../../types/card";
 import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
@@ -32,7 +32,6 @@ export default function CategoryCardsPage() {
         }
 
         const categories = await categoryService.getAll();
-
         const selected = categories.find((item) => item.id === categoryId);
 
         if (!selected) {
@@ -73,7 +72,6 @@ export default function CategoryCardsPage() {
       () => {
         setSpeakingCardId(card.id);
 
-        // Cartões de emergência ficam fora das estatísticas gerais.
         const isEmergency =
           category?.name
             .normalize("NFD")
@@ -102,102 +100,130 @@ export default function CategoryCardsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-app-background p-4 pb-28">
-      <header className="relative mb-5 pt-3">
-        <button
-          type="button"
-          onClick={() => navigate("/")}
-          aria-label="Voltar para o início"
-          className="absolute left-0 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white"
-        >
-          <ArrowLeft size={22} color="#383838" />
-        </button>
+    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
+      />
 
-        <h1 className="mb-6 px-12 text-center text-2xl font-bold tracking-tight text-app-text">
-          {category?.name ?? "Cartões"}
-        </h1>
+      <div className="relative mx-auto w-full max-w-lg">
+        <header className="mb-6 pt-3">
+          <div className="relative flex min-h-14 items-center justify-center">
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              aria-label="Voltar para o início"
+              className="absolute left-0 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#42251D] shadow-sm transition-transform active:scale-95"
+            >
+              <ArrowLeft size={24} strokeWidth={2.5} />
+            </button>
 
-        <div className="flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
-          <p className="text-sm font-medium text-app-text">
-            Toque em um cartão para falar
-          </p>
+            <h1 className="break-words px-14 text-center text-2xl font-extrabold tracking-tight text-[#42251D]">
+              {category?.name ?? "Cartões"}
+            </h1>
+          </div>
 
-          <span
-            aria-hidden="true"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-primary text-white"
+          <div className="mt-5 flex items-center justify-between gap-3 rounded-3xl bg-white px-4 py-3 shadow-[0_5px_14px_rgba(41,37,36,0.05)]">
+            <p className="text-sm font-semibold text-[#592B1D]">
+              Toque em um cartão para falar
+            </p>
+
+            <span
+              aria-hidden="true"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFE0BD] text-brand-primary"
+            >
+              <Volume2 size={23} strokeWidth={2.5} />
+            </span>
+          </div>
+        </header>
+
+        {loading ? (
+          <p className="text-sm text-app-muted">Carregando cartões...</p>
+        ) : error ? (
+          <p
+            role="alert"
+            className="rounded-2xl bg-red-50 p-4 text-sm text-red-700"
           >
-            <Volume2 size={20} />
-          </span>
-        </div>
-      </header>
-
-      {loading ? (
-        <p className="text-sm text-app-muted">Carregando cartões...</p>
-      ) : error ? (
-        <p role="alert" className="text-sm text-app-danger">
-          {error}
-        </p>
-      ) : cards.length === 0 ? (
-        <div className="rounded-xl bg-white p-5">
-          <p className="text-sm text-app-muted">
-            Ainda não existem cartões nesta categoria.
+            {error}
           </p>
-        </div>
-      ) : (
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          {cards.map((card) => {
-            const selectedIcon = quickPhraseIcons.find(
-              (item) => item.id === card.icon,
-            );
+        ) : cards.length === 0 ? (
+          <div className="rounded-3xl bg-white p-6 text-center shadow-sm">
+            <Smile
+              size={42}
+              className="mx-auto mb-3 text-brand-primary"
+              aria-hidden="true"
+            />
+            <p className="font-semibold text-[#42251D]">
+              Ainda não há cartões nesta categoria.
+            </p>
+          </div>
+        ) : (
+          <section
+            aria-label={`Cartões da categoria ${category?.name ?? ""}`}
+            className="grid grid-cols-2 gap-3"
+          >
+            {cards.map((card) => {
+              const selectedIcon = quickPhraseIcons.find(
+                (item) => item.id === card.icon,
+              );
 
-            const Icon = selectedIcon?.Icon ?? Smile;
-            const isSpeaking = speakingCardId === card.id;
+              const Icon = selectedIcon?.Icon ?? Smile;
+              const isSpeaking = speakingCardId === card.id;
 
-            return (
-              <button
-                key={card.id}
-                type="button"
-                onClick={() => handleSpeak(card)}
-                aria-label={`Falar: ${card.speechText}`}
-                className={`relative flex min-h-40 w-full min-w-0 flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border-2 p-4 text-center transition-all duration-200 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
-                  isSpeaking
-                    ? "border-brand-primary shadow-md"
-                    : "border-transparent"
-                }`}
-                style={{
-                  backgroundColor: category?.color ?? "#B8D8BA",
-                }}
-              >
-                <span aria-hidden="true">
-                  {card.image && !card.icon ? (
-                    <img
-                      src={card.image}
-                      alt=""
-                      className="h-14 w-14 object-contain"
-                    />
-                  ) : (
-                    <Icon size={52} strokeWidth={2.5} color="#383838" />
-                  )}
-                </span>
-
-                <span className="break-words text-sm font-semibold text-app-text">
-                  {card.title}
-                </span>
-
-                {isSpeaking && (
+              return (
+                <button
+                  key={card.id}
+                  type="button"
+                  onClick={() => handleSpeak(card)}
+                  aria-label={`Falar: ${card.speechText}`}
+                  className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border-2 p-4 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+                    isSpeaking
+                      ? "border-brand-primary shadow-[0_5px_18px_rgba(194,65,12,0.18)]"
+                      : "border-white/60 shadow-[0_5px_14px_rgba(41,37,36,0.07)]"
+                  }`}
+                  style={{
+                    backgroundColor: category?.color ?? "#B8D8BA",
+                  }}
+                >
                   <span
-                    role="status"
-                    className="flex items-center gap-1 text-xs font-medium text-[#A86400]"
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
+                  />
+
+                  <span
+                    aria-hidden="true"
+                    className="relative flex items-center justify-center"
                   >
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-brand-primary" />
-                    Falando...
+                    {card.image && !card.icon ? (
+                      <img
+                        src={card.image}
+                        alt=""
+                        className="h-16 w-16 object-contain"
+                      />
+                    ) : (
+                      <Icon size={58} strokeWidth={2.2} color="#42251D" />
+                    )}
                   </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      )}
+
+                  <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
+                    {card.title}
+                  </span>
+
+                  {isSpeaking && (
+                    <span
+                      role="status"
+                      className="relative flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-bold text-[#9A3412]"
+                    >
+                      <span className="h-2 w-2 animate-pulse rounded-full bg-brand-primary" />
+                      Falando...
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </section>
+        )}
+      </div>
 
       <button
         type="button"
@@ -208,10 +234,10 @@ export default function CategoryCardsPage() {
             });
           }
         }}
-        aria-label="Gerenciar categorias"
-        className="fixed bottom-24 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-white text-app-text shadow-lg transition-transform active:scale-95"
+        aria-label="Gerenciar cartões da categoria"
+        className="fixed bottom-24 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full border border-[#F8E5D8] bg-white text-[#592B1D] shadow-lg transition-transform active:scale-95"
       >
-        <Pencil size={24} aria-hidden="true" />
+        <Pencil size={24} strokeWidth={2.5} aria-hidden="true" />
       </button>
     </main>
   );
