@@ -1,4 +1,5 @@
 import PinAccessPage from "../../components/profile/PinAccessPage";
+import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import {
@@ -9,6 +10,7 @@ import {
   LayoutGrid,
   MessageCircle,
   X,
+  Loader2,
 } from "lucide-react";
 
 import { useProfileContext } from "../../contexts/ProfileContext";
@@ -457,97 +459,107 @@ export default function ManageCardsPage() {
       )}
 
       {/* Confirmação de exclusão */}
-      {!needsPin && cardToDelete && (
-        <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/45 p-4"
-          onClick={(event) => {
-            if (event.target === event.currentTarget && !isDeletingCard) {
-              setCardToDelete(null);
-              setDeleteError("");
-            }
-          }}
-        >
-          <div
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="delete-card-title"
-            aria-describedby="delete-card-description"
-            className="w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl"
-          >
-            {/* Cabeçalho do modal */}
-            <div className="flex items-center justify-between gap-3 border-b border-[#F1E4D9] bg-[#FFF7F0] p-5">
+
+      {!needsPin &&
+        cardToDelete &&
+        createPortal(
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 py-6">
+            {/* Fundo escurecido: tocar fora cancela a exclusão */}
+            <button
+              type="button"
+              aria-label="Cancelar exclusão e fechar janela"
+              onClick={() => {
+                setCardToDelete(null);
+                setDeleteError("");
+              }}
+              disabled={isDeletingCard}
+              className="absolute inset-0 h-full w-full bg-[#26160E]/60 backdrop-blur-[2px]"
+            />
+
+            <div
+              role="alertdialog"
+              aria-modal="true"
+              aria-labelledby="delete-card-title"
+              aria-describedby="delete-card-description"
+              className="relative z-10 w-full max-w-[360px] rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_24px_60px_rgba(38,22,14,0.25)]"
+            >
               <div className="flex items-center gap-3">
                 <span
                   aria-hidden="true"
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FFF0E4] text-brand-primary"
                 >
-                  <Trash2 size={24} color="#B91C1C" />
+                  <Trash2 size={23} strokeWidth={2.2} />
                 </span>
 
                 <h2
                   id="delete-card-title"
-                  className="text-xl font-extrabold text-[#42251D]"
+                  className="text-lg font-extrabold text-[#42251D]"
                 >
                   Excluir cartão?
                 </h2>
               </div>
 
-              <button
-                type="button"
-                disabled={isDeletingCard}
-                onClick={() => setCardToDelete(null)}
-                aria-label="Fechar confirmação"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#592B1D] disabled:opacity-50"
-              >
-                <X size={21} aria-hidden="true" />
-              </button>
-            </div>
-
-            <div className="p-5">
               <p
                 id="delete-card-description"
-                className="text-sm leading-relaxed text-[#775F54]"
+                className="mt-4 text-sm leading-6 text-[#80685D]"
               >
                 Deseja excluir o cartão{" "}
-                <strong className="text-[#42251D]">
+                <strong className="break-words text-[#42251D]">
                   "{cardToDelete.title}"
                 </strong>
-                ? Esta ação não poderá ser desfeita.
+                ? Esta ação não pode ser desfeita.
               </p>
 
               {deleteError && (
                 <p
                   role="alert"
-                  className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700"
+                  className="mt-4 rounded-xl border border-[#F4D4BD] bg-[#FFF0E4] p-3 text-sm text-[#9A3412]"
                 >
                   {deleteError}
                 </p>
               )}
-            </div>
 
-            {/* Botões do modal */}
-            <div className="grid grid-cols-2 gap-3 border-t border-[#F1E4D9] bg-white p-4">
-              <button
-                type="button"
-                disabled={isDeletingCard}
-                onClick={() => setCardToDelete(null)}
-                className="min-h-12 rounded-xl border border-[#E7D5C8] bg-white px-3 py-3 font-semibold text-[#42251D] disabled:opacity-50"
-              >
-                Cancelar
-              </button>
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCardToDelete(null);
+                    setDeleteError("");
+                  }}
+                  disabled={isDeletingCard}
+                  autoFocus
+                  className="flex min-h-12 min-w-0 items-center justify-center rounded-2xl border border-[#F1E4D9] bg-white px-3 text-sm font-bold text-[#42251D] transition-colors active:bg-[#FFF0E4] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-brand-primary"
+                >
+                  Cancelar
+                </button>
 
-              <button
-                type="button"
-                disabled={isDeletingCard}
-                onClick={() => void handleDeleteCard()}
-                className="min-h-12 rounded-xl bg-red-600 px-3 py-3 font-bold text-white disabled:opacity-50"
-              >
-                {isDeletingCard ? "Excluindo..." : "Excluir"}
-              </button>
+                <button
+                  type="button"
+                  onClick={() => void handleDeleteCard()}
+                  disabled={isDeletingCard}
+                  className="flex min-h-12 min-w-0 items-center justify-center gap-2 rounded-2xl bg-brand-primary px-3 text-sm font-bold text-white transition-colors active:bg-[#9A3412] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-brand-primary"
+                >
+                  {isDeletingCard ? (
+                    <>
+                      <Loader2
+                        size={17}
+                        className="animate-spin"
+                        aria-hidden="true"
+                      />
+                      Excluindo
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 size={17} aria-hidden="true" />
+                      Apagar
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </main>
   );
 }

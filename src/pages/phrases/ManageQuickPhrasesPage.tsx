@@ -1,5 +1,5 @@
-
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
 import {
   ArrowLeft,
@@ -8,6 +8,7 @@ import {
   Trash2,
   MessageCircle,
   MessagesSquare,
+  Loader2,
   X,
 } from "lucide-react";
 
@@ -38,13 +39,10 @@ export default function ManageQuickPhrasesPage() {
   const [phrasesError, setPhrasesError] = useState("");
 
   const [isAddPhraseOpen, setIsAddPhraseOpen] = useState(false);
-  const [editingPhrase, setEditingPhrase] =
-    useState<QuickPhrase | null>(null);
+  const [editingPhrase, setEditingPhrase] = useState<QuickPhrase | null>(null);
 
-  const [
-    isDeleteConfirmationOpen,
-    setIsDeleteConfirmationOpen,
-  ] = useState(false);
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+    useState(false);
 
   const [isDeletingPhrase, setIsDeletingPhrase] = useState(false);
   const [deleteError, setDeleteError] = useState("");
@@ -85,9 +83,7 @@ export default function ManageQuickPhrasesPage() {
         console.error("Erro ao carregar frases:", error);
 
         if (active) {
-          setPhrasesError(
-            "Não foi possível carregar as frases cadastradas.",
-          );
+          setPhrasesError("Não foi possível carregar as frases cadastradas.");
         }
       } finally {
         if (active) {
@@ -161,22 +157,16 @@ export default function ManageQuickPhrasesPage() {
       throw new Error("Acesso não autorizado.");
     }
 
-    const originalPhrase = phrases.find(
-      (phrase) => phrase.id === id,
-    );
+    const originalPhrase = phrases.find((phrase) => phrase.id === id);
 
     if (!originalPhrase || originalPhrase.userId !== "local-user") {
-      throw new Error(
-        "Somente frases personalizadas podem ser editadas.",
-      );
+      throw new Error("Somente frases personalizadas podem ser editadas.");
     }
 
     const updatedPhrase = await updateQuickPhrase(id, changes);
 
     setPhrases((current) =>
-      current.map((phrase) =>
-        phrase.id === id ? updatedPhrase : phrase,
-      ),
+      current.map((phrase) => (phrase.id === id ? updatedPhrase : phrase)),
     );
   }
 
@@ -188,9 +178,7 @@ export default function ManageQuickPhrasesPage() {
     const phrase = phrases.find((item) => item.id === id);
 
     if (!phrase || phrase.userId !== "local-user") {
-      throw new Error(
-        "Somente frases personalizadas podem ser excluídas.",
-      );
+      throw new Error("Somente frases personalizadas podem ser excluídas.");
     }
 
     const favorites = await getQuickPhraseFavorites("local-user");
@@ -205,9 +193,7 @@ export default function ManageQuickPhrasesPage() {
 
     await deleteQuickPhrase(id);
 
-    setPhrases((current) =>
-      current.filter((item) => item.id !== id),
-    );
+    setPhrases((current) => current.filter((item) => item.id !== id));
 
     setEditingPhrase(null);
     setIsDeleteConfirmationOpen(false);
@@ -233,10 +219,7 @@ export default function ManageQuickPhrasesPage() {
 
   if (needsPin) {
     return (
-      <PinAccessPage
-        title="Gerenciar Minhas Frases"
-        onBack={handleBack}
-      />
+      <PinAccessPage title="Gerenciar Minhas Frases" onBack={handleBack} />
     );
   }
 
@@ -263,11 +246,7 @@ export default function ManageQuickPhrasesPage() {
               aria-label="Voltar para Minhas Frases"
               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-[#42251D] shadow-sm transition-transform active:scale-95"
             >
-              <ArrowLeft
-                size={24}
-                strokeWidth={2.5}
-                aria-hidden="true"
-              />
+              <ArrowLeft size={24} strokeWidth={2.5} aria-hidden="true" />
             </button>
 
             <h1 className="min-w-0 text-xl font-extrabold leading-tight tracking-tight text-[#42251D] sm:text-2xl">
@@ -282,11 +261,7 @@ export default function ManageQuickPhrasesPage() {
             aria-hidden="true"
             className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/70"
           >
-            <MessagesSquare
-              size={30}
-              strokeWidth={2.3}
-              color="#C2410C"
-            />
+            <MessagesSquare size={30} strokeWidth={2.3} color="#C2410C" />
           </span>
 
           <div className="min-w-0">
@@ -295,8 +270,7 @@ export default function ManageQuickPhrasesPage() {
             </h2>
 
             <p className="mt-1 text-sm leading-relaxed text-[#775A49]">
-              Cadastre mensagens para facilitar a comunicação
-              no dia a dia.
+              Cadastre mensagens para facilitar a comunicação no dia a dia.
             </p>
           </div>
         </section>
@@ -334,9 +308,7 @@ export default function ManageQuickPhrasesPage() {
           )}
 
           {phrasesLoading ? (
-            <p className="text-sm text-app-muted">
-              Carregando frases...
-            </p>
+            <p className="text-sm text-app-muted">Carregando frases...</p>
           ) : phrases.length === 0 ? (
             <div className="rounded-2xl bg-[#FFF9F3] p-6 text-center">
               <MessagesSquare
@@ -350,8 +322,7 @@ export default function ManageQuickPhrasesPage() {
               </p>
 
               <p className="mt-2 text-sm leading-relaxed text-[#80685D]">
-                Toque em Nova frase para cadastrar
-                uma mensagem.
+                Toque em Nova frase para cadastrar uma mensagem.
               </p>
             </div>
           ) : (
@@ -377,11 +348,7 @@ export default function ManageQuickPhrasesPage() {
                           backgroundColor: phrase.color,
                         }}
                       >
-                        <Icon
-                          size={34}
-                          strokeWidth={2.2}
-                          color="#42251D"
-                        />
+                        <Icon size={34} strokeWidth={2.2} color="#42251D" />
                       </span>
 
                       <div className="min-w-0 flex-1">
@@ -396,9 +363,7 @@ export default function ManageQuickPhrasesPage() {
                               : "bg-[#F5EDE6] text-[#775A49]"
                           }`}
                         >
-                          {isCustom
-                            ? "Personalizada"
-                            : "Predefinida"}
+                          {isCustom ? "Personalizada" : "Predefinida"}
                         </span>
                       </div>
                     </div>
@@ -411,10 +376,7 @@ export default function ManageQuickPhrasesPage() {
                           aria-label={`Editar frase ${phrase.text}`}
                           className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#F5F0EA] px-4 py-2 text-sm font-semibold text-[#42251D] transition-colors hover:bg-[#EEE4DB]"
                         >
-                          <Pencil
-                            size={17}
-                            aria-hidden="true"
-                          />
+                          <Pencil size={17} aria-hidden="true" />
                           Editar
                         </button>
                       </div>
@@ -460,104 +422,107 @@ export default function ManageQuickPhrasesPage() {
       )}
 
       {/* Confirmação de exclusão */}
-      {isDeleteConfirmationOpen && editingPhrase && (
-        <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/45 p-4"
-          onClick={(event) => {
-            if (
-              event.target === event.currentTarget &&
-              !isDeletingPhrase
-            ) {
-              setIsDeleteConfirmationOpen(false);
-              setDeleteError("");
-            }
-          }}
-        >
-          <div
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="delete-phrase-title"
-            aria-describedby="delete-phrase-description"
-            className="w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl"
-          >
-            <div className="flex items-center justify-between gap-3 border-b border-[#F1E4D9] bg-[#FFF7F0] p-5">
+
+      {isDeleteConfirmationOpen &&
+        editingPhrase &&
+        createPortal(
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 py-6">
+            {/* Tocar no fundo tem o mesmo efeito de Cancelar */}
+            <button
+              type="button"
+              aria-label="Cancelar exclusão e fechar janela"
+              onClick={() => {
+                setIsDeleteConfirmationOpen(false);
+                setDeleteError("");
+              }}
+              disabled={isDeletingPhrase}
+              className="absolute inset-0 h-full w-full bg-[#26160E]/60 backdrop-blur-[2px]"
+            />
+
+            <div
+              role="alertdialog"
+              aria-modal="true"
+              aria-labelledby="delete-phrase-title"
+              aria-describedby="delete-phrase-description"
+              className="relative z-10 w-full max-w-[360px] rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_24px_60px_rgba(38,22,14,0.25)]"
+            >
               <div className="flex items-center gap-3">
                 <span
                   aria-hidden="true"
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FFF0E4] text-brand-primary"
                 >
-                  <Trash2 size={24} color="#B91C1C" />
+                  <Trash2 size={23} strokeWidth={2.2} />
                 </span>
 
                 <h2
                   id="delete-phrase-title"
-                  className="text-xl font-extrabold text-[#42251D]"
+                  className="text-lg font-extrabold text-[#42251D]"
                 >
                   Excluir frase?
                 </h2>
               </div>
 
-              <button
-                type="button"
-                disabled={isDeletingPhrase}
-                onClick={() => {
-                  setIsDeleteConfirmationOpen(false);
-                  setDeleteError("");
-                }}
-                aria-label="Fechar confirmação"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#592B1D] disabled:opacity-50"
-              >
-                <X size={21} aria-hidden="true" />
-              </button>
-            </div>
-
-            <div className="p-5">
               <p
                 id="delete-phrase-description"
-                className="text-sm leading-relaxed text-[#775F54]"
+                className="mt-4 text-sm leading-6 text-[#80685D]"
               >
                 Deseja excluir a frase{" "}
-                <strong className="text-[#42251D]">
+                <strong className="break-words text-[#42251D]">
                   "{editingPhrase.text}"
                 </strong>
-                ? Esta ação não poderá ser desfeita.
+                ? Esta ação não pode ser desfeita.
               </p>
 
               {deleteError && (
                 <p
                   role="alert"
-                  className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700"
+                  className="mt-4 rounded-xl border border-[#F4D4BD] bg-[#FFF0E4] p-3 text-sm text-[#9A3412]"
                 >
                   {deleteError}
                 </p>
               )}
-            </div>
 
-            <div className="grid grid-cols-2 gap-3 border-t border-[#F1E4D9] bg-white p-4">
-              <button
-                type="button"
-                disabled={isDeletingPhrase}
-                onClick={() => {
-                  setIsDeleteConfirmationOpen(false);
-                  setDeleteError("");
-                }}
-                className="min-h-12 rounded-xl border border-[#E7D5C8] bg-white px-3 py-3 font-semibold text-[#42251D] disabled:opacity-50"
-              >
-                Cancelar
-              </button>
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsDeleteConfirmationOpen(false);
+                    setDeleteError("");
+                  }}
+                  disabled={isDeletingPhrase}
+                  autoFocus
+                  className="flex min-h-12 min-w-0 items-center justify-center rounded-2xl border border-[#F1E4D9] bg-white px-3 text-sm font-bold text-[#42251D] transition-colors active:bg-[#FFF0E4] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-brand-primary"
+                >
+                  Cancelar
+                </button>
 
-              <button
-                type="button"
-                disabled={isDeletingPhrase}
-                onClick={() => void confirmDeletePhrase()}
-                className="min-h-12 rounded-xl bg-red-600 px-3 py-3 font-bold text-white disabled:opacity-50"
-              >
-                {isDeletingPhrase ? "Excluindo..." : "Excluir"}
-              </button>
+                <button
+                  type="button"
+                  onClick={() => void confirmDeletePhrase()}
+                  disabled={isDeletingPhrase}
+                  className="flex min-h-12 min-w-0 items-center justify-center gap-2 rounded-2xl bg-brand-primary px-3 text-sm font-bold text-white transition-colors active:bg-[#9A3412] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-brand-primary"
+                >
+                  {isDeletingPhrase ? (
+                    <>
+                      <Loader2
+                        size={17}
+                        className="animate-spin"
+                        aria-hidden="true"
+                      />
+                      Excluindo
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 size={17} aria-hidden="true" />
+                      Apagar
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </main>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { createPortal } from "react-dom";
 import {
   ArrowLeft,
   Plus,
@@ -22,6 +23,7 @@ import {
   LayoutGrid,
   X,
   Check,
+  Loader2,
 } from "lucide-react";
 import PinAccessPage from "../../components/profile/PinAccessPage";
 import { categoryService } from "../../services/categoryService";
@@ -741,73 +743,92 @@ export default function ManageCategoriesPage() {
       )}
 
       {/* Confirmação de exclusão */}
-      {!needsPin && categoryToDelete && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4"
-          onClick={(event) => {
-            if (event.target === event.currentTarget && !deleting) {
-              setCategoryToDelete(null);
-            }
-          }}
-        >
-          <div
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="delete-category-title"
-            aria-describedby="delete-category-description"
-            className="w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl"
-          >
-            <div className="flex items-center gap-3 border-b border-[#F1E4D9] bg-[#FFF7F0] p-5">
-              <span
-                aria-hidden="true"
-                className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100"
-              >
-                <Trash2 size={24} color="#B91C1C" />
-              </span>
 
-              <h2
-                id="delete-category-title"
-                className="text-xl font-extrabold text-[#42251D]"
-              >
-                Excluir categoria?
-              </h2>
-            </div>
+      {!needsPin &&
+        categoryToDelete &&
+        createPortal(
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 py-6">
+            {/* Tocar fora do modal cancela a exclusão */}
+            <button
+              type="button"
+              aria-label="Cancelar exclusão e fechar janela"
+              onClick={() => setCategoryToDelete(null)}
+              disabled={deleting}
+              className="absolute inset-0 h-full w-full bg-[#26160E]/60 backdrop-blur-[2px]"
+            />
 
-            <div className="p-5">
+            <div
+              role="alertdialog"
+              aria-modal="true"
+              aria-labelledby="delete-category-title"
+              aria-describedby="delete-category-description"
+              className="relative z-10 w-full max-w-[360px] rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_24px_60px_rgba(38,22,14,0.25)]"
+            >
+              <div className="flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FFF0E4] text-brand-primary"
+                >
+                  <Trash2 size={23} strokeWidth={2.2} />
+                </span>
+
+                <h2
+                  id="delete-category-title"
+                  className="text-lg font-extrabold text-[#42251D]"
+                >
+                  Excluir categoria?
+                </h2>
+              </div>
+
               <p
                 id="delete-category-description"
-                className="text-sm leading-relaxed text-[#775F54]"
+                className="mt-4 text-sm leading-6 text-[#80685D]"
               >
                 Deseja excluir a categoria{" "}
-                <strong className="text-[#42251D]">
+                <strong className="break-words text-[#42251D]">
                   "{categoryToDelete.name}"
                 </strong>
-                ? Esta ação não poderá ser desfeita.
+                ? Esta ação não pode ser desfeita.
               </p>
-            </div>
 
-            <div className="grid grid-cols-2 gap-3 border-t border-[#F1E4D9] p-4">
-              <button
-                type="button"
-                disabled={deleting}
-                onClick={() => setCategoryToDelete(null)}
-                className="min-h-12 rounded-xl border border-[#E7D5C8] bg-white px-3 py-3 font-semibold text-[#42251D] disabled:opacity-50"
-              >
-                Cancelar
-              </button>
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setCategoryToDelete(null)}
+                  disabled={deleting}
+                  autoFocus
+                  className="flex min-h-12 min-w-0 items-center justify-center rounded-2xl border border-[#F1E4D9] bg-white px-3 text-sm font-bold text-[#42251D] transition-colors active:bg-[#FFF0E4] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-brand-primary"
+                >
+                  Cancelar
+                </button>
 
-              <button
-                type="button"
-                disabled={deleting}
-                onClick={() => void handleDeleteCategory()}
-                className="min-h-12 rounded-xl bg-red-600 px-3 py-3 font-bold text-white disabled:opacity-50"
-              >
-                {deleting ? "Excluindo..." : "Excluir"}
-              </button>
+                <button
+                  type="button"
+                  onClick={() => void handleDeleteCategory()}
+                  disabled={deleting}
+                  className="flex min-h-12 min-w-0 items-center justify-center gap-2 rounded-2xl bg-brand-primary px-3 text-sm font-bold text-white transition-colors active:bg-[#9A3412] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-brand-primary"
+                >
+                  {deleting ? (
+                    <>
+                      <Loader2
+                        size={17}
+                        className="animate-spin"
+                        aria-hidden="true"
+                      />
+                      Excluindo
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 size={17} aria-hidden="true" />
+                      Apagar
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </main>
   );
 }

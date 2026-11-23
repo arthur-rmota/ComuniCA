@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 import RoutineModal from "../../components/routine/RoutineModal";
 import { useNavigate } from "react-router";
-import { ArrowLeft, CalendarCheck2, Pencil, Plus, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  CalendarCheck2,
+  Pencil,
+  Plus,
+  Trash2,
+  Loader2,
+} from "lucide-react";
 import PinAccessPage from "../../components/profile/PinAccessPage";
 import { useProfileContext } from "../../contexts/ProfileContext";
 import { PinVerificationForm } from "../../components/profile/PinVerificationForm";
 import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
 import { routineService } from "../../services/routineService";
+import { createPortal } from "react-dom";
 
 import type { RoutineSection } from "../../types/routine";
 
@@ -571,39 +579,91 @@ function ManageRoutinePage() {
         </RoutineModal>
       )}
 
-      {!needsPin && sectionToDelete && (
-        <RoutineModal
-          title="Excluir seção?"
-          titleId="delete-routine-title"
-          busy={saving}
-          destructive
-          footer={
-            <div className="flex gap-3">
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() => setSectionToDelete(null)}
-                className="min-h-12 flex-1 rounded-xl border border-[#E7D5C8] bg-white px-4 py-3 font-semibold text-[#42251D]"
+      {!needsPin &&
+        sectionToDelete &&
+        createPortal(
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 py-6">
+            {/* Tocar fora do modal cancela a exclusão */}
+            <button
+              type="button"
+              aria-label="Cancelar exclusão e fechar janela"
+              onClick={() => setSectionToDelete(null)}
+              disabled={saving}
+              className="absolute inset-0 h-full w-full bg-[#26160E]/60 backdrop-blur-[2px]"
+            />
+
+            <div
+              role="alertdialog"
+              aria-modal="true"
+              aria-labelledby="delete-routine-title"
+              aria-describedby="delete-routine-description"
+              className="relative z-10 w-full max-w-[360px] rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_24px_60px_rgba(38,22,14,0.25)]"
+            >
+              <div className="flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FFF0E4] text-brand-primary"
+                >
+                  <Trash2 size={23} strokeWidth={2.2} />
+                </span>
+
+                <h2
+                  id="delete-routine-title"
+                  className="text-lg font-extrabold text-[#42251D]"
+                >
+                  Excluir seção?
+                </h2>
+              </div>
+
+              <p
+                id="delete-routine-description"
+                className="mt-4 text-sm leading-6 text-[#80685D]"
               >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() => void handleDelete()}
-                className="min-h-12 flex-1 rounded-xl bg-red-600 px-4 py-3 font-semibold text-white disabled:opacity-50"
-              >
-                {saving ? "Excluindo..." : "Excluir"}
-              </button>
+                Deseja excluir a seção{" "}
+                <strong className="break-words text-[#42251D]">
+                  "{sectionToDelete.name}"
+                </strong>
+                ? Esta ação não pode ser desfeita.
+              </p>
+
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setSectionToDelete(null)}
+                  disabled={saving}
+                  autoFocus
+                  className="flex min-h-12 min-w-0 items-center justify-center rounded-2xl border border-[#F1E4D9] bg-white px-3 text-sm font-bold text-[#42251D] transition-colors active:bg-[#FFF0E4] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-brand-primary"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => void handleDelete()}
+                  disabled={saving}
+                  className="flex min-h-12 min-w-0 items-center justify-center gap-2 rounded-2xl bg-brand-primary px-3 text-sm font-bold text-white transition-colors active:bg-[#9A3412] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-brand-primary"
+                >
+                  {saving ? (
+                    <>
+                      <Loader2
+                        size={17}
+                        className="animate-spin"
+                        aria-hidden="true"
+                      />
+                      Excluindo
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 size={17} aria-hidden="true" />
+                      Apagar
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-          }
-          onClose={() => setSectionToDelete(null)}
-        >
-          <p className="my-4 text-sm text-app-muted">
-            Deseja excluir "{sectionToDelete.name}"?
-          </p>
-        </RoutineModal>
-      )}
+          </div>,
+          document.body,
+        )}
     </main>
   );
 }
