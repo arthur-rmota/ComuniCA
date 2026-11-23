@@ -1,36 +1,46 @@
-
 import { useState } from "react";
 import type { Card } from "../types/card";
-import type { MessageItem } from "../types/message";
+import type {
+  MessageBuilder,
+  MessageItem,
+  MoveDirection,
+} from "../types/message";
 
-export function useMessageBuilder() {
+export function useMessageBuilder(): MessageBuilder {
   const [items, setItems] = useState<MessageItem[]>([]);
-  const [finalizedText, setFinalizedText] = useState("");
+  const [finalizedText, setFinalizedText] = useState<string | null>(null);
 
-  // Adiciona um cartao a mensagem
-  function addItem(card: Card) {
+  // Adiciona um cartão à mensagem, permitindo repetições
+  function addItem(card: Card): void {
     const newItem: MessageItem = {
       id: crypto.randomUUID(),
-      card,
+      cardId: card.id,
+      title: card.title,
+      speechText: card.speechText,
+      icon: card.icon ?? null,
+      image: card.image,
     };
 
     setItems((current) => [...current, newItem]);
-    setFinalizedText("");
+    setFinalizedText(null);
   }
 
-  // Remove apenas o elemento selecionado
-  function removeItem(id: string) {
-    setItems((current) =>
-      current.filter((item) => item.id !== id)
-    );
-    setFinalizedText("");
+  // Remove apenas a ocorrência selecionada
+  function removeItem(itemId: string): void {
+    setItems((current) => current.filter((item) => item.id !== itemId));
+
+    setFinalizedText(null);
   }
 
-  // Move um elemento para outra posição
-  function moveItem(id: string, direction: "left" | "right") {
+  // Move um elemento uma posição para esquerda ou direita
+
+  function moveItem(itemId: string, direction: MoveDirection): void {
     setItems((current) => {
-      const index = current.findIndex((item) => item.id === id);
-      if (index === -1) return current;
+      const index = current.findIndex((item) => item.id === itemId);
+
+      if (index === -1) {
+        return current;
+      }
 
       const newIndex = direction === "left" ? index - 1 : index + 1;
 
@@ -40,37 +50,42 @@ export function useMessageBuilder() {
 
       const updated = [...current];
 
-      [updated[index], updated[newIndex]] = [
-        updated[newIndex],
-        updated[index],
-      ];
+      const currentItem = updated[index];
+      const neighborItem = updated[newIndex];
+
+      if (!currentItem || !neighborItem) {
+        return current;
+      }
+
+      updated[index] = neighborItem;
+      updated[newIndex] = currentItem;
 
       return updated;
     });
 
-    setFinalizedText("");
+    setFinalizedText(null);
   }
 
-  // Limpa todos os elementos
-  function clearMessage() {
+  // Limpa todos os elementos da mensagem
+  function clearMessage(): void {
     setItems([]);
-    setFinalizedText("");
+    setFinalizedText(null);
   }
 
-  // Finaliza a mensagem e retorna o texto
+  // Finaliza a mensagem e retorna o texto para reprodução
   function finalizeMessage(): string | null {
     if (items.length === 0) {
-      setFinalizedText("");
+      setFinalizedText(null);
       return null;
     }
 
     const text = items
-      .map((item) => item.card.speechText.trim())
+      .map((item) => item.speechText.trim())
       .filter((text) => text.length > 0)
       .join(" ");
 
     if (!text) {
-      setFinalizedText("");
+      setFinalizedText(null);
       return null;
     }
 
