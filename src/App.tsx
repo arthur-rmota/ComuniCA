@@ -19,6 +19,7 @@ import ManageRoutinePage from "./pages/routine/ManageRoutinePage";
 import ManageRoutineActivitiesPage from "./pages/routine/ManageRoutineActivitiesPage";
 import RoutineActivityPage from "./pages/routine/RoutineActivityPage";
 import HistoryPage from "./pages/history/HistoryPage";
+import MessagePage from "./pages/messages/MessagePage";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path="/rotina/gerenciar/:sectionId/atividades" element={<ManageRoutineActivitiesPage />} />
         <Route path="/rotina/:sectionId/atividades/:activityId" element={<RoutineActivityPage />} />
         <Route path="/historico" element={<HistoryPage />} />
+        <Route path="/mensagem" element={<MessagePage />} />
       </Routes>
 
       <BottomNavigation />

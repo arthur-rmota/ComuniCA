@@ -35,10 +35,6 @@ function DailyMessage() {
           <h2 className="text-lg font-extrabold text-[#592B1D]">
             {greeting}
           </h2>
-
-          <p className="mt-1 text-xs font-medium text-[#82553C]">
-            Toque para ouvir
-          </p>
         </div>
 
         <button
