@@ -159,8 +159,8 @@ export default function ManageQuickPhrasesPage() {
 
     const originalPhrase = phrases.find((phrase) => phrase.id === id);
 
-    if (!originalPhrase || originalPhrase.userId !== "local-user") {
-      throw new Error("Somente frases personalizadas podem ser editadas.");
+    if (!originalPhrase) {
+      throw new Error("Frase não encontrada.");
     }
 
     const updatedPhrase = await updateQuickPhrase(id, changes);
@@ -177,8 +177,8 @@ export default function ManageQuickPhrasesPage() {
 
     const phrase = phrases.find((item) => item.id === id);
 
-    if (!phrase || phrase.userId !== "local-user") {
-      throw new Error("Somente frases personalizadas podem ser excluídas.");
+    if (!phrase) {
+      throw new Error("Frase não encontrada.");
     }
 
     const favorites = await getQuickPhraseFavorites("local-user");
@@ -368,19 +368,17 @@ export default function ManageQuickPhrasesPage() {
                       </div>
                     </div>
 
-                    {isCustom && (
-                      <div className="mt-3 flex justify-end border-t border-[#F1E4D9] pt-3">
-                        <button
-                          type="button"
-                          onClick={() => setEditingPhrase(phrase)}
-                          aria-label={`Editar frase ${phrase.text}`}
-                          className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#F5F0EA] px-4 py-2 text-sm font-semibold text-[#42251D] transition-colors hover:bg-[#EEE4DB]"
-                        >
-                          <Pencil size={17} aria-hidden="true" />
-                          Editar
-                        </button>
-                      </div>
-                    )}
+                    <div className="mt-3 flex justify-end border-t border-[#F1E4D9] pt-3">
+                      <button
+                        type="button"
+                        onClick={() => setEditingPhrase(phrase)}
+                        aria-label={`Editar frase ${phrase.text}`}
+                        className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#F5F0EA] px-4 py-2 text-sm font-semibold text-[#42251D] transition-colors hover:bg-[#EEE4DB]"
+                      >
+                        <Pencil size={17} aria-hidden="true" />
+                        Editar
+                      </button>
+                    </div>
                   </li>
                 );
               })}
