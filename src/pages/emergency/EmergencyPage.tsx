@@ -1,11 +1,5 @@
-
 import { useEffect, useState } from "react";
-import {
-  AlertTriangle,
-  Volume2,
-  Pencil,
-  ShieldAlert,
-} from "lucide-react";
+import { AlertTriangle, Volume2, Pencil, ShieldAlert } from "lucide-react";
 import { useNavigate } from "react-router";
 
 import { getEmergencyPhrases } from "../../services/emergencyPhraseService";
@@ -20,6 +14,7 @@ function EmergencyPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [speakingId, setSpeakingId] = useState<string | null>(null);
+  const [speechError, setSpeechError] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -33,15 +28,10 @@ function EmergencyPage() {
           setError("");
         }
       } catch (error) {
-        console.error(
-          "Erro ao carregar frases de emergência:",
-          error,
-        );
+        console.error("Erro ao carregar frases de emergência:", error);
 
         if (active) {
-          setError(
-            "Não foi possível carregar as frases de emergência.",
-          );
+          setError("Não foi possível carregar as frases de emergência.");
         }
       } finally {
         if (active) {
@@ -58,15 +48,27 @@ function EmergencyPage() {
   }, []);
 
   function handleSpeak(phrase: EmergencyPhrase) {
+    setSpeechError("");
     setSpeakingId(null);
 
     speak(
       phrase.speechText,
-      () => setSpeakingId(phrase.id),
-      () =>
+      () => {
+        setSpeakingId(phrase.id);
+      },
+      () => {
         setSpeakingId((currentId) =>
           currentId === phrase.id ? null : currentId,
-        ),
+        );
+      },
+      {
+        volume: 1,
+        onError: () => {
+          setSpeechError(
+            "Não foi possível reproduzir a mensagem. Verifique o áudio do aparelho e tente novamente.",
+          );
+        },
+      },
     );
   }
 
@@ -84,11 +86,7 @@ function EmergencyPage() {
               aria-hidden="true"
               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FBE0D8]"
             >
-              <ShieldAlert
-                size={29}
-                strokeWidth={2.4}
-                color="#A52E24"
-              />
+              <ShieldAlert size={29} strokeWidth={2.4} color="#A52E24" />
             </span>
 
             <h1 className="text-2xl font-extrabold tracking-tight text-[#42251D]">
@@ -105,14 +103,27 @@ function EmergencyPage() {
               aria-hidden="true"
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FBE0D8]"
             >
-              <Volume2
-                size={23}
-                strokeWidth={2.5}
-                color="#A52E24"
-              />
+              <Volume2 size={23} strokeWidth={2.5} color="#A52E24" />
             </span>
           </div>
         </header>
+
+        {speechError && (
+          <div
+            role="alert"
+            className="mb-5 flex items-start gap-3 rounded-2xl border border-[#F4D4BD] bg-[#FFF0E4] p-4"
+          >
+            <AlertTriangle
+              size={22}
+              className="mt-0.5 shrink-0 text-[#A52E24]"
+              aria-hidden="true"
+            />
+
+            <p className="text-sm font-semibold leading-6 text-[#9A3412]">
+              {speechError}
+            </p>
+          </div>
+        )}
 
         {loading ? (
           <p className="text-sm text-app-muted">
@@ -138,8 +149,8 @@ function EmergencyPage() {
             </p>
 
             <p className="mt-2 text-sm leading-relaxed text-[#80685D]">
-              As mensagens de emergência aparecerão aqui
-              quando forem cadastradas.
+              As mensagens de emergência aparecerão aqui quando forem
+              cadastradas.
             </p>
           </div>
         ) : (
@@ -209,11 +220,7 @@ function EmergencyPage() {
         aria-label="Gerenciar frases de emergência"
         className="fixed bottom-24 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full border border-[#F8E5D8] bg-white text-[#592B1D] shadow-lg transition-transform active:scale-95"
       >
-        <Pencil
-          size={24}
-          strokeWidth={2.5}
-          aria-hidden="true"
-        />
+        <Pencil size={24} strokeWidth={2.5} aria-hidden="true" />
       </button>
     </main>
   );

@@ -1,5 +1,5 @@
-
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
 import {
   ArrowLeft,
@@ -8,7 +8,7 @@ import {
   Trash2,
   AlertTriangle,
   ShieldAlert,
-  X,
+  Loader2,
 } from "lucide-react";
 
 import EmergencyPhraseForm from "../../components/emergency/EmergencyPhraseForm";
@@ -34,11 +34,13 @@ export default function ManageEmergencyPhrasesPage() {
   const [saving, setSaving] = useState(false);
 
   const [formOpen, setFormOpen] = useState(false);
-  const [editingPhrase, setEditingPhrase] =
-    useState<EmergencyPhrase | null>(null);
+  const [editingPhrase, setEditingPhrase] = useState<EmergencyPhrase | null>(
+    null,
+  );
 
-  const [phraseToDelete, setPhraseToDelete] =
-    useState<EmergencyPhrase | null>(null);
+  const [phraseToDelete, setPhraseToDelete] = useState<EmergencyPhrase | null>(
+    null,
+  );
 
   const {
     user,
@@ -73,15 +75,10 @@ export default function ManageEmergencyPhrasesPage() {
           setError("");
         }
       } catch (err) {
-        console.error(
-          "Erro ao carregar frases de emergência:",
-          err,
-        );
+        console.error("Erro ao carregar frases de emergência:", err);
 
         if (active) {
-          setError(
-            "Não foi possível carregar as frases de emergência.",
-          );
+          setError("Não foi possível carregar as frases de emergência.");
         }
       } finally {
         if (active) {
@@ -167,15 +164,10 @@ export default function ManageEmergencyPhrasesPage() {
 
     try {
       if (editingPhrase) {
-        const updated = await updateEmergencyPhrase(
-          editingPhrase.id,
-          data,
-        );
+        const updated = await updateEmergencyPhrase(editingPhrase.id, data);
 
         setPhrases((current) =>
-          current.map((item) =>
-            item.id === updated.id ? updated : item,
-          ),
+          current.map((item) => (item.id === updated.id ? updated : item)),
         );
       } else {
         const nextPosition =
@@ -192,10 +184,7 @@ export default function ManageEmergencyPhrasesPage() {
       setFormOpen(false);
       setEditingPhrase(null);
     } catch (err) {
-      console.error(
-        "Erro ao salvar frase de emergência:",
-        err,
-      );
+      console.error("Erro ao salvar frase de emergência:", err);
 
       throw err;
     } finally {
@@ -214,18 +203,19 @@ export default function ManageEmergencyPhrasesPage() {
     try {
       await deleteEmergencyPhrase(phrase.id);
 
-      setPhrases((current) =>
-        current.filter((item) => item.id !== phrase.id),
-      );
+      setPhrases((current) => current.filter((item) => item.id !== phrase.id));
 
       setPhraseToDelete(null);
     } catch (err) {
-      console.error(
-        "Erro ao excluir frase de emergência:",
-        err,
-      );
+      console.error("Erro ao excluir frase de emergência:", err);
 
-      setError("Não foi possível excluir a frase.");
+      setError(
+        err instanceof Error &&
+          err.message ===
+            "É necessário manter pelo menos uma frase de emergência cadastrada."
+          ? err.message
+          : "Não foi possível excluir a frase.",
+      );
     } finally {
       setSaving(false);
     }
@@ -235,12 +225,7 @@ export default function ManageEmergencyPhrasesPage() {
 
   // Mantém o padrão de verificação de PIN das outras telas.
   if (needsPin) {
-    return (
-      <PinAccessPage
-        title="Gerenciar Emergência"
-        onBack={handleBack}
-      />
-    );
+    return <PinAccessPage title="Gerenciar Emergência" onBack={handleBack} />;
   }
 
   return (
@@ -266,11 +251,7 @@ export default function ManageEmergencyPhrasesPage() {
               aria-label="Voltar para Emergência"
               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-[#42251D] shadow-sm transition-transform active:scale-95"
             >
-              <ArrowLeft
-                size={24}
-                strokeWidth={2.5}
-                aria-hidden="true"
-              />
+              <ArrowLeft size={24} strokeWidth={2.5} aria-hidden="true" />
             </button>
 
             <h1 className="min-w-0 text-xl font-extrabold leading-tight tracking-tight text-[#42251D] sm:text-2xl">
@@ -285,11 +266,7 @@ export default function ManageEmergencyPhrasesPage() {
             aria-hidden="true"
             className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/70"
           >
-            <ShieldAlert
-              size={30}
-              strokeWidth={2.3}
-              color="#A52E24"
-            />
+            <ShieldAlert size={30} strokeWidth={2.3} color="#A52E24" />
           </span>
 
           <div className="min-w-0">
@@ -298,8 +275,8 @@ export default function ManageEmergencyPhrasesPage() {
             </h2>
 
             <p className="mt-1 text-sm leading-relaxed text-[#775A49]">
-              Organize as mensagens que ajudam a criança
-              a pedir ajuda rapidamente.
+              Organize as mensagens que ajudam a criança a pedir ajuda
+              rapidamente.
             </p>
           </div>
         </section>
@@ -353,8 +330,7 @@ export default function ManageEmergencyPhrasesPage() {
               </p>
 
               <p className="mt-2 text-sm leading-relaxed text-[#80685D]">
-                Toque em Nova frase para cadastrar
-                uma mensagem de emergência.
+                Toque em Nova frase para cadastrar uma mensagem de emergência.
               </p>
             </div>
           ) : (
@@ -364,8 +340,7 @@ export default function ManageEmergencyPhrasesPage() {
                   (item) => item.id === phrase.icon,
                 );
 
-                const Icon =
-                  selectedIcon?.Icon ?? AlertTriangle;
+                const Icon = selectedIcon?.Icon ?? AlertTriangle;
 
                 return (
                   <li
@@ -378,11 +353,7 @@ export default function ManageEmergencyPhrasesPage() {
                         aria-hidden="true"
                         className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#F7C7BD]"
                       >
-                        <Icon
-                          size={34}
-                          strokeWidth={2.2}
-                          color="#7C2D24"
-                        />
+                        <Icon size={34} strokeWidth={2.2} color="#7C2D24" />
                       </span>
 
                       {/* Texto da frase */}
@@ -405,10 +376,7 @@ export default function ManageEmergencyPhrasesPage() {
                         aria-label={`Editar frase ${phrase.text}`}
                         className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#F5F0EA] px-3 py-2 text-sm font-semibold text-[#42251D] transition-colors hover:bg-[#EEE4DB]"
                       >
-                        <Pencil
-                          size={17}
-                          aria-hidden="true"
-                        />
+                        <Pencil size={17} aria-hidden="true" />
                         Editar
                       </button>
 
@@ -418,13 +386,16 @@ export default function ManageEmergencyPhrasesPage() {
                           setError("");
                           setPhraseToDelete(phrase);
                         }}
+                        disabled={phrases.length <= 1}
                         aria-label={`Excluir frase ${phrase.text}`}
-                        className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-red-200 bg-white px-3 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50"
+                        title={
+                          phrases.length <= 1
+                            ? "É necessário manter pelo menos uma frase de emergência."
+                            : undefined
+                        }
+                        className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-red-200 bg-white px-3 py-2 text-sm font-semibold text-red-700 transition-colors active:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
                       >
-                        <Trash2
-                          size={17}
-                          aria-hidden="true"
-                        />
+                        <Trash2 size={17} aria-hidden="true" />
                         Excluir
                       </button>
                     </div>
@@ -444,6 +415,16 @@ export default function ManageEmergencyPhrasesPage() {
         </section>
       </div>
 
+      {!loadingPhrases && phrases.length === 1 && (
+        <p
+          role="status"
+          className="mb-4 rounded-2xl border border-[#F4D4BD] bg-[#FFF7F0] px-4 py-3 text-sm leading-6 text-[#80685D]"
+        >
+          Para garantir o acesso à comunicação de emergência, é necessário
+          manter pelo menos uma frase cadastrada.
+        </p>
+      )}
+
       {/* Formulário de cadastro e edição */}
       {formOpen && (
         <EmergencyPhraseForm
@@ -455,100 +436,99 @@ export default function ManageEmergencyPhrasesPage() {
       )}
 
       {/* Modal de confirmação de exclusão */}
-      {phraseToDelete && (
-        <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/45 p-4"
-          onClick={(event) => {
-            if (event.target === event.currentTarget) {
-              closeDeleteConfirmation();
-            }
-          }}
-        >
-          <div
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="delete-emergency-title"
-            aria-describedby="delete-emergency-description"
-            className="w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl"
-          >
-            {/* Cabeçalho do modal */}
-            <div className="flex items-center justify-between gap-3 border-b border-[#F1E4D9] bg-[#FFF7F0] p-5">
+      {phraseToDelete &&
+        createPortal(
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 py-6">
+            {/* Fundo escurecido: tocar fora cancela a exclusão */}
+            <button
+              type="button"
+              aria-label="Cancelar exclusão e fechar janela"
+              onClick={closeDeleteConfirmation}
+              disabled={saving}
+              className="absolute inset-0 h-full w-full bg-[#26160E]/60 backdrop-blur-[2px]"
+            />
+
+            <div
+              role="alertdialog"
+              aria-modal="true"
+              aria-labelledby="delete-emergency-title"
+              aria-describedby="delete-emergency-description"
+              className="relative z-10 w-full max-w-[360px] rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_24px_60px_rgba(38,22,14,0.25)]"
+            >
               <div className="flex items-center gap-3">
                 <span
                   aria-hidden="true"
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FFF0E4] text-brand-primary"
                 >
-                  <Trash2
-                    size={24}
-                    color="#B91C1C"
-                  />
+                  <Trash2 size={23} strokeWidth={2.2} />
                 </span>
 
                 <h2
                   id="delete-emergency-title"
-                  className="text-xl font-extrabold text-[#42251D]"
+                  className="text-lg font-extrabold text-[#42251D]"
                 >
                   Excluir frase?
                 </h2>
               </div>
 
-              <button
-                type="button"
-                disabled={saving}
-                onClick={closeDeleteConfirmation}
-                aria-label="Fechar confirmação"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#592B1D] disabled:opacity-50"
-              >
-                <X size={21} aria-hidden="true" />
-              </button>
-            </div>
-
-            {/* Mensagem de confirmação */}
-            <div className="p-5">
               <p
                 id="delete-emergency-description"
-                className="text-sm leading-relaxed text-[#775F54]"
+                className="mt-4 text-sm leading-6 text-[#80685D]"
               >
                 Deseja excluir a frase{" "}
-                <strong className="text-[#42251D]">
+                <strong className="break-words text-[#42251D]">
                   "{phraseToDelete.text}"
                 </strong>
-                ? Esta ação não poderá ser desfeita.
+                ? Esta ação não pode ser desfeita.
               </p>
 
               {error && (
                 <p
                   role="alert"
-                  className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700"
+                  className="mt-4 rounded-xl border border-[#F4D4BD] bg-[#FFF0E4] p-3 text-sm text-[#9A3412]"
                 >
                   {error}
                 </p>
               )}
-            </div>
 
-            {/* Botões */}
-            <div className="grid grid-cols-2 gap-3 border-t border-[#F1E4D9] bg-white p-4">
-              <button
-                type="button"
-                disabled={saving}
-                onClick={closeDeleteConfirmation}
-                className="min-h-12 rounded-xl border border-[#E7D5C8] bg-white px-3 py-3 font-semibold text-[#42251D] disabled:opacity-50"
-              >
-                Cancelar
-              </button>
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={closeDeleteConfirmation}
+                  disabled={saving}
+                  autoFocus
+                  className="flex min-h-12 min-w-0 items-center justify-center rounded-2xl border border-[#F1E4D9] bg-white px-3 text-sm font-bold text-[#42251D] transition-colors active:bg-[#FFF0E4] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-brand-primary"
+                >
+                  Cancelar
+                </button>
 
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() => void handleDelete()}
-                className="min-h-12 rounded-xl bg-red-600 px-3 py-3 font-bold text-white disabled:opacity-50"
-              >
-                {saving ? "Excluindo..." : "Excluir"}
-              </button>
+                <button
+                  type="button"
+                  onClick={() => void handleDelete()}
+                  disabled={saving}
+                  className="flex min-h-12 min-w-0 items-center justify-center gap-2 rounded-2xl bg-brand-primary px-3 text-sm font-bold text-white transition-colors active:bg-[#9A3412] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-brand-primary"
+                >
+                  {saving ? (
+                    <>
+                      <Loader2
+                        size={17}
+                        className="animate-spin"
+                        aria-hidden="true"
+                      />
+                      Excluindo
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 size={17} aria-hidden="true" />
+                      Apagar
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </main>
   );
 }
