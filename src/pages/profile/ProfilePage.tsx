@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   UserRound,
   UserRoundCog,
+  History,
 } from "lucide-react";
 
 import { ProfileInfo } from "../../components/profile/ProfileInfo";
@@ -137,15 +138,15 @@ function ProfilePage() {
                   accent="green"
                 />
                 <ProfileMenuItem
+                  icon={History}
+                  label="Histórico de mensagens"
+                  onClick={() => navigate("/historico")}
+                  accent="blue"
+                />
+                <ProfileMenuItem
                   icon={LockKeyhole}
                   label="Senha e Segurança"
                   accent="purple"
-                  disabled
-                />
-                <ProfileMenuItem
-                  icon={Bell}
-                  label="Notificações"
-                  accent="blue"
                   disabled
                 />
                 <ProfileMenuItem
