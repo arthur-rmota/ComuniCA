@@ -1,7 +1,7 @@
-
 import HomeHeader from "../../components/home/HomeHeader";
 import DailyMessage from "../../components/home/DailyMessage";
 import HomeSections from "../../components/home/HomeSections";
+import MessageShortcut from "../../components/home/MessageShortcut";
 
 function HomePage() {
   return (
@@ -19,6 +19,7 @@ function HomePage() {
       <div className="relative mx-auto w-full max-w-lg">
         <HomeHeader />
         <DailyMessage />
+        <MessageShortcut />
         <HomeSections />
       </div>
     </main>
