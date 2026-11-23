@@ -1,4 +1,3 @@
-
 import { db } from "../database/db";
 import type { EmergencyPhrase } from "../types/emergencyPhrase";
 
@@ -38,14 +37,22 @@ export async function updateEmergencyPhrase(
   return phrase;
 }
 
-export async function deleteEmergencyPhrase(
-  id: string,
-): Promise<void> {
-  const phrase = await db.emergencyPhrases.get(id);
+export async function deleteEmergencyPhrase(id: string): Promise<void> {
+  await db.transaction("rw", db.emergencyPhrases, async () => {
+    const phrase = await db.emergencyPhrases.get(id);
 
-  if (!phrase) {
-    throw new Error("Frase de emergência não encontrada.");
-  }
+    if (!phrase) {
+      throw new Error("Frase de emergência não encontrada.");
+    }
 
-  await db.emergencyPhrases.delete(id);
+    const total = await db.emergencyPhrases.count();
+
+    if (total <= 1) {
+      throw new Error(
+        "É necessário manter pelo menos uma frase de emergência cadastrada.",
+      );
+    }
+
+    await db.emergencyPhrases.delete(id);
+  });
 }
