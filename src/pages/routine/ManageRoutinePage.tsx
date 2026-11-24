@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
 import RoutineModal from "../../components/routine/RoutineModal";
+import AppIcon from "../../components/common/AppIcon";
 import { useNavigate } from "react-router";
-import {
-  ArrowLeft,
-  CalendarCheck2,
-  Pencil,
-  Plus,
-  Trash2,
-  Loader2,
-} from "lucide-react";
+import { ArrowLeft, Pencil, Plus, Trash2, Loader2 } from "lucide-react";
+
 import PinAccessPage from "../../components/profile/PinAccessPage";
 import { useProfileContext } from "../../contexts/ProfileContext";
 import { PinVerificationForm } from "../../components/profile/PinVerificationForm";
@@ -66,6 +61,7 @@ function ManageRoutinePage() {
   const [editingSection, setEditingSection] = useState<RoutineSection | null>(
     null,
   );
+
   const [sectionToDelete, setSectionToDelete] = useState<RoutineSection | null>(
     null,
   );
@@ -129,12 +125,14 @@ function ManageRoutinePage() {
 
   function openEditForm(section: RoutineSection) {
     setEditingSection(section);
+
     setForm({
       name: section.name,
       description: section.description,
       icon: section.icon,
       color: section.color,
     });
+
     setIconSearch("");
     setIconCategory("Todas");
     setError("");
@@ -178,6 +176,7 @@ function ManageRoutinePage() {
       }
 
       const updatedSections = await routineService.getSections();
+
       setSections(updatedSections);
       setFormOpen(false);
       setEditingSection(null);
@@ -200,15 +199,18 @@ function ManageRoutinePage() {
 
       if (!removed) {
         setSectionToDelete(null);
+
         setError(
           "Esta seção possui atividades. Exclua as atividades antes de remover a seção.",
         );
+
         return;
       }
 
       setSections((current) =>
         current.filter((item) => item.id !== sectionToDelete.id),
       );
+
       setSectionToDelete(null);
     } catch (err) {
       console.error("Erro ao excluir seção:", err);
@@ -304,76 +306,71 @@ function ManageRoutinePage() {
               </p>
             ) : (
               <ul className="space-y-3">
-                {sections.map((section) => {
-                  const selectedIcon = quickPhraseIcons.find(
-                    (item) => item.id === section.icon,
-                  );
-
-                  const Icon = selectedIcon?.Icon ?? CalendarCheck2;
-
-                  return (
-                    <li
-                      key={section.id}
-                      className="rounded-2xl border border-[#F1E4D9] bg-[#FFFCF9] p-4"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl"
-                          style={{
-                            backgroundColor: section.color,
-                          }}
-                        >
-                          <Icon size={30} color="#292524" aria-hidden="true" />
-                        </div>
-
-                        <div className="min-w-0 flex-1">
-                          <h3 className="break-words font-semibold text-app-text">
-                            {section.name}
-                          </h3>
-
-                          {section.description && (
-                            <p className="mt-1 break-words text-sm text-app-muted">
-                              {section.description}
-                            </p>
-                          )}
-                        </div>
+                {sections.map((section) => (
+                  <li
+                    key={section.id}
+                    className="rounded-2xl border border-[#F1E4D9] bg-[#FFFCF9] p-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl"
+                        style={{
+                          backgroundColor: section.color,
+                        }}
+                      >
+                        <AppIcon
+                          name={section.icon || "CalendarCheck2"}
+                          size={72}
+                        />
                       </div>
+
+                      <div className="min-w-0 flex-1">
+                        <h3 className="break-words font-semibold text-app-text">
+                          {section.name}
+                        </h3>
+
+                        {section.description && (
+                          <p className="mt-1 break-words text-sm text-app-muted">
+                            {section.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        navigate(`/rotina/gerenciar/${section.id}/atividades`)
+                      }
+                      className="mt-3 w-full rounded-xl bg-[#FFF3E0] px-4 py-3 text-sm font-semibold text-[#9A3412]"
+                    >
+                      Gerenciar atividades
+                    </button>
+
+                    <div className="mt-3 flex justify-end gap-2 border-t border-app-border pt-3">
+                      <button
+                        type="button"
+                        onClick={() => openEditForm(section)}
+                        className="flex items-center gap-2 rounded-xl bg-stone-100 px-3 py-2 text-sm font-medium text-app-text"
+                      >
+                        <Pencil size={16} />
+                        Editar
+                      </button>
 
                       <button
                         type="button"
-                        onClick={() =>
-                          navigate(`/rotina/gerenciar/${section.id}/atividades`)
-                        }
-                        className="mt-3 w-full rounded-xl bg-[#FFF3E0] px-4 py-3 text-sm font-semibold text-[#9A3412]"
+                        onClick={() => {
+                          setError("");
+                          setSectionToDelete(section);
+                        }}
+                        className="flex items-center gap-2 rounded-xl border border-red-200 px-3 py-2 text-sm font-medium text-red-700"
                       >
-                        Gerenciar atividades
+                        <Trash2 size={16} />
+                        Excluir
                       </button>
-
-                      <div className="mt-3 flex justify-end gap-2 border-t border-app-border pt-3">
-                        <button
-                          type="button"
-                          onClick={() => openEditForm(section)}
-                          className="flex items-center gap-2 rounded-xl bg-stone-100 px-3 py-2 text-sm font-medium text-app-text"
-                        >
-                          <Pencil size={16} />
-                          Editar
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setError("");
-                            setSectionToDelete(section);
-                          }}
-                          className="flex items-center gap-2 rounded-xl border border-red-200 px-3 py-2 text-sm font-medium text-red-700"
-                        >
-                          <Trash2 size={16} />
-                          Excluir
-                        </button>
-                      </div>
-                    </li>
-                  );
-                })}
+                    </div>
+                  </li>
+                ))}
               </ul>
             )}
 
@@ -406,6 +403,7 @@ function ManageRoutinePage() {
               >
                 Cancelar
               </button>
+
               <button
                 type="submit"
                 form="routine-section-form"
@@ -534,9 +532,9 @@ function ManageRoutinePage() {
                 ))}
               </div>
 
-              <div className="max-h-52 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-2">
+              <div className="max-h-72 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-2">
                 <div className="grid grid-cols-4 gap-2">
-                  {filteredIcons.map(({ id, label, Icon }) => (
+                  {filteredIcons.map(({ id, label }) => (
                     <button
                       key={id}
                       type="button"
@@ -548,13 +546,18 @@ function ManageRoutinePage() {
                       }
                       aria-label={label}
                       aria-pressed={form.icon === id}
-                      className={`flex aspect-square items-center justify-center rounded-xl border-2 ${
+                      title={label}
+                      className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl border-2 p-1 ${
                         form.icon === id
                           ? "border-[#FFA726] bg-[#FFF3E0]"
                           : "border-gray-200 bg-gray-50"
                       }`}
                     >
-                      <Icon size={28} color="#383838" />
+                      <AppIcon name={id} size={64} className="max-w-full" />
+
+                      <span className="max-w-full break-words text-center text-[10px] font-semibold leading-tight text-[#592B1D]">
+                        {label}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -583,7 +586,6 @@ function ManageRoutinePage() {
         sectionToDelete &&
         createPortal(
           <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 py-6">
-            {/* Tocar fora do modal cancela a exclusão */}
             <button
               type="button"
               aria-label="Cancelar exclusão e fechar janela"

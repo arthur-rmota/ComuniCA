@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, Smile, Volume2, Pencil } from "lucide-react";
+import { ArrowLeft, Pencil } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 
 import { recordCardUse, cardService } from "../../services/cardService";
 import { categoryService } from "../../services/categoryService";
 import type { Category } from "../../types/category";
 import type { Card } from "../../types/card";
-import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
+import AppIcon from "../../components/common/AppIcon";
 import { speak } from "../../utils/speech";
 
 export default function CategoryCardsPage() {
@@ -130,9 +130,9 @@ export default function CategoryCardsPage() {
 
             <span
               aria-hidden="true"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFE0BD] text-brand-primary"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFE0BD]"
             >
-              <Volume2 size={23} strokeWidth={2.5} />
+              <AppIcon name="Volume2" size={40} />
             </span>
           </div>
         </header>
@@ -148,11 +148,8 @@ export default function CategoryCardsPage() {
           </p>
         ) : cards.length === 0 ? (
           <div className="rounded-3xl bg-white p-6 text-center shadow-sm">
-            <Smile
-              size={42}
-              className="mx-auto mb-3 text-brand-primary"
-              aria-hidden="true"
-            />
+            <AppIcon name="Smile" size={64} className="mx-auto mb-3" />
+
             <p className="font-semibold text-[#42251D]">
               Ainda não há cartões nesta categoria.
             </p>
@@ -163,11 +160,6 @@ export default function CategoryCardsPage() {
             className="grid grid-cols-2 gap-3"
           >
             {cards.map((card) => {
-              const selectedIcon = quickPhraseIcons.find(
-                (item) => item.id === card.icon,
-              );
-
-              const Icon = selectedIcon?.Icon ?? Smile;
               const isSpeaking = speakingCardId === card.id;
 
               return (
@@ -176,7 +168,7 @@ export default function CategoryCardsPage() {
                   type="button"
                   onClick={() => handleSpeak(card)}
                   aria-label={`Falar: ${card.speechText}`}
-                  className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border-2 p-4 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+                  className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 p-2 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
                     isSpeaking
                       ? "border-brand-primary shadow-[0_5px_18px_rgba(194,65,12,0.18)]"
                       : "border-white/60 shadow-[0_5px_14px_rgba(41,37,36,0.07)]"
@@ -198,10 +190,13 @@ export default function CategoryCardsPage() {
                       <img
                         src={card.image}
                         alt=""
-                        className="h-16 w-16 object-contain"
+                        width={128}
+                        height={128}
+                        draggable={false}
+                        className="h-32 w-32 select-none object-contain"
                       />
                     ) : (
-                      <Icon size={58} strokeWidth={2.2} color="#42251D" />
+                      <AppIcon name={card.icon || "Smile"} size={128} />
                     )}
                   </span>
 

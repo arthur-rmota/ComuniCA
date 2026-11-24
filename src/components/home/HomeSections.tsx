@@ -1,11 +1,8 @@
-
 import { useEffect, useState } from "react";
-import { Folder, MessageCircleHeart } from "lucide-react";
 import { useNavigate } from "react-router";
-
 import { getCategories } from "../../services/categoryService";
 import type { Category } from "../../types/category";
-import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
+import AppIcon from "../common/AppIcon";
 
 function HomeSections() {
   const navigate = useNavigate();
@@ -48,12 +45,7 @@ function HomeSections() {
   return (
     <section className="mt-8">
       <div className="mb-5 flex items-center gap-2">
-        <MessageCircleHeart
-          size={25}
-          strokeWidth={2.2}
-          className="text-brand-primary"
-          aria-hidden="true"
-        />
+        <AppIcon name="MessageCircleHeart" size={32} />
 
         <h2 className="text-xl font-extrabold tracking-tight text-[#42251D]">
           Quero me comunicar
@@ -70,9 +62,7 @@ function HomeSections() {
       )}
 
       {loading ? (
-        <p className="text-sm text-app-muted">
-          Carregando categorias...
-        </p>
+        <p className="text-sm text-app-muted">Carregando categorias...</p>
       ) : categories.length === 0 ? (
         <div className="rounded-3xl bg-white p-6 text-center shadow-sm">
           <p className="text-sm text-app-muted">
@@ -81,45 +71,29 @@ function HomeSections() {
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-3">
-          {categories.map((category) => {
-            const selectedIcon = quickPhraseIcons.find(
-              (item) => item.id === category.icon,
-            );
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              type="button"
+              onClick={() => navigate(`/categorias/${category.id}`)}
+              aria-label={`Abrir categoria ${category.name}`}
+              className="group relative flex min-h-44 min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 border-white/60 p-2 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-transform duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+              style={{
+                backgroundColor: category.color,
+              }}
+            >
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
+              />
 
-            const Icon = selectedIcon?.Icon ?? Folder;
+              <AppIcon name={category.icon} size={128} className="relative" />
 
-            return (
-              <button
-                key={category.id}
-                type="button"
-                onClick={() =>
-                  navigate(`/categorias/${category.id}`)
-                }
-                aria-label={`Abrir categoria ${category.name}`}
-                className="group relative flex min-h-44 min-w-0 flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border-2 border-white/60 p-4 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-transform duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
-                style={{
-                  backgroundColor: category.color,
-                }}
-              >
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
-                />
-
-                <Icon
-                  size={58}
-                  color="#42251D"
-                  strokeWidth={2.2}
-                  aria-hidden="true"
-                  className="relative"
-                />
-
-                <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
-                  {category.name}
-                </span>
-              </button>
-            );
-          })}
+              <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
+                {category.name}
+              </span>
+            </button>
+          ))}
         </div>
       )}
     </section>

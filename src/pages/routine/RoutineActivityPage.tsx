@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import {
-  ArrowLeft,
-  CalendarCheck2,
-  Clock3,
-  MessageCircle,
-  Volume2,
-} from "lucide-react";
+import { ArrowLeft, Clock3 } from "lucide-react";
 
 import { routineService } from "../../services/routineService";
 import { getCards, recordCardUse } from "../../services/cardService";
@@ -16,7 +10,7 @@ import {
 } from "../../services/quickPhraseService";
 import { getCategories } from "../../services/categoryService";
 
-import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
+import AppIcon from "../../components/common/AppIcon";
 import QuickPhraseCard from "../../components/common/QuickPhraseCard";
 import { speak } from "../../utils/speech";
 
@@ -145,6 +139,7 @@ function RoutineActivityPage() {
 
   function handleSpeakCard(card: Card) {
     const itemId = `card-${card.id}`;
+
     setSpeakingId(null);
 
     speak(
@@ -162,6 +157,7 @@ function RoutineActivityPage() {
 
   function handleSpeakPhrase(phrase: QuickPhrase) {
     const itemId = `phrase-${phrase.id}`;
+
     setSpeakingId(null);
 
     speak(
@@ -178,12 +174,6 @@ function RoutineActivityPage() {
   }
 
   const hasMessages = cards.length > 0 || phrases.length > 0;
-
-  const selectedActivityIcon = quickPhraseIcons.find(
-    (item) => item.id === activity?.icon,
-  );
-
-  const ActivityIcon = selectedActivityIcon?.Icon ?? CalendarCheck2;
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
@@ -208,7 +198,7 @@ function RoutineActivityPage() {
               aria-label="Voltar para a seção da rotina"
               className="absolute left-0 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#42251D] shadow-sm transition-transform active:scale-95"
             >
-              <ArrowLeft size={24} strokeWidth={2.5} />
+              <ArrowLeft size={24} strokeWidth={2.5} aria-hidden="true" />
             </button>
 
             <h1 className="break-words px-14 text-center text-2xl font-extrabold tracking-tight text-[#42251D]">
@@ -218,16 +208,23 @@ function RoutineActivityPage() {
 
           {activity && (
             <div
-              className="mt-5 flex items-center gap-4 rounded-3xl border-2 border-white/60 p-4 shadow-[0_5px_14px_rgba(41,37,36,0.06)]"
+              className="mt-5 flex items-center gap-3 rounded-3xl border-2 border-white/60 p-3 shadow-[0_5px_14px_rgba(41,37,36,0.06)]"
               style={{
                 backgroundColor: section?.color ?? "#FFE0BD",
               }}
             >
               <span
                 aria-hidden="true"
-                className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/60"
+                className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-white/60"
               >
-                <ActivityIcon size={39} strokeWidth={2.2} color="#42251D" />
+                <AppIcon
+                  name={
+                    activity.icon === "balloons"
+                      ? "Balloon"
+                      : activity.icon || "CalendarCheck2"
+                  }
+                  size={88}
+                />
               </span>
 
               <div className="min-w-0 flex-1">
@@ -249,6 +246,7 @@ function RoutineActivityPage() {
                   {activity.time && (
                     <span className="flex items-center gap-1 rounded-full bg-white/70 px-3 py-1 text-xs font-bold text-[#592B1D]">
                       <Clock3 size={13} aria-hidden="true" />
+
                       {activity.time}
                     </span>
                   )}
@@ -266,7 +264,7 @@ function RoutineActivityPage() {
               aria-hidden="true"
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFE0BD]"
             >
-              <Volume2 size={23} strokeWidth={2.5} color="#C2410C" />
+              <AppIcon name="Volume2" size={40} />
             </span>
           </div>
         </header>
@@ -282,11 +280,7 @@ function RoutineActivityPage() {
           </p>
         ) : !hasMessages ? (
           <div className="rounded-3xl bg-white p-6 text-center shadow-sm">
-            <CalendarCheck2
-              size={44}
-              className="mx-auto mb-3 text-brand-primary"
-              aria-hidden="true"
-            />
+            <AppIcon name="CalendarCheck2" size={64} className="mx-auto mb-3" />
 
             <p className="font-extrabold text-[#42251D]">
               Nenhuma mensagem relacionada
@@ -300,12 +294,7 @@ function RoutineActivityPage() {
         ) : (
           <>
             <div className="mb-4 flex items-center gap-2">
-              <MessageCircle
-                size={25}
-                strokeWidth={2.2}
-                className="text-brand-primary"
-                aria-hidden="true"
-              />
+              <AppIcon name="MessageCircle" size={36} />
 
               <h2 className="text-xl font-extrabold text-[#42251D]">
                 Quero me comunicar
@@ -317,12 +306,6 @@ function RoutineActivityPage() {
               className="grid grid-cols-2 gap-3"
             >
               {cards.map((card) => {
-                const selectedIcon = quickPhraseIcons.find(
-                  (item) => item.id === card.icon,
-                );
-
-                const Icon = selectedIcon?.Icon ?? MessageCircle;
-
                 const category = categories.find(
                   (item) => item.id === card.categoryId,
                 );
@@ -336,7 +319,7 @@ function RoutineActivityPage() {
                     type="button"
                     onClick={() => handleSpeakCard(card)}
                     aria-label={`Falar: ${card.speechText}`}
-                    className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border-2 p-4 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+                    className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 p-2 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
                       isSpeaking
                         ? "border-brand-primary shadow-[0_5px_18px_rgba(194,65,12,0.18)]"
                         : "border-white/60 shadow-[0_5px_14px_rgba(41,37,36,0.07)]"
@@ -359,10 +342,16 @@ function RoutineActivityPage() {
                         <img
                           src={card.image}
                           alt=""
-                          className="h-16 w-16 object-contain"
+                          width={128}
+                          height={128}
+                          draggable={false}
+                          className="h-32 w-32 select-none object-contain"
                         />
                       ) : (
-                        <Icon size={58} strokeWidth={2.2} color="#42251D" />
+                        <AppIcon
+                          name={card.icon || "MessageCircle"}
+                          size={128}
+                        />
                       )}
                     </span>
 
