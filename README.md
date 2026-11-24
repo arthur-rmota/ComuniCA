@@ -4,150 +4,125 @@
 
 O **ComuniCA** é uma aplicação web de **Comunicação Aumentativa e Alternativa (CAA)**, desenvolvida para facilitar a expressão de necessidades, sentimentos e desejos de pessoas com dificuldades na comunicação oral.
 
-Por meio de cartões visuais, símbolos, frases rápidas e reprodução de voz, o aplicativo busca proporcionar uma experiência de comunicação simples, intuitiva, acessível e personalizável.
+Por meio de pictogramas, cartões visuais, frases rápidas e reprodução de voz, o aplicativo busca proporcionar uma experiência de comunicação simples, intuitiva, acessível e personalizável.
 
-## 🌐 Acesse o ComuniCA
+## 🌐 Conheça o ComuniCA
 
-O ComuniCA está disponível online e pode ser acessado diretamente pelo navegador, tanto no computador quanto no celular.
+- **🖥️ Landing page:** [Conheça o projeto](https://arthur-rmota.github.io/ComuniCA-landing-page/)
+- **🔗 Aplicação web:** [Acessar o ComuniCA](https://comunica-28g.pages.dev/)
 
-**🔗 Aplicação publicada:** [Acessar o ComuniCA](https://comunica-28g.pages.dev/)
-
-> 🚧 **Status:** A aplicação está em desenvolvimento e pode receber atualizações e melhorias.
+> 🚧 **Status:** projeto em desenvolvimento, sujeito a atualizações e melhorias.
 
 ## 🎯 Objetivo
 
-O ComuniCA tem como objetivo apoiar a comunicação e promover maior autonomia nas atividades cotidianas.
+Promover maior autonomia na comunicação e nas atividades cotidianas de pessoas com necessidades complexas de comunicação, especialmente crianças com dificuldades na fala.
 
-A aplicação é voltada a pessoas com necessidades complexas de comunicação, familiares, cuidadores e profissionais que acompanham seu desenvolvimento.
+O projeto também busca auxiliar familiares, cuidadores e profissionais, priorizando:
 
-O projeto prioriza:
-
-- **Acessibilidade:** interfaces visuais claras e controles intuitivos.
+- **Acessibilidade:** interfaces visuais claras e intuitivas.
 - **Autonomia:** expressão de necessidades, sentimentos e preferências.
-- **Personalização:** adaptação de categorias, cartões e frases.
-- **Usabilidade:** navegação simples, especialmente em dispositivos móveis.
+- **Personalização:** adaptação dos recursos de comunicação.
+- **Usabilidade:** experiência simplificada em dispositivos móveis.
 - **Inclusão:** apoio à comunicação e à participação social.
 
 ## ✨ Funcionalidades
 
-### 🏠 Página inicial
+### 🧩 Categorias e cartões
 
-- Visualização de categorias de comunicação.
-- Categorias identificadas por cores, ícones e nomes.
-- Navegação por meio de cartões totalmente clicáveis.
-- Acesso aos símbolos e palavras associados a cada categoria.
-
-### 🧩 Categorias e cartões de comunicação
-
-- Visualização de cartões organizados por categoria.
+- Organização de cartões de comunicação por categorias.
 - Reprodução de voz ao selecionar um cartão.
-- Cadastro, edição e exclusão de categorias.
-- Cadastro, edição e exclusão de cartões.
-- Associação de cartões às categorias.
-- Seleção de ícones para representar palavras e expressões.
-- Gerenciamento protegido por PIN, quando configurado.
+- Cadastro, edição e exclusão de categorias e cartões.
+- Personalização de pictogramas, cores e textos.
+
+### 💬 Construtor de mensagens
+
+- Construção de frases utilizando palavras e pictogramas.
+- Sugestão de palavras e regras de composição gramatical.
+- Remoção e reorganização de palavras por arrastar e soltar.
+- Reprodução de mensagens completas por voz.
+- Utilização de cartões personalizados.
 
 ### 🗣️ Frases rápidas
 
-- Acesso rápido a frases de uso cotidiano.
-- Reprodução das frases por voz.
-- Frases predefinidas essenciais.
-- Cadastro de frases personalizadas.
-- Edição e exclusão de frases personalizadas.
-- Seleção de ícones e cores.
-- Confirmação antes da exclusão.
+- Acesso rápido a mensagens de uso cotidiano.
+- Frases essenciais predefinidas.
+- Cadastro, edição e exclusão de frases personalizadas.
+- Identificação das frases mais utilizadas.
 
-As frases essenciais predefinidas são:
+### 📅 Rotina e agenda
 
-- Sim
-- Não
-- Obrigado
-- Banheiro
+- Organização visual das atividades cotidianas.
+- Divisão das atividades por seções e períodos do dia.
+- Cadastro e personalização de seções e atividades.
+- Associação de cartões e frases às atividades.
 
-As demais frases podem ser personalizadas de acordo com as necessidades do usuário.
+### 🚨 Comunicação de emergência
 
-### ⭐ Favoritos
+- Acesso rápido a mensagens de ajuda e desconforto.
+- Reprodução de mensagens por voz.
+- Gerenciamento de frases de emergência personalizadas.
 
-- Adição e remoção de frases rápidas dos favoritos.
-- Página dedicada às frases favoritas.
-- Reprodução de voz diretamente pelos cartões favoritos.
-- Armazenamento local dos favoritos.
+### 🕒 Histórico de mensagens
+
+- Registro das mensagens reproduzidas.
+- Consulta e reprodução de mensagens anteriores.
+- Identificação das mensagens mais utilizadas.
+- Exclusão do histórico mediante confirmação.
 
 ### 👤 Perfil e segurança
 
 - Configuração e edição do perfil.
-- Definição de PIN de acesso.
-- Verificação de PIN para funcionalidades de gerenciamento.
-- Recuperação de PIN conforme os recursos implementados.
-- Personalização de elementos utilizados na comunicação.
+- Proteção das funcionalidades de gerenciamento por PIN.
+- Recuperação de PIN.
 
-### 🎨 Personalização
+## 🎨 Pictogramas
 
-- Biblioteca ampliada de ícones.
-- Pesquisa de ícones por nome.
-- Filtros de ícones por categoria.
-- Seleção de cores para frases rápidas e categorias.
-- Criação e organização de cartões de comunicação.
-- Interface responsiva com foco em dispositivos móveis.
+O ComuniCA possui uma biblioteca de **188 pictogramas ilustrados**, com identidade visual consistente, cores suaves e fundo transparente.
 
-### 🔊 Reprodução de voz
+As imagens representam pessoas, ações, objetos, alimentos, sentimentos, necessidades, atividades e expressões sociais.
 
-O ComuniCA utiliza a **Web Speech API** para transformar textos em fala.
+A aplicação utiliza um manifesto centralizado e um componente reutilizável para padronizar a exibição dos pictogramas, além de permitir sua pesquisa e seleção durante a personalização.
 
-A disponibilidade e a qualidade das vozes dependem do navegador e do dispositivo utilizado.
+Os ícones funcionais de navegação e gerenciamento utilizam o Lucide React.
 
 ## 🛠️ Tecnologias utilizadas
 
-| Tecnologia     | Utilização                            |
-| -------------- | ------------------------------------- |
-| React          | Construção da interface               |
-| TypeScript     | Tipagem estática                      |
-| Vite           | Desenvolvimento e build               |
-| Tailwind CSS   | Estilização responsiva                |
-| React Router   | Navegação entre páginas               |
-| Lucide React   | Biblioteca de ícones                  |
-| Dexie.js       | Gerenciamento do banco local          |
-| IndexedDB      | Persistência dos dados no dispositivo |
-| Web Speech API | Reprodução de voz                     |
+| Tecnologia       | Utilização                   |
+| ---------------- | ---------------------------- |
+| React            | Construção da interface      |
+| TypeScript       | Tipagem estática             |
+| Vite             | Desenvolvimento e build      |
+| Tailwind CSS     | Estilização responsiva       |
+| React Router     | Navegação entre páginas      |
+| Lucide React     | Ícones funcionais            |
+| Dnd Kit          | Reorganização de elementos   |
+| Dexie.js         | Gerenciamento do banco local |
+| IndexedDB        | Persistência de dados        |
+| Web Speech API   | Reprodução de voz            |
+| Cloudflare Pages | Hospedagem                   |
 
 ## 🗄️ Armazenamento de dados
 
-O ComuniCA utiliza **IndexedDB**, com auxílio da biblioteca **Dexie.js**, para armazenar os dados diretamente no navegador.
+O ComuniCA utiliza **IndexedDB**, com auxílio do **Dexie.js**, para armazenar perfis, categorias, cartões, frases, atividades e histórico diretamente no navegador.
 
-Entre os dados armazenados estão:
+A aplicação adota uma abordagem **local-first**, sem depender de um servidor de banco de dados para suas principais funcionalidades.
 
-- Perfis.
-- Categorias.
-- Cartões de comunicação.
-- Frases rápidas personalizadas.
-- Frases favoritas.
-- Informações de inicialização e migração dos dados.
+Os dados não são automaticamente sincronizados entre dispositivos. O armazenamento local também não garante o funcionamento integral da aplicação sem internet.
 
-A aplicação segue uma abordagem **offline-first** para os dados de comunicação armazenados localmente.
-
-Os dados não são automaticamente sincronizados entre diferentes navegadores ou dispositivos.
-
-> **Atenção:** limpar os dados do site ou utilizar outro navegador pode resultar na perda das personalizações armazenadas localmente.
+> **Atenção:** limpar os dados do navegador pode resultar na perda das personalizações armazenadas.
 
 ## 📁 Estrutura do projeto
 
 ```text
 ComuniCA/
 ├── public/
+│   └── aac-icons/
 ├── src/
+│   ├── assets/
 │   ├── components/
-│   │   ├── cards/
-│   │   ├── common/
-│   │   ├── home/
-│   │   ├── layout/
-│   │   ├── profile/
-│   │   └── quickPhrases/
 │   ├── constants/
 │   ├── contexts/
 │   ├── database/
-│   │   ├── seeds/
-│   │   ├── db.ts
-│   │   └── seed.ts
 │   ├── hooks/
 │   ├── pages/
 │   ├── services/
@@ -159,18 +134,6 @@ ComuniCA/
 └── README.md
 ```
 
-A estrutura foi organizada para separar as responsabilidades:
-
-- **components:** componentes reutilizáveis da interface.
-- **constants:** bibliotecas e configurações compartilhadas.
-- **contexts:** compartilhamento de estados entre componentes.
-- **database:** banco de dados local e dados iniciais.
-- **hooks:** lógica reutilizável do React.
-- **pages:** páginas do aplicativo.
-- **services:** operações de acesso e manipulação dos dados.
-- **types:** interfaces e tipos TypeScript.
-- **utils:** funções auxiliares.
-
 ## 🚀 Como executar o projeto
 
 ### Pré-requisitos
@@ -179,113 +142,66 @@ A estrutura foi organizada para separar as responsabilidades:
 - npm.
 - Git.
 
-### 1. Clonar o repositório
+### Instalação e execução
 
 ```bash
 git clone https://github.com/arthur-rmota/ComuniCA.git
-```
-
-### 2. Acessar a pasta
-
-```bash
 cd ComuniCA
-```
-
-### 3. Instalar as dependências
-
-```bash
 npm install
-```
-
-### 4. Iniciar o ambiente de desenvolvimento
-
-```bash
 npm run dev
 ```
 
-Abra no navegador o endereço informado pelo Vite, normalmente:
+Acesse o endereço informado pelo Vite, normalmente `http://localhost:5173`.
 
-```text
-http://localhost:5173
-```
+### Comandos disponíveis
 
-Não é necessário iniciar o JSON Server para utilizar o armazenamento local da aplicação.
+| Comando            | Descrição                            |
+| ------------------ | ------------------------------------ |
+| `npm run dev`      | Inicia o ambiente de desenvolvimento |
+| `npm run build`    | Gera a versão de produção            |
+| `npm run lint`     | Executa a análise estática do código |
+| `npm run preview`  | Visualiza a versão de produção       |
+| `npx tsc --noEmit` | Verifica a tipagem TypeScript        |
 
-### 5. Validar o projeto
+## 📱 Experiência mobile e acessibilidade
 
-```bash
-npm run build
-npm run lint
-```
+O ComuniCA adota uma abordagem **mobile-first**, priorizando interações por toque, cartões visuais, navegação simplificada e controles intuitivos.
 
-### 6. Visualizar a versão de produção localmente
+O desenvolvimento busca incorporar boas práticas de acessibilidade, como identificação de controles, indicadores de foco, associação de imagens a textos e reprodução de mensagens por voz.
 
-```bash
-npm run preview
-```
-
-## 📱 Experiência mobile
-
-O ComuniCA adota uma abordagem **mobile-first**, sendo projetado prioritariamente para smartphones.
-
-A interface foi desenvolvida considerando interações por toque, cartões visuais, navegação simplificada e acessibilidade em telas menores.
-
-Embora o aplicativo também possa ser acessado em computadores, **a utilização em desktop não é recomendada como experiência principal**, pois o design e as interações foram otimizados para dispositivos móveis.
-
-## ♿ Acessibilidade
-
-A acessibilidade é um dos princípios centrais do ComuniCA.
-
-O desenvolvimento busca incorporar boas práticas como:
-
-- Associação de elementos visuais a textos.
-- Identificação acessível de botões e controles.
-- Organização visual consistente.
-- Feedback durante as interações.
-- Reprodução de mensagens por voz.
-- Interfaces adaptadas ao uso por toque.
+A disponibilidade das vozes depende do navegador e do dispositivo utilizado.
 
 O projeto ainda está em evolução e não possui certificação formal de conformidade com padrões de acessibilidade.
 
-## 🗺️ Próximas etapas
+## 🗺️ Roadmap
 
-Entre as funcionalidades e melhorias planejadas estão:
-
-- [ ] Construção de mensagens com múltiplos símbolos e palavras.
-- [ ] Remoção e reorganização dos elementos de uma mensagem.
-- [ ] Reprodução de mensagens completas.
-- [ ] Ampliação dos recursos de personalização e acessibilidade.
-- [ ] Aprimoramento da navegação e da experiência mobile.
+- [ ] Ampliação contínua do vocabulário e dos pictogramas.
+- [ ] Aprimoramento do construtor de mensagens.
+- [ ] Evolução dos recursos de rotina e agenda.
+- [ ] Aprimoramento da acessibilidade e da experiência mobile.
+- [ ] Revisão da segurança e recuperação de PIN.
+- [ ] Refatoração e organização do código.
+- [ ] Implementação de testes automatizados.
 - [ ] Testes de usabilidade com usuários.
-- [ ] Evolução das funcionalidades de rotina e agenda.
-- [ ] Avaliação de estratégias de exportação e backup dos dados.
-
-As próximas etapas podem ser ajustadas conforme os requisitos e a evolução do projeto.
+- [ ] Exportação e backup dos dados.
+- [ ] Implementação de recursos PWA e funcionamento offline.
 
 ## 🤝 Contribuições
 
-Sugestões, relatos de problemas e propostas de melhoria são bem-vindos.
-
-Você pode contribuir por meio de:
-
-- Abertura de issues.
-- Sugestões de melhorias de acessibilidade.
-- Relatos de problemas.
-- Pull requests.
+Sugestões, relatos de problemas e propostas de melhoria são bem-vindos por meio de issues e pull requests.
 
 ## 👨‍💻 Desenvolvimento
 
 **Arthur Mota**
+**Filipe Hannisch**
+**Paulo César**
+**Rebeca Alencar**
+**Rebeca Macedo**
+**Vitória Merlino**
 
-- **Aplicação:** https://comunica-28g.pages.dev/
-- **GitHub:** https://github.com/arthur-rmota
-- **Repositório:** https://github.com/arthur-rmota/ComuniCA
-
-## 📌 Sobre o projeto
-
-O ComuniCA é um projeto de software em desenvolvimento que busca utilizar tecnologias web para apoiar a comunicação acessível.
-
-A proposta é unir desenvolvimento de software, experiência do usuário e inclusão digital em uma ferramenta flexível, capaz de evoluir conforme as necessidades reais de comunicação.
+- **Aplicação:** [ComuniCA](https://comunica-28g.pages.dev/)
+- **GitHub:** [arthur-rmota](https://github.com/arthur-rmota)
+- **Repositório:** [ComuniCA](https://github.com/arthur-rmota/ComuniCA)
 
 ---
 
