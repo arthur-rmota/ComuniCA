@@ -1,4 +1,3 @@
-
 import type { Card } from "../../types/card";
 
 export const defaultCards: Card[] = [
@@ -6,6 +5,7 @@ export const defaultCards: Card[] = [
     id: "card-001",
     title: "Água",
     image: null,
+    icon: "Agua",
     altText: "Copo com água",
     speechText: "Quero água",
     categoryId: "cat-001",
@@ -17,6 +17,7 @@ export const defaultCards: Card[] = [
     id: "card-002",
     title: "Comida",
     image: null,
+    icon: "Comida",
     altText: "Prato com comida",
     speechText: "Quero comer",
     categoryId: "cat-002",
@@ -28,6 +29,7 @@ export const defaultCards: Card[] = [
     id: "card-003",
     title: "Feliz",
     image: null,
+    icon: "Smile",
     altText: "Rosto demonstrando felicidade",
     speechText: "Estou feliz",
     categoryId: "cat-003",

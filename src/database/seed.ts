@@ -57,6 +57,32 @@ export async function seedDatabase(): Promise<void> {
         await db.seedMetadata.put({ key: "cards-initialized" });
       }
 
+      // Migração dos pictogramas dos cartões iniciais.
+      const cardsIconsMigration = await db.seedMetadata.get("cards-icons-v1");
+
+      if (!cardsIconsMigration) {
+        for (const defaultCard of defaultCards) {
+          const existingCard = await db.cards.get(defaultCard.id);
+
+          if (
+            existingCard &&
+            existingCard.ownerId === null &&
+            existingCard.title === defaultCard.title &&
+            !existingCard.image &&
+            !existingCard.icon &&
+            defaultCard.icon
+          ) {
+            await db.cards.update(existingCard.id, {
+              icon: defaultCard.icon,
+            });
+          }
+        }
+
+        await db.seedMetadata.put({
+          key: "cards-icons-v1",
+        });
+      }
+
       const quickPhrasesInitialized = await db.seedMetadata.get(
         "quick-phrases-initialized",
       );
