@@ -11,7 +11,7 @@ function HomeHeader() {
     <header className="relative mb-6 pt-2">
       <div className="mb-3 flex items-center justify-center gap-2">
         <img
-          src="/comunica2-icon.png"
+          src="/comunica-dark-icon.png"
           alt=""
           aria-hidden="true"
           className="h-14 w-14 object-contain"
