@@ -1,9 +1,9 @@
 import Dexie, { type Table } from "dexie";
+
 import type { User } from "../types/user";
 import type { Category } from "../types/category";
 import type { Card } from "../types/card";
 import type { QuickPhrase } from "../types/quickPhrase";
-import type { QuickPhraseFavorite } from "../types/quickPhraseFavorite";
 import type { EmergencyPhrase } from "../types/emergencyPhrase";
 import type { RoutineSection, RoutineActivity } from "../types/routine";
 import type { HistoryRecord } from "../types/history";
@@ -13,7 +13,6 @@ export class ComuniCADatabase extends Dexie {
   categories!: Table<Category, string>;
   cards!: Table<Card, string>;
   quickPhrases!: Table<QuickPhrase, string>;
-  quickPhraseFavorites!: Table<QuickPhraseFavorite, string>;
   seedMetadata!: Table<{ key: string }, string>;
   emergencyPhrases!: Table<EmergencyPhrase, string>;
   routineSections!: Table<RoutineSection, string>;
@@ -44,6 +43,7 @@ export class ComuniCADatabase extends Dexie {
       cards: "id, categoryId, ownerId, isActive",
       quickPhrases: "id, userId, categoryId, position",
     });
+
     this.version(5).stores({
       users: "id, email",
       categories: "id, name, ownerId, position",
@@ -51,6 +51,7 @@ export class ComuniCADatabase extends Dexie {
       quickPhrases: "id, userId, categoryId, position",
       quickPhraseFavorites: "id, userId, quickPhraseId, [userId+quickPhraseId]",
     });
+
     this.version(6).stores({
       users: "id, email",
       categories: "id, name, ownerId, position",
@@ -93,6 +94,11 @@ export class ComuniCADatabase extends Dexie {
       routineSections: "id, position",
       routineActivities: "id, sectionId, period, position",
       history: "id, createdAt",
+    });
+
+    // Remove a antiga tabela de favoritos.
+    this.version(10).stores({
+      quickPhraseFavorites: null,
     });
   }
 }
