@@ -16,11 +16,6 @@ import {
   deleteQuickPhrase,
 } from "../../services/quickPhraseService";
 
-import {
-  getQuickPhraseFavorites,
-  removeQuickPhraseFavorite,
-} from "../../services/quickPhraseFavoriteService";
-
 import type { QuickPhrase } from "../../types/quickPhrase";
 
 export default function ManageQuickPhrasesPage() {
@@ -176,19 +171,6 @@ export default function ManageQuickPhrasesPage() {
 
     if (!phrase) {
       throw new Error("Frase não encontrada.");
-    }
-
-    // Limpeza de registros da antiga funcionalidade
-    // de favoritos.
-
-    const favorites = await getQuickPhraseFavorites("local-user");
-
-    const relatedFavorites = favorites.filter(
-      (favorite) => favorite.quickPhraseId === id,
-    );
-
-    for (const favorite of relatedFavorites) {
-      await removeQuickPhraseFavorite(favorite.id);
     }
 
     await deleteQuickPhrase(id);

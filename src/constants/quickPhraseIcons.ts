@@ -104,7 +104,36 @@ import {
 } from "lucide-react";
 
 export const quickPhraseIcons = [
-  // Pictogramas adicionais de comunicação alternativa
+  // ==========================================
+  // PICTOGRAMAS DE COMUNICAÇÃO ALTERNATIVA
+  // ==========================================
+
+  // Pessoas
+
+  { id: "eu", label: "Eu", category: "Pessoas", Icon: UserRound },
+  { id: "voce", label: "Você", category: "Pessoas", Icon: UserRound },
+  { id: "mamae", label: "Mamãe", category: "Pessoas", Icon: Users },
+  { id: "papai", label: "Papai", category: "Pessoas", Icon: Users },
+
+  // Ações
+
+  { id: "quero", label: "Quero", category: "Ações", Icon: HandHeart },
+  { id: "preciso", label: "Preciso de", category: "Ações", Icon: HandHelping },
+  { id: "estou", label: "Estou", category: "Ações", Icon: UserRound },
+  { id: "gosto", label: "Gosto de", category: "Ações", Icon: ThumbsUp },
+  { id: "posso", label: "Posso", category: "Ações", Icon: Check },
+  { id: "nao-quero", label: "Não quero", category: "Ações", Icon: ThumbsDown },
+  { id: "vou", label: "Vou", category: "Ações", Icon: Footprints },
+  { id: "nao-posso", label: "Não posso", category: "Ações", Icon: X },
+  { id: "adoro", label: "Adoro", category: "Ações", Icon: Heart },
+  {
+    id: "nao-gosto",
+    label: "Não gosto de",
+    category: "Ações",
+    Icon: ThumbsDown,
+  },
+
+  // Necessidades básicas
 
   {
     id: "agua",
@@ -148,6 +177,62 @@ export const quickPhraseIcons = [
     category: "Necessidades",
     Icon: Bed,
   },
+  { id: "fome", label: "Fome", category: "Necessidades", Icon: Utensils },
+  { id: "sede", label: "Sede", category: "Necessidades", Icon: GlassWater },
+  { id: "sono", label: "Sono", category: "Necessidades", Icon: Bed },
+
+  // Alimentação
+
+  { id: "comer", label: "Comer", category: "Alimentação", Icon: Utensils },
+  { id: "beber", label: "Beber", category: "Alimentação", Icon: GlassWater },
+
+  // Atividades
+
+  {
+    id: "brincar",
+    label: "Brincar (ilustrado)",
+    category: "Atividades",
+    Icon: Gamepad2,
+  },
+  { id: "desenhar", label: "Desenhar", category: "Atividades", Icon: Pencil },
+  { id: "cantar", label: "Cantar", category: "Atividades", Icon: Music },
+  { id: "descansar", label: "Descansar", category: "Atividades", Icon: Bed },
+  { id: "ir-casa", label: "Ir para casa", category: "Atividades", Icon: House },
+  { id: "jogar", label: "Jogar", category: "Atividades", Icon: Gamepad2 },
+  {
+    id: "ler",
+    label: "Ler (ilustrado)",
+    category: "Atividades",
+    Icon: BookOpen,
+  },
+
+  // Brinquedos e lazer
+
+  { id: "brinquedo", label: "Brinquedo", category: "Lazer", Icon: Puzzle },
+  { id: "bola", label: "Bola", category: "Lazer", Icon: Gamepad2 },
+
+  // Emoções e sentimentos
+
+  { id: "abraco", label: "Abraço", category: "Emoções", Icon: HandHeart },
+  { id: "medo", label: "Medo", category: "Emoções", Icon: Frown },
+  { id: "bem", label: "Bem", category: "Emoções", Icon: Smile },
+  { id: "mal", label: "Mal", category: "Emoções", Icon: Frown },
+
+  // Saúde e sensações
+
+  { id: "frio", label: "Frio", category: "Saúde", Icon: Thermometer },
+  { id: "calor", label: "Calor", category: "Saúde", Icon: Sun },
+  { id: "dor", label: "Dor", category: "Saúde", Icon: HeartPulse },
+
+  // Tempo
+
+  { id: "agora", label: "Agora", category: "Tempo", Icon: Clock },
+  { id: "depois", label: "Depois", category: "Tempo", Icon: Clock },
+  { id: "hoje", label: "Hoje", category: "Tempo", Icon: Sun },
+  { id: "amanha", label: "Amanhã", category: "Tempo", Icon: Sun },
+
+  // Expressões sociais
+
   {
     id: "sim",
     label: "Sim (ilustrado)",
@@ -160,6 +245,24 @@ export const quickPhraseIcons = [
     category: "Comunicação",
     Icon: ThumbsDown,
   },
+  { id: "ola", label: "Olá", category: "Comunicação", Icon: Hand },
+  { id: "tchau", label: "Tchau", category: "Comunicação", Icon: Hand },
+  {
+    id: "por-favor",
+    label: "Por favor",
+    category: "Comunicação",
+    Icon: HandHeart,
+  },
+  {
+    id: "obrigado",
+    label: "Obrigado / Obrigada",
+    category: "Comunicação",
+    Icon: Heart,
+  },
+
+  // ==========================================
+  // CATÁLOGO ORIGINAL
+  // ==========================================
 
   // Necessidades básicas
 
