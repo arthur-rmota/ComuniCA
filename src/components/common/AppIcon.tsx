@@ -8,12 +8,21 @@ interface AppIconProps {
 }
 
 function normalizeName(name: string): string {
-  return name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+  return name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9]/g, "")
+    .toLowerCase();
 }
 
 const iconAliases: Record<string, string> = {
   balloons: "balloon",
   phonecall: "phone",
+  calendarcheck: "calendarcheck2",
+  music2: "music",
+  micvocal: "music",
+  toybrick: "puzzle",
+  snowflake: "thermometer",
 };
 
 const iconPaths = new Map<string, string>(

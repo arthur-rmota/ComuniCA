@@ -1,10 +1,10 @@
-import type { LucideIcon } from "lucide-react";
 import { ChevronRight } from "lucide-react";
+import AppIcon from "../common/AppIcon";
 
 type Accent = "orange" | "green" | "purple" | "blue";
 
 interface ProfileMenuItemProps {
-  icon: LucideIcon;
+  icon: string;
   label: string;
   onClick?: () => void;
   disabled?: boolean;
@@ -12,14 +12,14 @@ interface ProfileMenuItemProps {
 }
 
 const accentClasses: Record<Accent, string> = {
-  orange: "bg-[#FFE0BD] text-[#C2410C]",
-  green: "bg-[#DDEFE3] text-[#347854]",
-  purple: "bg-[#EBE1FA] text-[#7752A4]",
-  blue: "bg-[#DDEBFA] text-[#356A9C]",
+  orange: "bg-[#FFE0BD]",
+  green: "bg-[#DDEFE3]",
+  purple: "bg-[#EBE1FA]",
+  blue: "bg-[#DDEBFA]",
 };
 
 export function ProfileMenuItem({
-  icon: Icon,
+  icon,
   label,
   onClick,
   disabled = false,
@@ -34,9 +34,9 @@ export function ProfileMenuItem({
     >
       <span
         aria-hidden="true"
-        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${accentClasses[accent]}`}
+        className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl ${accentClasses[accent]}`}
       >
-        <Icon size={24} strokeWidth={2.2} />
+        <AppIcon name={icon} size={60} />
       </span>
 
       <span className="min-w-0 flex-1 break-words text-sm font-bold text-[#42251D]">

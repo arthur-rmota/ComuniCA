@@ -1,5 +1,6 @@
 import { Link } from "react-router";
-import { ChevronRight, MessageSquarePlus } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import AppIcon from "../common/AppIcon";
 
 export default function MessageShortcut() {
   return (
@@ -10,9 +11,9 @@ export default function MessageShortcut() {
     >
       <span
         aria-hidden="true"
-        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#DDEFE3] text-[#347854]"
+        className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#DDEFE3]"
       >
-        <MessageSquarePlus size={26} strokeWidth={2.2} />
+        <AppIcon name="MessageSquarePlus" size={60} />
       </span>
 
       <span className="min-w-0 flex-1">

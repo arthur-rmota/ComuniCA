@@ -1,12 +1,15 @@
 import { useState, type SubmitEvent } from "react";
-import { ArrowLeft, Eye, EyeOff, KeyRound, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router";
+
+import AppIcon from "../../components/common/AppIcon";
 import { verifyRecoveryPassword } from "../../services/pinRecoveryService";
 import { useProfileContext } from "../../contexts/ProfileContext";
 
 export default function RecoverPinPage() {
   const navigate = useNavigate();
   const { authorizePinRecovery } = useProfileContext();
+
   const [showPassword, setShowPassword] = useState(false);
   const [recoveryPassword, setRecoveryPassword] = useState("");
   const [error, setError] = useState("");
@@ -36,6 +39,7 @@ export default function RecoverPinPage() {
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
       />
+
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-20 top-80 h-48 w-48 rounded-full bg-[#FFF0BB]/30"
@@ -61,14 +65,16 @@ export default function RecoverPinPage() {
           <div className="mt-5 flex items-center gap-3 rounded-3xl bg-[#FFE0BD] p-4 shadow-[0_5px_14px_rgba(194,65,12,0.05)]">
             <span
               aria-hidden="true"
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/75 text-brand-primary"
+              className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/75"
             >
-              <ShieldCheck size={26} strokeWidth={2.3} />
+              <AppIcon name="ShieldCheck" size={60} />
             </span>
+
             <div className="min-w-0">
               <p className="text-base font-extrabold text-[#42251D]">
                 Esqueceu seu PIN?
               </p>
+
               <p className="mt-1 text-sm leading-relaxed text-[#775A49]">
                 Use sua senha de recuperação para criar um novo código.
               </p>
@@ -78,7 +84,8 @@ export default function RecoverPinPage() {
 
         <section className="rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_5px_14px_rgba(41,37,36,0.06)]">
           <div className="mb-5 flex items-center gap-2">
-            <KeyRound size={22} className="text-brand-primary" aria-hidden="true" />
+            <AppIcon name="KeyRound" size={36} />
+
             <h2 className="text-lg font-extrabold text-[#42251D]">
               Senha de recuperação
             </h2>
@@ -90,7 +97,7 @@ export default function RecoverPinPage() {
                 htmlFor="recovery-password"
                 className="mb-2 block text-sm font-bold text-[#42251D]"
               >
-                <p>Digite sua senha</p> Dica: a senha é "o flamengo é seleção"
+                Digite sua senha
               </label>
 
               <div className="flex min-h-12 w-full items-center rounded-xl border border-[#E7D5C8] bg-[#FFFCF9] focus-within:border-brand-primary focus-within:ring-2 focus-within:ring-[#F8D8BF]">
@@ -104,7 +111,7 @@ export default function RecoverPinPage() {
                     setRecoveryPassword(event.target.value);
                     setError("");
                   }}
-                  placeholder="Senha de recuperação"
+                  placeholder="Dica: a senha é: o flamengo é seleção"
                   className="min-w-0 flex-1 rounded-l-xl bg-transparent px-4 py-3 text-base text-[#42251D] outline-none"
                 />
 
