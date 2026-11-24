@@ -1,14 +1,5 @@
-
 import type { QuickPhrase } from "../../types/quickPhrase";
-import { Smile } from "lucide-react";
-import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
-
-const phraseIconColors: Record<string, string> = {
-  "glass-water": "#006AA6",
-  utensils: "#3D7B35",
-  "life-buoy": "#C62828",
-  smile: "#7B1FA2",
-};
+import AppIcon from "./AppIcon";
 
 interface QuickPhraseCardProps {
   phrase: QuickPhrase;
@@ -27,12 +18,6 @@ function QuickPhraseCard({
 }: QuickPhraseCardProps) {
   const canEdit = phrase.userId === "local-user";
 
-  const selectedIcon = quickPhraseIcons.find(
-    (item) => item.id === phrase.icon,
-  );
-
-  const Icon = selectedIcon?.Icon ?? Smile;
-
   return (
     <button
       type="button"
@@ -47,12 +32,10 @@ function QuickPhraseCard({
         onSpeak(phrase);
       }}
       aria-label={
-        isSelectingToEdit
-          ? `Editar ${phrase.text}`
-          : `Falar: ${phrase.text}`
+        isSelectingToEdit ? `Editar ${phrase.text}` : `Falar: ${phrase.text}`
       }
       disabled={isSelectingToEdit && !canEdit}
-      className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border-2 p-4 text-center transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+      className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 p-2 text-center transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
         isSelectingToEdit && !canEdit
           ? "cursor-not-allowed border-white/60 opacity-40"
           : isSpeaking || isSelectingToEdit
@@ -68,13 +51,7 @@ function QuickPhraseCard({
         className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
       />
 
-      <Icon
-        size={58}
-        strokeWidth={2.2}
-        color={phraseIconColors[phrase.icon] ?? "#42251D"}
-        aria-hidden="true"
-        className="relative"
-      />
+      <AppIcon name={phrase.icon} size={128} className="relative" />
 
       <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
         {phrase.text}

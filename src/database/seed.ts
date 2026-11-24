@@ -118,26 +118,6 @@ export async function seedDatabase(): Promise<void> {
         });
       }
 
-      // Sincroniza as quatro frases rápidas fixas com o seed.
-      // As frases personalizadas não são modificadas.
-      for (const defaultPhrase of defaultQuickPhrases) {
-        const existingPhrase = await db.quickPhrases.get(defaultPhrase.id);
-
-        if (!existingPhrase) {
-          await db.quickPhrases.add(defaultPhrase);
-          continue;
-        }
-
-        await db.quickPhrases.update(defaultPhrase.id, {
-          userId: null,
-          text: defaultPhrase.text,
-          categoryId: defaultPhrase.categoryId,
-          position: defaultPhrase.position,
-          icon: defaultPhrase.icon,
-          color: defaultPhrase.color,
-        });
-      }
-
       // Inicializa as frases de emergência apenas uma vez.
       // Edições e exclusões posteriores são preservadas.
       const emergencyInitialized = await db.seedMetadata.get(

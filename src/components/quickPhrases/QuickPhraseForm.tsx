@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
 import type { QuickPhrase } from "../../types/quickPhrase";
+import AppIcon from "../common/AppIcon";
 
 const availableColors = [
   "#AFE0FA",
@@ -25,16 +26,20 @@ function QuickPhraseForm({
   initialPhrase,
 }: QuickPhraseFormProps) {
   const [phraseText, setPhraseText] = useState(initialPhrase?.text ?? "");
+
   const [selectedIcon, setSelectedIcon] = useState(
     initialPhrase?.icon ?? "smile",
   );
+
   const [selectedColor, setSelectedColor] = useState(
     initialPhrase?.color ?? "#AFE0FA",
   );
+
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const [iconSearch, setIconSearch] = useState("");
   const [selectedIconCategory, setSelectedIconCategory] = useState("Todas");
+
   const isPhraseValid = phraseText.trim().length > 0;
 
   async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
@@ -110,6 +115,7 @@ function QuickPhraseForm({
         >
           {isEditing ? "Editar frase" : "Adicionar frase"}
         </h2>
+
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label
@@ -140,6 +146,7 @@ function QuickPhraseForm({
             <p className="mb-3 text-sm font-semibold text-app-text">
               Escolha um ícone
             </p>
+
             <input
               type="search"
               value={iconSearch}
@@ -171,24 +178,30 @@ function QuickPhraseForm({
               ))}
             </div>
 
-            <div className="max-h-56 overflow-y-auto rounded-xl border border-gray-200 p-2">
+            <div className="max-h-56 overflow-x-hidden overflow-y-auto overscroll-y-contain touch-pan-y rounded-xl border border-gray-200 p-2">
               <div className="grid grid-cols-4 gap-2">
-                {filteredIcons.map(({ id, label, Icon }) => (
+                {filteredIcons.map(({ id, label }) => (
                   <button
                     key={id}
                     type="button"
                     onClick={() => setSelectedIcon(id)}
                     aria-label={label}
                     aria-pressed={selectedIcon === id}
-                    className={`flex aspect-square items-center justify-center rounded-xl border-2 transition-colors ${
+                    title={label}
+                    className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl border-2 p-1 transition-colors focus-visible:outline-2 focus-visible:outline-brand-primary ${
                       selectedIcon === id
                         ? "border-[#FFA726] bg-[#FFF3E0]"
                         : "border-gray-200 bg-gray-50"
                     }`}
                   >
-                    <Icon size={28} color="#383838" />
+                    <AppIcon name={id} size={64} className="max-w-full" />
+
+                    <span className="max-w-full break-words text-center text-[10px] font-semibold leading-tight text-[#592B1D]">
+                      {label}
+                    </span>
                   </button>
                 ))}
+
                 {filteredIcons.length === 0 && (
                   <p className="col-span-full w-full py-6 text-center text-sm text-gray-500">
                     Nenhum ícone encontrado.
@@ -226,6 +239,34 @@ function QuickPhraseForm({
             </div>
           </div>
 
+          <div className="mb-6">
+            <p className="mb-3 text-sm font-semibold text-app-text">
+              Prévia do cartão
+            </p>
+
+            <div
+              className="relative mx-auto flex min-h-44 w-full max-w-44 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 border-white/60 p-2 text-center shadow-sm"
+              style={{
+                backgroundColor: selectedColor,
+              }}
+            >
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
+              />
+
+              <AppIcon
+                name={selectedIcon}
+                size={128}
+                className="relative max-w-full"
+              />
+
+              <span className="relative max-w-full break-words text-base font-extrabold leading-tight text-[#42251D]">
+                {phraseText.trim() || "Sua frase"}
+              </span>
+            </div>
+          </div>
+
           {error && (
             <p role="alert" className="mb-4 text-sm text-red-600">
               {error}
@@ -245,13 +286,9 @@ function QuickPhraseForm({
             <button
               type="submit"
               disabled={isSaving || !isPhraseValid}
-              className="flex-1 rounded-xl bg-brand-primary hover:bg-brand-hover transition-colors px-4 py-3 font-semibold text-white disabled:opacity-50"
+              className="flex-1 rounded-xl bg-brand-primary px-4 py-3 font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-50"
             >
-              {isSaving
-                ? "Salvando..."
-                : isEditing
-                  ? "Salvar"
-                  : "Salvar frase"}
+              {isSaving ? "Salvando..." : isEditing ? "Salvar" : "Salvar frase"}
             </button>
           </div>
         </form>

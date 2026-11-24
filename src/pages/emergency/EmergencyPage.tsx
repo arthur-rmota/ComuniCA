@@ -1,11 +1,17 @@
+
 import { useEffect, useState } from "react";
-import { AlertTriangle, Volume2, Pencil, ShieldAlert } from "lucide-react";
+import { AlertTriangle, Pencil } from "lucide-react";
 import { useNavigate } from "react-router";
 
+import AppIcon from "../../components/common/AppIcon";
 import { getEmergencyPhrases } from "../../services/emergencyPhraseService";
-import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
 import type { EmergencyPhrase } from "../../types/emergencyPhrase";
 import { speak } from "../../utils/speech";
+
+const emergencyPictograms: Record<string, string> = {
+  "life-buoy": "Ajuda",
+  "phone-call": "Phone",
+};
 
 function EmergencyPage() {
   const navigate = useNavigate();
@@ -86,7 +92,7 @@ function EmergencyPage() {
               aria-hidden="true"
               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FBE0D8]"
             >
-              <ShieldAlert size={29} strokeWidth={2.4} color="#A52E24" />
+              <AppIcon name="ShieldAlert" size={44} />
             </span>
 
             <h1 className="text-2xl font-extrabold tracking-tight text-[#42251D]">
@@ -103,7 +109,7 @@ function EmergencyPage() {
               aria-hidden="true"
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FBE0D8]"
             >
-              <Volume2 size={23} strokeWidth={2.5} color="#A52E24" />
+              <AppIcon name="Volume2" size={40} />
             </span>
           </div>
         </header>
@@ -138,10 +144,10 @@ function EmergencyPage() {
           </p>
         ) : phrases.length === 0 ? (
           <div className="rounded-3xl bg-white p-6 text-center shadow-sm">
-            <AlertTriangle
-              size={44}
-              className="mx-auto mb-3 text-[#A52E24]"
-              aria-hidden="true"
+            <AppIcon
+              name="AlertTriangle"
+              size={64}
+              className="mx-auto mb-3"
             />
 
             <p className="font-bold text-[#42251D]">
@@ -159,12 +165,10 @@ function EmergencyPage() {
             className="grid grid-cols-2 gap-3"
           >
             {phrases.map((phrase) => {
-              const selectedIcon = quickPhraseIcons.find(
-                (item) => item.id === phrase.icon,
-              );
-
-              const Icon = selectedIcon?.Icon ?? AlertTriangle;
               const isSpeaking = speakingId === phrase.id;
+
+              const iconName =
+                emergencyPictograms[phrase.icon] ?? phrase.icon;
 
               return (
                 <button
@@ -172,7 +176,7 @@ function EmergencyPage() {
                   type="button"
                   onClick={() => handleSpeak(phrase)}
                   aria-label={`Falar: ${phrase.speechText}`}
-                  className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border-2 p-4 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+                  className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 p-2 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
                     isSpeaking
                       ? "border-[#A52E24] shadow-[0_5px_18px_rgba(165,46,36,0.18)]"
                       : "border-white/60 shadow-[0_5px_14px_rgba(41,37,36,0.07)]"
@@ -186,11 +190,9 @@ function EmergencyPage() {
                     className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/20"
                   />
 
-                  <Icon
-                    size={58}
-                    strokeWidth={2.2}
-                    color="#7C2D24"
-                    aria-hidden="true"
+                  <AppIcon
+                    name={iconName || "AlertTriangle"}
+                    size={128}
                     className="relative"
                   />
 

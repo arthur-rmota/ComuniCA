@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
@@ -6,10 +7,9 @@ import {
   MessageCircle,
   RotateCcw,
   Square,
-  GripVertical,
-  X,
   Volume2,
 } from "lucide-react";
+
 import {
   closestCenter,
   DndContext,
@@ -17,7 +17,6 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragOverlay,
   type DragEndEvent,
 } from "@dnd-kit/core";
 
@@ -27,10 +26,11 @@ import {
   SortableContext,
 } from "@dnd-kit/sortable";
 
-import SortableMessageWord from "../../components/messages/SortableMessageWord";
 import { useNavigate } from "react-router";
 
-import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
+import AppIcon from "../../components/common/AppIcon";
+import SortableMessageWord from "../../components/messages/SortableMessageWord";
+
 import {
   availableMessageGroups,
   availableMessageWords,
@@ -40,9 +40,11 @@ import {
   type MessageGroupId,
   type MessageWord,
 } from "../../data/messageVocabulary";
+
 import { useMessageBuilder } from "../../hooks/useMessageBuilder";
 import { getCards } from "../../services/cardService";
 import type { Card } from "../../types/card";
+
 import {
   canRepeatSpeech,
   repeatLastSpeech,
@@ -50,14 +52,54 @@ import {
   stopSpeaking,
 } from "../../utils/speech";
 
+const wordPictograms: Record<string, string> = {
+  agua: "Agua",
+  comida: "Comida",
+  ajuda: "Ajuda",
+  casa: "Casa",
+  banheiro: "Banheiro",
+  banho: "Banho",
+  dormir: "Dormir",
+  sim: "Sim",
+  nao: "Nao",
+  "ir-casa": "Casa",
+  "nao-quero": "Nao",
+  "nao-posso": "Nao",
+  comer: "Comida",
+  beber: "Agua",
+  sede: "Agua",
+  fome: "Comida",
+  descanso: "Dormir",
+  descansar: "Dormir",
+  suco: "CupSoda",
+  musica: "Music",
+  cantar: "Music",
+  brinquedo: "Puzzle",
+  brincar: "Puzzle",
+  bola: "Gamepad2",
+  frio: "Thermometer",
+};
+
+function getWordIcon(word: MessageWord): string {
+  if (word.role === "personal") {
+    return word.originalCard?.icon || "MessageCircle";
+  }
+
+  return (
+    wordPictograms[word.id] ??
+    word.Icon.displayName ??
+    "MessageCircle"
+  );
+}
+
 export default function MessagePage() {
   const navigate = useNavigate();
+
   const {
     items,
     finalizedText,
     addItem,
     removeItem,
-    clearMessage,
     finalizeMessage,
     moveItem,
   } = useMessageBuilder();
@@ -89,9 +131,13 @@ export default function MessagePage() {
       return;
     }
 
-    const oldIndex = items.findIndex((item) => item.id === active.id);
+    const oldIndex = items.findIndex(
+      (item) => item.id === active.id,
+    );
 
-    const newIndex = items.findIndex((item) => item.id === over.id);
+    const newIndex = items.findIndex(
+      (item) => item.id === over.id,
+    );
 
     if (oldIndex === -1 || newIndex === -1) {
       return;
@@ -117,6 +163,7 @@ export default function MessagePage() {
       })
       .catch((error: unknown) => {
         console.error("Erro ao carregar cartões:", error);
+
         if (active) {
           setCardsError("Seus cartões não puderam ser carregados.");
         }
@@ -130,7 +177,10 @@ export default function MessagePage() {
     };
   }, []);
 
-  const currentGroup = messageGroups.find((group) => group.id === groupId)!;
+  const currentGroup = messageGroups.find(
+    (group) => group.id === groupId,
+  )!;
+
   const allowedGroups = availableMessageGroups(items);
 
   const visibleWords: MessageWord[] =
@@ -140,14 +190,10 @@ export default function MessagePage() {
           .map((card) => ({
             id: card.id,
             label: card.title,
-            // Cartões personalizados podem ser frases inteiras: não os combinamos
-            // com verbos, para evitar composições como "quero Quero água".
             speechText: card.speechText,
             role: "personal",
             originalCard: card,
-            Icon:
-              quickPhraseIcons.find((option) => option.id === card.icon)
-                ?.Icon ?? MessageCircle,
+            Icon: MessageCircle,
           }))
       : availableMessageWords(groupId, items);
 
@@ -159,7 +205,6 @@ export default function MessagePage() {
   function addWord(word: MessageWord): void {
     if (!word.speechText.trim()) return;
 
-    // Evita inserir opções de uma etapa anterior da construção.
     if (
       !allowedGroups.includes(groupId) ||
       !visibleWords.some((option) => option.id === word.id)
@@ -174,8 +219,9 @@ export default function MessagePage() {
           : `vocabulary-${word.id}`,
       title: word.label,
       speechText: word.speechText,
-      image: null,
-      altText: word.label,
+      icon: getWordIcon(word),
+      image: word.originalCard?.image ?? null,
+      altText: word.originalCard?.altText ?? word.label,
       categoryId: `vocabulary-${groupId}`,
       ownerId: null,
       keywords: [word.speechText],
@@ -186,8 +232,6 @@ export default function MessagePage() {
     setNotice("");
     setShowGroups(false);
 
-    // O hook atual atualiza items no próximo render. Calculamos a próxima
-    // etapa com a lista já contendo a palavra recém-selecionada.
     const nextItems = [
       ...items,
       {
@@ -195,15 +239,19 @@ export default function MessagePage() {
         cardId: card.id,
         title: card.title,
         speechText: card.speechText,
-        icon: null,
-        image: null,
+        icon: card.icon ?? null,
+        image: card.image,
       },
     ];
+
     setGroupId(suggestedMessageGroup(nextItems) ?? groupId);
   }
 
   function handleRemove(itemId: string): void {
-    const remaining = items.filter((item) => item.id !== itemId);
+    const remaining = items.filter(
+      (item) => item.id !== itemId,
+    );
+
     removeItem(itemId);
     setGroupId(suggestedMessageGroup(remaining) ?? "quem");
     setShowGroups(false);
@@ -211,37 +259,34 @@ export default function MessagePage() {
 
   function handleSpeak(): void {
     const text = finalizedText ?? finalizeMessage();
+
     if (!text) return;
 
     if (!("speechSynthesis" in window)) {
-      setNotice("Este dispositivo não oferece reprodução por voz.");
+      setNotice(
+        "Este dispositivo não oferece reprodução por voz.",
+      );
       return;
     }
 
     setNotice("");
+
     speak(
       formatMessage(text),
       () => setSpeaking(true),
       () => setSpeaking(false),
     );
+
     setCanRepeat(canRepeatSpeech());
   }
 
   function handleRepeat(): void {
     if (!canRepeatSpeech()) return;
+
     repeatLastSpeech(
       () => setSpeaking(true),
       () => setSpeaking(false),
     );
-  }
-
-  function handleClear(): void {
-    stopSpeaking();
-    setSpeaking(false);
-    clearMessage();
-    setGroupId("quem");
-    setShowGroups(false);
-    setNotice("");
   }
 
   return (
@@ -260,7 +305,11 @@ export default function MessagePage() {
               aria-label="Voltar para o início"
               className="absolute left-0 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#42251D] shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
             >
-              <ArrowLeft size={24} strokeWidth={2.5} aria-hidden="true" />
+              <ArrowLeft
+                size={24}
+                strokeWidth={2.5}
+                aria-hidden="true"
+              />
             </button>
 
             <h1 className="px-14 text-center text-2xl font-extrabold tracking-tight text-[#42251D]">
@@ -306,7 +355,9 @@ export default function MessagePage() {
           )}
 
           <p className="sr-only" aria-live="polite">
-            {draft ? `Mensagem: ${formatMessage(draft)}` : "Mensagem vazia"}
+            {draft
+              ? `Mensagem: ${formatMessage(draft)}`
+              : "Mensagem vazia"}
           </p>
 
           <div className="mt-3 flex gap-2">
@@ -361,37 +412,48 @@ export default function MessagePage() {
               id="word-bank-title"
               className="text-xl font-extrabold text-[#42251D]"
             >
-              {allowedGroups.length === 0 ? "Pronto!" : currentGroup.label}
+              {allowedGroups.length === 0
+                ? "Pronto!"
+                : currentGroup.label}
             </h2>
 
             <button
               type="button"
-              onClick={() => setShowGroups((current) => !current)}
+              onClick={() =>
+                setShowGroups((current) => !current)
+              }
               disabled={allowedGroups.length <= 1}
               aria-expanded={showGroups}
               aria-controls="message-word-groups"
               className="flex min-h-11 items-center gap-1.5 rounded-xl px-2 text-sm font-bold text-[#80685D] hover:bg-[#FFF0E4] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-brand-primary"
             >
               <LayoutGrid size={18} aria-hidden="true" />
+
               <span>Outras palavras</span>
+
               <ChevronDown
                 size={16}
                 aria-hidden="true"
-                className={`transition-transform ${showGroups ? "rotate-180" : ""}`}
+                className={`transition-transform ${
+                  showGroups ? "rotate-180" : ""
+                }`}
               />
             </button>
           </div>
 
           <div
             id="message-word-groups"
-            className={`${showGroups ? "mb-5 grid" : "hidden"} grid-cols-2 gap-2 rounded-2xl border border-[#F5E9DF] bg-white p-3`}
+            className={`${
+              showGroups ? "mb-5 grid" : "hidden"
+            } grid-cols-2 gap-2 rounded-2xl border border-[#F5E9DF] bg-white p-3`}
             role="group"
             aria-label="Escolher grupo de palavras"
           >
             {messageGroups
-              .filter((group) => allowedGroups.includes(group.id))
+              .filter((group) =>
+                allowedGroups.includes(group.id),
+              )
               .map((group) => {
-                const Icon = group.Icon;
                 const selected = group.id === groupId;
 
                 return (
@@ -409,7 +471,14 @@ export default function MessagePage() {
                         : "border-[#F5E9DF] bg-[#FFFCF9] text-[#592B1D]"
                     }`}
                   >
-                    <Icon size={21} className="shrink-0" aria-hidden="true" />
+                    <AppIcon
+                      name={
+                        group.Icon.displayName ??
+                        "MessageCircle"
+                      }
+                      size={40}
+                    />
+
                     <span>{group.label}</span>
                   </button>
                 );
@@ -440,39 +509,44 @@ export default function MessagePage() {
             </p>
           ) : (
             <div className="grid grid-cols-2 gap-3">
-              {visibleWords.map((word) => {
-                const Icon = word.Icon;
+              {visibleWords.map((word) => (
+                <button
+                  key={word.id}
+                  type="button"
+                  onClick={() => addWord(word)}
+                  aria-label={`Adicionar ${word.label} à mensagem`}
+                  className="group relative flex min-h-44 min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 border-white/60 p-2 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-transform duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+                  style={{
+                    backgroundColor: currentGroup.color,
+                  }}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
+                  />
 
-                return (
-                  <button
-                    key={word.id}
-                    type="button"
-                    onClick={() => addWord(word)}
-                    aria-label={`Adicionar ${word.label} à mensagem`}
-                    className="flex min-h-32 min-w-0 flex-col items-center justify-center gap-3 rounded-3xl border border-white/70 p-4 text-center shadow-[0_5px_14px_rgba(41,37,36,0.06)] transition-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
-                    style={{ backgroundColor: currentGroup.color }}
-                  >
-                    {word.originalCard?.image ? (
-                      <img
-                        src={word.originalCard.image}
-                        alt=""
-                        className="h-12 w-12 object-contain"
-                      />
-                    ) : (
-                      <Icon
-                        size={42}
-                        strokeWidth={2.1}
-                        color="#42251D"
-                        aria-hidden="true"
-                      />
-                    )}
+                  {word.originalCard?.image ? (
+                    <img
+                      src={word.originalCard.image}
+                      alt=""
+                      width={128}
+                      height={128}
+                      draggable={false}
+                      className="relative h-32 w-32 select-none object-contain"
+                    />
+                  ) : (
+                    <AppIcon
+                      name={getWordIcon(word)}
+                      size={128}
+                      className="relative"
+                    />
+                  )}
 
-                    <span className="break-words text-base font-extrabold leading-tight text-[#42251D]">
-                      {word.label}
-                    </span>
-                  </button>
-                );
-              })}
+                  <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
+                    {word.label}
+                  </span>
+                </button>
+              ))}
             </div>
           )}
         </section>

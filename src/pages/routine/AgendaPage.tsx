@@ -1,16 +1,10 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import {
-  AlertCircle,
-  CalendarCheck2,
-  Pencil,
-  ChevronRight,
-} from "lucide-react";
+import { AlertCircle, Pencil, ChevronRight } from "lucide-react";
 
 import { routineService } from "../../services/routineService";
-import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
 import type { RoutineSection } from "../../types/routine";
+import AppIcon from "../../components/common/AppIcon";
 
 function AgendaPage() {
   const navigate = useNavigate();
@@ -69,11 +63,7 @@ function AgendaPage() {
               aria-hidden="true"
               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FFE0BD]"
             >
-              <CalendarCheck2
-                size={29}
-                strokeWidth={2.4}
-                color="#C2410C"
-              />
+              <AppIcon name="CalendarCheck2" size={44} />
             </span>
 
             <h1 className="text-2xl font-extrabold tracking-tight text-[#42251D]">
@@ -90,11 +80,7 @@ function AgendaPage() {
               aria-hidden="true"
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFE0BD]"
             >
-              <ChevronRight
-                size={23}
-                strokeWidth={2.5}
-                color="#C2410C"
-              />
+              <ChevronRight size={23} strokeWidth={2.5} color="#C2410C" />
             </span>
           </div>
         </header>
@@ -105,29 +91,23 @@ function AgendaPage() {
             className="mb-4 flex items-center gap-2 rounded-2xl bg-red-50 p-4 text-sm text-red-700"
           >
             <AlertCircle size={20} aria-hidden="true" />
+
             {error}
           </div>
         )}
 
         {loading ? (
-          <p className="text-sm text-app-muted">
-            Carregando rotina...
-          </p>
+          <p className="text-sm text-app-muted">Carregando rotina...</p>
         ) : error ? null : sections.length === 0 ? (
           <div className="rounded-3xl bg-white p-6 text-center shadow-sm">
-            <CalendarCheck2
-              size={44}
-              className="mx-auto mb-3 text-brand-primary"
-              aria-hidden="true"
-            />
+            <AppIcon name="CalendarCheck2" size={64} className="mx-auto mb-3" />
 
             <p className="font-bold text-[#42251D]">
               Nenhuma rotina cadastrada
             </p>
 
             <p className="mt-2 text-sm leading-relaxed text-[#80685D]">
-              As partes da sua rotina aparecerão aqui
-              quando forem cadastradas.
+              As partes da sua rotina aparecerão aqui quando forem cadastradas.
             </p>
           </div>
         ) : (
@@ -135,45 +115,33 @@ function AgendaPage() {
             aria-label="Seções da rotina"
             className="grid grid-cols-2 gap-3"
           >
-            {sections.map((section) => {
-              const selectedIcon = quickPhraseIcons.find(
-                (item) => item.id === section.icon,
-              );
+            {sections.map((section) => (
+              <button
+                key={section.id}
+                type="button"
+                onClick={() => navigate(`/rotina/${section.id}`)}
+                aria-label={`Abrir rotina: ${section.name}`}
+                className="group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 border-white/60 p-2 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+                style={{
+                  backgroundColor: section.color,
+                }}
+              >
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
+                />
 
-              const Icon = selectedIcon?.Icon ?? CalendarCheck2;
+                <AppIcon
+                  name={section.icon || "CalendarCheck2"}
+                  size={128}
+                  className="relative"
+                />
 
-              return (
-                <button
-                  key={section.id}
-                  type="button"
-                  onClick={() =>
-                    navigate(`/rotina/${section.id}`)
-                  }
-                  aria-label={`Abrir rotina: ${section.name}`}
-                  className="group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border-2 border-white/60 p-4 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
-                  style={{
-                    backgroundColor: section.color,
-                  }}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
-                  />
-
-                  <Icon
-                    size={58}
-                    strokeWidth={2.2}
-                    color="#42251D"
-                    aria-hidden="true"
-                    className="relative"
-                  />
-
-                  <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
-                    {section.name}
-                  </span>
-                </button>
-              );
-            })}
+                <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
+                  {section.name}
+                </span>
+              </button>
+            ))}
           </section>
         )}
       </div>
@@ -184,11 +152,7 @@ function AgendaPage() {
         aria-label="Gerenciar rotina"
         className="fixed bottom-24 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full border border-[#F8E5D8] bg-white text-[#592B1D] shadow-lg transition-transform active:scale-95"
       >
-        <Pencil
-          size={24}
-          strokeWidth={2.5}
-          aria-hidden="true"
-        />
+        <Pencil size={24} strokeWidth={2.5} aria-hidden="true" />
       </button>
     </main>
   );

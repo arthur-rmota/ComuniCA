@@ -1,19 +1,19 @@
-
 import { Volume2 } from "lucide-react";
 import { speak } from "../../utils/speech";
+import AppIcon from "../common/AppIcon";
 
 function DailyMessage() {
   const hour = new Date().getHours();
 
   let greeting = "Boa noite!";
-  let emoji = "🌙";
+  let icon = "Moon";
 
   if (hour >= 5 && hour < 12) {
     greeting = "Bom dia!";
-    emoji = "☀️";
+    icon = "Sun";
   } else if (hour >= 12 && hour < 18) {
     greeting = "Boa tarde!";
-    emoji = "🌤️";
+    icon = "CloudSun";
   }
 
   return (
@@ -26,15 +26,13 @@ function DailyMessage() {
       <div className="relative flex items-center gap-3">
         <span
           aria-hidden="true"
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/70 text-3xl"
+          className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/70"
         >
-          {emoji}
+          <AppIcon name={icon} size={60} />
         </span>
 
         <div className="min-w-0 flex-1">
-          <h2 className="text-lg font-extrabold text-[#592B1D]">
-            {greeting}
-          </h2>
+          <h2 className="text-lg font-extrabold text-[#592B1D]">{greeting}</h2>
         </div>
 
         <button
@@ -43,7 +41,7 @@ function DailyMessage() {
           aria-label={`Ouvir: ${greeting}`}
           className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-brand-primary shadow-sm transition-transform active:scale-95"
         >
-          <Volume2 size={24} strokeWidth={2.5} />
+          <Volume2 size={24} strokeWidth={2.5} aria-hidden="true" />
         </button>
       </div>
     </section>

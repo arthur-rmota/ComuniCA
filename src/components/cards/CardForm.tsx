@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
 import type { Card } from "../../types/card";
+import AppIcon from "../common/AppIcon";
 
 export interface CardFormData {
   title: string;
@@ -22,12 +23,17 @@ export default function CardForm({
   initialCard,
 }: CardFormProps) {
   const [title, setTitle] = useState(initialCard?.title ?? "");
+
   const [speechText, setSpeechText] = useState(initialCard?.speechText ?? "");
+
   const [selectedIcon, setSelectedIcon] = useState(
     initialCard?.icon ?? "message-circle",
   );
+
   const [iconSearch, setIconSearch] = useState("");
+
   const [selectedIconCategory, setSelectedIconCategory] = useState("Todas");
+
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -99,6 +105,8 @@ export default function CardForm({
         </h2>
 
         <form onSubmit={handleSubmit}>
+          {/* Nome do cartão */}
+
           <div className="mb-6">
             <label
               htmlFor="card-title"
@@ -122,6 +130,8 @@ export default function CardForm({
               {title.length}/60 caracteres
             </p>
           </div>
+
+          {/* Texto para fala */}
 
           <div className="mb-6">
             <label
@@ -147,6 +157,8 @@ export default function CardForm({
             </p>
           </div>
 
+          {/* Seletor de pictogramas */}
+
           <div className="mb-6">
             <p className="mb-3 text-sm font-semibold text-app-text">
               Escolha um ícone
@@ -161,10 +173,12 @@ export default function CardForm({
               className="mb-3 w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-app-text outline-none focus:border-brand-primary"
             />
 
+            {/* Filtros por categoria */}
+
             <div
               role="group"
               aria-label="Filtrar ícones por categoria"
-              className="mb-3 flex w-full min-w-0 gap-2 overflow-x-auto pb-2"
+              className="mb-3 flex w-full min-w-0 max-w-full gap-2 overflow-x-auto overscroll-x-contain pb-2"
             >
               {iconCategories.map((category) => (
                 <button
@@ -183,22 +197,29 @@ export default function CardForm({
               ))}
             </div>
 
-            <div className="max-h-56 overflow-y-auto rounded-xl border border-gray-200 p-2">
+            {/* Área de pictogramas com rolagem interna */}
+
+            <div className="max-h-56 overflow-x-hidden overflow-y-auto overscroll-y-contain touch-pan-y rounded-xl border border-gray-200 p-2">
               <div className="grid grid-cols-4 gap-2">
-                {filteredIcons.map(({ id, label, Icon }) => (
+                {filteredIcons.map(({ id, label }) => (
                   <button
                     key={id}
                     type="button"
                     onClick={() => setSelectedIcon(id)}
                     aria-label={label}
                     aria-pressed={selectedIcon === id}
-                    className={`flex aspect-square items-center justify-center rounded-xl border-2 transition-colors ${
+                    title={label}
+                    className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl border-2 p-1 transition-colors focus-visible:outline-2 focus-visible:outline-brand-primary ${
                       selectedIcon === id
                         ? "border-brand-primary bg-brand-soft"
                         : "border-gray-200 bg-gray-50"
                     }`}
                   >
-                    <Icon size={28} color="#383838" aria-hidden="true" />
+                    <AppIcon name={id} size={64} className="max-w-full" />
+
+                    <span className="max-w-full break-words text-center text-[10px] font-semibold leading-tight text-[#592B1D]">
+                      {label}
+                    </span>
                   </button>
                 ))}
 
@@ -211,11 +232,46 @@ export default function CardForm({
             </div>
           </div>
 
+          {/* Prévia do cartão */}
+
+          <div className="mb-6">
+            <p className="mb-3 text-sm font-semibold text-app-text">
+              Prévia do cartão
+            </p>
+
+            <div className="relative mx-auto flex min-h-44 w-full max-w-44 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 border-white/60 bg-[#DDEBFA] p-2 text-center shadow-sm">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
+              />
+
+              <AppIcon
+                name={selectedIcon}
+                size={128}
+                className="relative max-w-full"
+              />
+
+              <span className="relative max-w-full break-words text-base font-extrabold leading-tight text-[#42251D]">
+                {title.trim() || "Seu cartão"}
+              </span>
+            </div>
+
+            {speechText.trim() && (
+              <p className="mt-3 break-words text-center text-xs text-app-muted">
+                Texto para fala: "{speechText.trim()}"
+              </p>
+            )}
+          </div>
+
+          {/* Mensagem de erro */}
+
           {error && (
             <p role="alert" className="mb-4 text-sm text-red-600">
               {error}
             </p>
           )}
+
+          {/* Botões do formulário */}
 
           <div className="flex gap-3">
             <button

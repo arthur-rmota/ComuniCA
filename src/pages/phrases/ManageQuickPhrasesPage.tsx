@@ -1,20 +1,12 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
-import {
-  ArrowLeft,
-  Plus,
-  Pencil,
-  Trash2,
-  MessageCircle,
-  MessagesSquare,
-  Loader2,
-  X,
-} from "lucide-react";
 
+import { ArrowLeft, Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+
+import AppIcon from "../../components/common/AppIcon";
 import { useProfileContext } from "../../contexts/ProfileContext";
 import PinAccessPage from "../../components/profile/PinAccessPage";
-import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
 import QuickPhraseForm from "../../components/quickPhrases/QuickPhraseForm";
 
 import {
@@ -39,6 +31,7 @@ export default function ManageQuickPhrasesPage() {
   const [phrasesError, setPhrasesError] = useState("");
 
   const [isAddPhraseOpen, setIsAddPhraseOpen] = useState(false);
+
   const [editingPhrase, setEditingPhrase] = useState<QuickPhrase | null>(null);
 
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
@@ -99,16 +92,20 @@ export default function ManageQuickPhrasesPage() {
     };
   }, [loading, user, needsPin]);
 
+  // Bloqueia a rolagem durante a confirmação de exclusão.
+
   useEffect(() => {
     if (!isDeleteConfirmationOpen) return;
 
     const previousOverflow = document.body.style.overflow;
+
     document.body.style.overflow = "hidden";
 
     function handleEscape(event: KeyboardEvent) {
       if (event.key === "Escape" && !isDeletingPhrase) {
         event.preventDefault();
         event.stopPropagation();
+
         setIsDeleteConfirmationOpen(false);
         setDeleteError("");
       }
@@ -159,8 +156,8 @@ export default function ManageQuickPhrasesPage() {
 
     const originalPhrase = phrases.find((phrase) => phrase.id === id);
 
-    if (!originalPhrase || originalPhrase.userId !== "local-user") {
-      throw new Error("Somente frases personalizadas podem ser editadas.");
+    if (!originalPhrase) {
+      throw new Error("Frase não encontrada.");
     }
 
     const updatedPhrase = await updateQuickPhrase(id, changes);
@@ -177,9 +174,12 @@ export default function ManageQuickPhrasesPage() {
 
     const phrase = phrases.find((item) => item.id === id);
 
-    if (!phrase || phrase.userId !== "local-user") {
-      throw new Error("Somente frases personalizadas podem ser excluídas.");
+    if (!phrase) {
+      throw new Error("Frase não encontrada.");
     }
+
+    // Limpeza de registros da antiga funcionalidade
+    // de favoritos.
 
     const favorites = await getQuickPhraseFavorites("local-user");
 
@@ -209,6 +209,7 @@ export default function ManageQuickPhrasesPage() {
       await handleDeletePhrase(editingPhrase.id);
     } catch (error) {
       console.error("Erro ao excluir frase:", error);
+
       setDeleteError("Não foi possível excluir a frase.");
     } finally {
       setIsDeletingPhrase(false);
@@ -226,6 +227,7 @@ export default function ManageQuickPhrasesPage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
       {/* Decoração */}
+
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
@@ -238,6 +240,7 @@ export default function ManageQuickPhrasesPage() {
 
       <div className="relative mx-auto w-full max-w-lg">
         {/* Cabeçalho */}
+
         <header className="mb-6 pt-3">
           <div className="flex min-h-14 items-center gap-4">
             <button
@@ -256,12 +259,13 @@ export default function ManageQuickPhrasesPage() {
         </header>
 
         {/* Apresentação */}
+
         <section className="mb-5 flex items-center gap-3 rounded-3xl bg-[#FFE0BD] p-4">
           <span
             aria-hidden="true"
             className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/70"
           >
-            <MessagesSquare size={30} strokeWidth={2.3} color="#C2410C" />
+            <AppIcon name="MessagesSquare" size={48} />
           </span>
 
           <div className="min-w-0">
@@ -276,6 +280,7 @@ export default function ManageQuickPhrasesPage() {
         </section>
 
         {/* Frases cadastradas */}
+
         <section className="rounded-3xl border border-[#F5E9DF] bg-white p-4 shadow-[0_5px_14px_rgba(41,37,36,0.06)] sm:p-5">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -311,10 +316,10 @@ export default function ManageQuickPhrasesPage() {
             <p className="text-sm text-app-muted">Carregando frases...</p>
           ) : phrases.length === 0 ? (
             <div className="rounded-2xl bg-[#FFF9F3] p-6 text-center">
-              <MessagesSquare
-                size={42}
-                className="mx-auto mb-3 text-brand-primary"
-                aria-hidden="true"
+              <AppIcon
+                name="MessagesSquare"
+                size={64}
+                className="mx-auto mb-3"
               />
 
               <p className="font-bold text-[#42251D]">
@@ -328,11 +333,6 @@ export default function ManageQuickPhrasesPage() {
           ) : (
             <ul className="space-y-3">
               {phrases.map((phrase) => {
-                const selectedIcon = quickPhraseIcons.find(
-                  (item) => item.id === phrase.icon,
-                );
-
-                const Icon = selectedIcon?.Icon ?? MessageCircle;
                 const isCustom = phrase.userId === "local-user";
 
                 return (
@@ -343,12 +343,15 @@ export default function ManageQuickPhrasesPage() {
                     <div className="flex items-center gap-3">
                       <span
                         aria-hidden="true"
-                        className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl"
+                        className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl"
                         style={{
                           backgroundColor: phrase.color,
                         }}
                       >
-                        <Icon size={34} strokeWidth={2.2} color="#42251D" />
+                        <AppIcon
+                          name={phrase.icon || "MessageCircle"}
+                          size={72}
+                        />
                       </span>
 
                       <div className="min-w-0 flex-1">
@@ -368,19 +371,17 @@ export default function ManageQuickPhrasesPage() {
                       </div>
                     </div>
 
-                    {isCustom && (
-                      <div className="mt-3 flex justify-end border-t border-[#F1E4D9] pt-3">
-                        <button
-                          type="button"
-                          onClick={() => setEditingPhrase(phrase)}
-                          aria-label={`Editar frase ${phrase.text}`}
-                          className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#F5F0EA] px-4 py-2 text-sm font-semibold text-[#42251D] transition-colors hover:bg-[#EEE4DB]"
-                        >
-                          <Pencil size={17} aria-hidden="true" />
-                          Editar
-                        </button>
-                      </div>
-                    )}
+                    <div className="mt-3 flex justify-end border-t border-[#F1E4D9] pt-3">
+                      <button
+                        type="button"
+                        onClick={() => setEditingPhrase(phrase)}
+                        aria-label={`Editar frase ${phrase.text}`}
+                        className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#F5F0EA] px-4 py-2 text-sm font-semibold text-[#42251D] transition-colors hover:bg-[#EEE4DB]"
+                      >
+                        <Pencil size={17} aria-hidden="true" />
+                        Editar
+                      </button>
+                    </div>
                   </li>
                 );
               })}
@@ -398,6 +399,7 @@ export default function ManageQuickPhrasesPage() {
       </div>
 
       {/* Formulário de cadastro */}
+
       {isAddPhraseOpen && (
         <QuickPhraseForm
           onClose={() => setIsAddPhraseOpen(false)}
@@ -406,6 +408,7 @@ export default function ManageQuickPhrasesPage() {
       )}
 
       {/* Formulário de edição */}
+
       {editingPhrase && (
         <QuickPhraseForm
           key={editingPhrase.id}
@@ -427,7 +430,6 @@ export default function ManageQuickPhrasesPage() {
         editingPhrase &&
         createPortal(
           <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 py-6">
-            {/* Tocar no fundo tem o mesmo efeito de Cancelar */}
             <button
               type="button"
               aria-label="Cancelar exclusão e fechar janela"

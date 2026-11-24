@@ -1,17 +1,22 @@
+
 import { useEffect, useState } from "react";
-import RoutineModal from "../../components/routine/RoutineModal";
 import { useNavigate, useParams } from "react-router";
-import { ArrowLeft, CalendarCheck2, Pencil, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Pencil, Plus, Trash2 } from "lucide-react";
+
+import RoutineModal from "../../components/routine/RoutineModal";
+import AppIcon from "../../components/common/AppIcon";
+import PinAccessPage from "../../components/profile/PinAccessPage";
+
 import { getCards } from "../../services/cardService";
 import { getQuickPhrases } from "../../services/quickPhraseService";
 import { getCategories } from "../../services/categoryService";
+import { routineService } from "../../services/routineService";
+
+import { useProfileContext } from "../../contexts/ProfileContext";
+import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
+
 import type { Card } from "../../types/card";
 import type { QuickPhrase } from "../../types/quickPhrase";
-import { useProfileContext } from "../../contexts/ProfileContext";
-import { PinVerificationForm } from "../../components/profile/PinVerificationForm";
-import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
-import { routineService } from "../../services/routineService";
-import PinAccessPage from "../../components/profile/PinAccessPage";
 
 import type {
   RoutineActivity,
@@ -44,6 +49,14 @@ const periodLabels: Record<RoutinePeriod, string> = {
   night: "Noite",
 };
 
+function getActivityIcon(icon: string): string {
+  if (!icon || icon === "calendar-check") {
+    return "CalendarCheck2";
+  }
+
+  return icon;
+}
+
 function ManageRoutineActivitiesPage() {
   const navigate = useNavigate();
   const { sectionId } = useParams<{ sectionId: string }>();
@@ -52,25 +65,24 @@ function ManageRoutineActivitiesPage() {
     user,
     loading: profileLoading,
     isPinVerified,
-    enteredPin,
-    setEnteredPin,
-    verifyingPin,
-    accessPinError,
-    handleVerifyPin,
   } = useProfileContext();
 
   const needsPin = Boolean(user?.pinHash && !isPinVerified);
+
   const [availableCards, setAvailableCards] = useState<Card[]>([]);
   const [availablePhrases, setAvailablePhrases] = useState<QuickPhrase[]>([]);
   const [section, setSection] = useState<RoutineSection | null>(null);
   const [activities, setActivities] = useState<RoutineActivity[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   const [formOpen, setFormOpen] = useState(false);
+
   const [editingActivity, setEditingActivity] =
     useState<RoutineActivity | null>(null);
+
   const [activityToDelete, setActivityToDelete] =
     useState<RoutineActivity | null>(null);
 
@@ -116,6 +128,7 @@ function ManageRoutineActivitiesPage() {
 
         setSection(sectionData);
         setActivities(activitiesData);
+
         const emergencyCategoryIds = new Set(
           categoriesData
             .filter(
@@ -132,7 +145,8 @@ function ManageRoutineActivitiesPage() {
         setAvailableCards(
           cardsData.filter(
             (card) =>
-              card.isActive && !emergencyCategoryIds.has(card.categoryId),
+              card.isActive &&
+              !emergencyCategoryIds.has(card.categoryId),
           ),
         );
 
@@ -162,11 +176,13 @@ function ManageRoutineActivitiesPage() {
 
   function openCreateForm() {
     setEditingActivity(null);
+
     setForm({
       ...emptyForm,
       linkedCardIds: [],
       linkedQuickPhraseIds: [],
     });
+
     setIconSearch("");
     setIconCategory("Todas");
     setError("");
@@ -175,6 +191,7 @@ function ManageRoutineActivitiesPage() {
 
   function openEditForm(activity: RoutineActivity) {
     setEditingActivity(activity);
+
     setForm({
       linkedCardIds: [...(activity.linkedCardIds ?? [])],
       linkedQuickPhraseIds: [...(activity.linkedQuickPhraseIds ?? [])],
@@ -183,13 +200,16 @@ function ManageRoutineActivitiesPage() {
       period: activity.period,
       time: activity.time,
     });
+
     setIconSearch("");
     setIconCategory("Todas");
     setError("");
     setFormOpen(true);
   }
 
-  async function handleSave(event: React.SubmitEvent<HTMLFormElement>) {
+  async function handleSave(
+    event: React.SubmitEvent<HTMLFormElement>,
+  ) {
     event.preventDefault();
 
     if (!user || needsPin || !sectionId || saving) return;
@@ -243,7 +263,8 @@ function ManageRoutineActivitiesPage() {
         });
       }
 
-      const updated = await routineService.getActivitiesBySection(sectionId);
+      const updated =
+        await routineService.getActivitiesBySection(sectionId);
 
       setActivities(updated);
       setFormOpen(false);
@@ -266,8 +287,11 @@ function ManageRoutineActivitiesPage() {
       await routineService.removeActivity(activityToDelete.id);
 
       setActivities((current) =>
-        current.filter((item) => item.id !== activityToDelete.id),
+        current.filter(
+          (item) => item.id !== activityToDelete.id,
+        ),
       );
+
       setActivityToDelete(null);
     } catch (err) {
       console.error("Erro ao excluir atividade:", err);
@@ -289,14 +313,20 @@ function ManageRoutineActivitiesPage() {
 
     return (
       matchesSearch &&
-      (iconCategory === "Todas" || item.category === iconCategory)
+      (iconCategory === "Todas" ||
+        item.category === iconCategory)
     );
   });
 
   if (profileLoading || !user) return null;
 
   if (needsPin) {
-    return <PinAccessPage title="Gerenciar atividades" onBack={handleBack} />;
+    return (
+      <PinAccessPage
+        title="Gerenciar atividades"
+        onBack={handleBack}
+      />
+    );
   }
 
   return (
@@ -315,116 +345,99 @@ function ManageRoutineActivitiesPage() {
       </h1>
 
       <section className="rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_5px_14px_rgba(41,37,36,0.06)]">
-        {needsPin ? (
-          <PinVerificationForm
-            enteredPin={enteredPin}
-            accessPinError={accessPinError}
-            verifyingPin={verifyingPin}
-            onPinChange={setEnteredPin}
-            onSubmit={handleVerifyPin}
-            onCancel={handleBack}
-            onForgotPin={() => navigate("/perfil/recuperar-pin")}
-          />
-        ) : (
-          <>
-            <div className="mb-4 flex items-center justify-between gap-2">
-              <h2 className="font-semibold text-app-text">
-                Atividades cadastradas
-              </h2>
+        <div className="mb-4 flex items-center justify-between gap-2">
+          <h2 className="font-semibold text-app-text">
+            Atividades cadastradas
+          </h2>
 
-              <button
-                type="button"
-                onClick={openCreateForm}
-                disabled={!section || loading}
-                className="flex shrink-0 items-center gap-2 rounded-xl bg-brand-primary px-3 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
-              >
-                <Plus size={18} />
-                Nova atividade
-              </button>
-            </div>
+          <button
+            type="button"
+            onClick={openCreateForm}
+            disabled={!section || loading}
+            className="flex shrink-0 items-center gap-2 rounded-xl bg-brand-primary px-3 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+          >
+            <Plus size={18} />
+            Nova atividade
+          </button>
+        </div>
 
-            {error && (
-              <p role="alert" className="mb-4 text-sm text-red-600">
-                {error}
-              </p>
-            )}
-
-            {loading ? (
-              <p className="text-sm text-app-muted">Carregando atividades...</p>
-            ) : activities.length === 0 ? (
-              <p className="text-sm text-app-muted">
-                Nenhuma atividade cadastrada nesta seção.
-              </p>
-            ) : (
-              <ul className="space-y-3">
-                {activities.map((activity) => {
-                  const selectedIcon = quickPhraseIcons.find(
-                    (item) => item.id === activity.icon,
-                  );
-
-                  const Icon = selectedIcon?.Icon ?? CalendarCheck2;
-
-                  return (
-                    <li
-                      key={activity.id}
-                      className="rounded-2xl border border-[#F1E4D9] bg-[#FFFCF9] p-4"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl"
-                          style={{
-                            backgroundColor: section?.color ?? "#FFF0D6",
-                          }}
-                        >
-                          <Icon size={28} color="#292524" />
-                        </div>
-
-                        <div className="min-w-0 flex-1">
-                          <h3 className="font-semibold text-app-text">
-                            {activity.title}
-                          </h3>
-
-                          <p className="text-sm text-app-muted">
-                            {periodLabels[activity.period]}
-                            {activity.time ? ` · ${activity.time}` : ""}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="mt-3 flex justify-end gap-2 border-t border-app-border pt-3">
-                        <button
-                          type="button"
-                          onClick={() => openEditForm(activity)}
-                          className="flex items-center gap-2 rounded-xl bg-stone-100 px-3 py-2 text-sm font-medium"
-                        >
-                          <Pencil size={16} />
-                          Editar
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setActivityToDelete(activity)}
-                          className="flex items-center gap-2 rounded-xl border border-red-200 px-3 py-2 text-sm font-medium text-red-700"
-                        >
-                          <Trash2 size={16} />
-                          Excluir
-                        </button>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-
-            <button
-              type="button"
-              onClick={handleBack}
-              className="mt-6 w-full rounded-xl bg-brand-primary px-4 py-3 font-semibold text-white"
-            >
-              Confirmar
-            </button>
-          </>
+        {error && (
+          <p role="alert" className="mb-4 text-sm text-red-600">
+            {error}
+          </p>
         )}
+
+        {loading ? (
+          <p className="text-sm text-app-muted">
+            Carregando atividades...
+          </p>
+        ) : activities.length === 0 ? (
+          <p className="text-sm text-app-muted">
+            Nenhuma atividade cadastrada nesta seção.
+          </p>
+        ) : (
+          <ul className="space-y-3">
+            {activities.map((activity) => (
+              <li
+                key={activity.id}
+                className="rounded-2xl border border-[#F1E4D9] bg-[#FFFCF9] p-4"
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl"
+                    style={{
+                      backgroundColor: section?.color ?? "#FFF0D6",
+                    }}
+                  >
+                    <AppIcon
+                      name={getActivityIcon(activity.icon)}
+                      size={72}
+                    />
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <h3 className="break-words font-semibold text-app-text">
+                      {activity.title}
+                    </h3>
+
+                    <p className="text-sm text-app-muted">
+                      {periodLabels[activity.period]}
+                      {activity.time ? ` · ${activity.time}` : ""}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-3 flex justify-end gap-2 border-t border-app-border pt-3">
+                  <button
+                    type="button"
+                    onClick={() => openEditForm(activity)}
+                    className="flex items-center gap-2 rounded-xl bg-stone-100 px-3 py-2 text-sm font-medium"
+                  >
+                    <Pencil size={16} />
+                    Editar
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setActivityToDelete(activity)}
+                    className="flex items-center gap-2 rounded-xl border border-red-200 px-3 py-2 text-sm font-medium text-red-700"
+                  >
+                    <Trash2 size={16} />
+                    Excluir
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <button
+          type="button"
+          onClick={handleBack}
+          className="mt-6 w-full rounded-xl bg-brand-primary px-4 py-3 font-semibold text-white"
+        >
+          Confirmar
+        </button>
       </section>
 
       {!needsPin && formOpen && (
@@ -445,6 +458,7 @@ function ManageRoutineActivitiesPage() {
               >
                 Cancelar
               </button>
+
               <button
                 type="submit"
                 form="routine-activity-form"
@@ -472,6 +486,7 @@ function ManageRoutineActivitiesPage() {
               >
                 Nome da atividade
               </label>
+
               <input
                 id="activity-title"
                 required
@@ -486,6 +501,7 @@ function ManageRoutineActivitiesPage() {
                 placeholder="Ex.: Hora do lanche"
                 className="w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
               />
+
               <p className="mt-1 text-right text-xs text-gray-500">
                 {form.title.length}/60 caracteres
               </p>
@@ -498,6 +514,7 @@ function ManageRoutineActivitiesPage() {
               >
                 Período do dia
               </label>
+
               <select
                 id="activity-period"
                 value={form.period}
@@ -522,6 +539,7 @@ function ManageRoutineActivitiesPage() {
               >
                 Horário (opcional)
               </label>
+
               <input
                 id="activity-time"
                 type="time"
@@ -537,14 +555,18 @@ function ManageRoutineActivitiesPage() {
             </div>
 
             <div>
-              <p className="mb-3 text-sm font-semibold">Ícone da atividade</p>
+              <p className="mb-3 text-sm font-semibold">
+                Ícone da atividade
+              </p>
 
               <input
                 type="search"
                 aria-label="Pesquisar ícones"
                 placeholder="Pesquisar ícone..."
                 value={iconSearch}
-                onChange={(event) => setIconSearch(event.target.value)}
+                onChange={(event) =>
+                  setIconSearch(event.target.value)
+                }
                 className="mb-3 w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
               />
 
@@ -566,24 +588,36 @@ function ManageRoutineActivitiesPage() {
                 ))}
               </div>
 
-              <div className="max-h-52 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-2">
+              <div className="max-h-72 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-2">
                 <div className="grid grid-cols-4 gap-2">
-                  {filteredIcons.map(({ id, label, Icon }) => (
+                  {filteredIcons.map(({ id, label }) => (
                     <button
                       key={id}
                       type="button"
                       aria-label={label}
                       aria-pressed={form.icon === id}
+                      title={label}
                       onClick={() =>
-                        setForm((current) => ({ ...current, icon: id }))
+                        setForm((current) => ({
+                          ...current,
+                          icon: id,
+                        }))
                       }
-                      className={`flex aspect-square items-center justify-center rounded-xl border-2 ${
+                      className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl border-2 p-1 ${
                         form.icon === id
                           ? "border-[#FFA726] bg-[#FFF3E0]"
                           : "border-gray-200 bg-gray-50"
                       }`}
                     >
-                      <Icon size={28} color="#383838" />
+                      <AppIcon
+                        name={getActivityIcon(id)}
+                        size={64}
+                        className="max-w-full"
+                      />
+
+                      <span className="max-w-full break-words text-center text-[10px] font-semibold leading-tight text-[#592B1D]">
+                        {label}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -645,7 +679,23 @@ function ManageRoutineActivitiesPage() {
                             className="h-5 w-5 shrink-0 accent-orange-700"
                           />
 
-                          <span className="text-sm font-medium text-app-text">
+                          {card.image && !card.icon ? (
+                            <img
+                              src={card.image}
+                              alt=""
+                              width={48}
+                              height={48}
+                              draggable={false}
+                              className="h-12 w-12 shrink-0 select-none object-contain"
+                            />
+                          ) : (
+                            <AppIcon
+                              name={card.icon || "MessageCircle"}
+                              size={48}
+                            />
+                          )}
+
+                          <span className="min-w-0 flex-1 break-words text-sm font-medium text-app-text">
                             {card.title}
                           </span>
                         </label>
@@ -688,7 +738,12 @@ function ManageRoutineActivitiesPage() {
                             className="h-5 w-5 shrink-0 accent-orange-700"
                           />
 
-                          <span className="text-sm font-medium text-app-text">
+                          <AppIcon
+                            name={phrase.icon || "MessageCircle"}
+                            size={48}
+                          />
+
+                          <span className="min-w-0 flex-1 break-words text-sm font-medium text-app-text">
                             {phrase.text}
                           </span>
                         </label>
@@ -718,6 +773,7 @@ function ManageRoutineActivitiesPage() {
               >
                 Cancelar
               </button>
+
               <button
                 type="button"
                 disabled={saving}

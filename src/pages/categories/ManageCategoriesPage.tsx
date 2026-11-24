@@ -1,22 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { createPortal } from "react-dom";
+
 import {
   ArrowLeft,
   Plus,
-  School,
-  House,
-  Heart,
-  Utensils,
-  Gamepad2,
-  BookOpen,
-  Music,
-  Smile,
-  Bus,
-  Star,
-  HandHeart,
-  Siren,
-  Folder,
   EllipsisVertical,
   Pencil,
   Trash2,
@@ -25,30 +13,27 @@ import {
   Check,
   Loader2,
 } from "lucide-react";
+
+import AppIcon from "../../components/common/AppIcon";
 import PinAccessPage from "../../components/profile/PinAccessPage";
 import { categoryService } from "../../services/categoryService";
 import type { Category } from "../../types/category";
 import { useProfileContext } from "../../contexts/ProfileContext";
-import { PinVerificationForm } from "../../components/profile/PinVerificationForm";
 
 const categoryIcons = [
-  { name: "Escola", value: "school", Icon: School },
-  { name: "Casa", value: "house", Icon: House },
-  { name: "Coração", value: "heart", Icon: Heart },
-  { name: "Alimentação", value: "utensils", Icon: Utensils },
-  { name: "Brincadeiras", value: "gamepad-2", Icon: Gamepad2 },
-  { name: "Leitura", value: "book-open", Icon: BookOpen },
-  { name: "Música", value: "music", Icon: Music },
-  { name: "Emoções", value: "smile", Icon: Smile },
-  { name: "Transporte", value: "bus", Icon: Bus },
-  { name: "Favoritos", value: "star", Icon: Star },
-  {
-    name: "Necessidades básicas",
-    value: "hand-heart",
-    Icon: HandHeart,
-  },
-  { name: "Emergência", value: "siren", Icon: Siren },
-  { name: "Pasta", value: "folder", Icon: Folder },
+  { name: "Escola", value: "school" },
+  { name: "Casa", value: "house" },
+  { name: "Coração", value: "heart" },
+  { name: "Alimentação", value: "utensils" },
+  { name: "Brincadeiras", value: "gamepad-2" },
+  { name: "Leitura", value: "book-open" },
+  { name: "Música", value: "music" },
+  { name: "Emoções", value: "smile" },
+  { name: "Transporte", value: "bus" },
+  { name: "Estrela", value: "star" },
+  { name: "Necessidades básicas", value: "hand-heart" },
+  { name: "Emergência", value: "siren" },
+  { name: "Pasta", value: "folder" },
 ];
 
 const categoryColors = [
@@ -70,12 +55,8 @@ export default function ManageCategoriesPage() {
     loading: profileLoading,
     isPinVerified,
     setIsPinVerified,
-    enteredPin,
     setEnteredPin,
-    verifyingPin,
-    accessPinError,
     setAccessPinError,
-    handleVerifyPin,
   } = useProfileContext();
 
   const needsPin = Boolean(user?.pinHash && !isPinVerified);
@@ -87,6 +68,7 @@ export default function ManageCategoriesPage() {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const [formOpen, setFormOpen] = useState(false);
+
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(
     null,
   );
@@ -102,6 +84,7 @@ export default function ManageCategoriesPage() {
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
     null,
   );
+
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
@@ -141,11 +124,12 @@ export default function ManageCategoriesPage() {
   }, []);
 
   // Bloqueia a rolagem da página enquanto houver um modal.
-  // A tecla Escape também fecha o modal quando não está salvando.
+
   useEffect(() => {
     if (!formOpen && !categoryToDelete) return;
 
     const previousOverflow = document.body.style.overflow;
+
     document.body.style.overflow = "hidden";
 
     function handleEscape(event: KeyboardEvent) {
@@ -172,6 +156,7 @@ export default function ManageCategoriesPage() {
     setIsPinVerified(false);
     setEnteredPin("");
     setAccessPinError("");
+
     navigate("/perfil", { replace: true });
   }
 
@@ -275,6 +260,7 @@ export default function ManageCategoriesPage() {
       setEditingCategoryId(null);
     } catch (err) {
       console.error("Erro ao salvar categoria:", err);
+
       setFormError("Não foi possível salvar a categoria. Tente novamente.");
     } finally {
       setSaving(false);
@@ -305,6 +291,7 @@ export default function ManageCategoriesPage() {
       setCategoryToDelete(null);
     } catch (err) {
       console.error("Erro ao excluir categoria:", err);
+
       setError("Não foi possível excluir a categoria.");
       setCategoryToDelete(null);
     } finally {
@@ -327,6 +314,7 @@ export default function ManageCategoriesPage() {
 
       <div className="relative mx-auto w-full max-w-lg">
         {/* Cabeçalho */}
+
         <header className="mb-6 pt-3">
           <button
             type="button"
@@ -343,228 +331,202 @@ export default function ManageCategoriesPage() {
           </h1>
         </header>
 
-        {needsPin ? (
-          <section className="rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-sm">
-            <h2 className="mb-4 text-lg font-extrabold text-[#42251D]">
-              Verificar PIN de acesso
+        {/* Apresentação */}
+
+        <section className="mb-5 flex items-center gap-3 rounded-3xl bg-[#FFE0BD] p-4">
+          <span
+            aria-hidden="true"
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/70"
+          >
+            <AppIcon name="LayoutGrid" size={48} />
+          </span>
+
+          <div>
+            <h2 className="font-extrabold text-[#42251D]">
+              Organize a comunicação
             </h2>
 
-            <PinVerificationForm
-              enteredPin={enteredPin}
-              accessPinError={accessPinError}
-              verifyingPin={verifyingPin}
-              onPinChange={setEnteredPin}
-              onSubmit={handleVerifyPin}
-              onCancel={handleBack}
-              onForgotPin={() => navigate("/perfil/recuperar-pin")}
-            />
-          </section>
-        ) : (
-          <>
-            {/* Apresentação */}
-            <section className="mb-5 flex items-center gap-3 rounded-3xl bg-[#FFE0BD] p-4">
-              <span
-                aria-hidden="true"
-                className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/70"
-              >
-                <LayoutGrid size={30} color="#C2410C" />
-              </span>
+            <p className="mt-1 text-sm leading-relaxed text-[#775A49]">
+              Crie e personalize as categorias do aplicativo.
+            </p>
+          </div>
+        </section>
 
-              <div>
-                <h2 className="font-extrabold text-[#42251D]">
-                  Organize a comunicação
-                </h2>
+        {/* Listagem de categorias */}
 
-                <p className="mt-1 text-sm leading-relaxed text-[#775A49]">
-                  Crie e personalize as categorias do aplicativo.
-                </p>
-              </div>
-            </section>
+        <section className="rounded-3xl border border-[#F5E9DF] bg-white p-4 shadow-[0_5px_14px_rgba(41,37,36,0.06)] sm:p-5">
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-extrabold text-[#42251D]">
+                Categorias
+              </h2>
 
-            <section className="rounded-3xl border border-[#F5E9DF] bg-white p-4 shadow-[0_5px_14px_rgba(41,37,36,0.06)] sm:p-5">
-              <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <h2 className="text-lg font-extrabold text-[#42251D]">
-                    Categorias
-                  </h2>
+              <p className="mt-1 text-xs font-medium text-[#80685D]">
+                {categories.length} cadastrada(s)
+              </p>
+            </div>
 
-                  <p className="mt-1 text-xs font-medium text-[#80685D]">
-                    {categories.length} cadastrada(s)
-                  </p>
-                </div>
+            <button
+              type="button"
+              onClick={openCreateForm}
+              className="flex min-h-11 items-center gap-2 rounded-xl bg-brand-primary px-4 py-2.5 text-sm font-bold text-white transition-transform active:scale-95"
+            >
+              <Plus size={19} aria-hidden="true" />
+              Nova categoria
+            </button>
+          </div>
 
-                <button
-                  type="button"
-                  onClick={openCreateForm}
-                  className="flex min-h-11 items-center gap-2 rounded-xl bg-brand-primary px-4 py-2.5 text-sm font-bold text-white transition-transform active:scale-95"
-                >
-                  <Plus size={19} aria-hidden="true" />
-                  Nova categoria
-                </button>
-              </div>
+          {error && (
+            <p
+              role="alert"
+              className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-700"
+            >
+              {error}
+            </p>
+          )}
 
-              {error && (
-                <p
-                  role="alert"
-                  className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-700"
-                >
-                  {error}
-                </p>
-              )}
+          {loading ? (
+            <p className="text-sm text-app-muted">Carregando categorias...</p>
+          ) : categories.length === 0 ? (
+            <div className="rounded-2xl bg-[#FFF9F3] p-6 text-center">
+              <AppIcon name="Folder" size={64} className="mx-auto mb-3" />
 
-              {loading ? (
-                <p className="text-sm text-app-muted">
-                  Carregando categorias...
-                </p>
-              ) : categories.length === 0 ? (
-                <div className="rounded-2xl bg-[#FFF9F3] p-6 text-center">
-                  <Folder
-                    size={40}
-                    className="mx-auto mb-3 text-brand-primary"
-                  />
+              <p className="text-sm font-medium text-[#80685D]">
+                Nenhuma categoria cadastrada.
+              </p>
+            </div>
+          ) : (
+            <ul className="space-y-3">
+              {categories.map((category, index) => {
+                const menuOpen = openMenuId === category.id;
 
-                  <p className="text-sm font-medium text-[#80685D]">
-                    Nenhuma categoria cadastrada.
-                  </p>
-                </div>
-              ) : (
-                <ul className="space-y-3">
-                  {categories.map((category, index) => {
-                    const selectedIcon = categoryIcons.find(
-                      (item) => item.value === category.icon,
-                    );
-
-                    const Icon = selectedIcon?.Icon ?? Folder;
-
-                    const menuOpen = openMenuId === category.id;
-
-                    return (
-                      <li
-                        key={category.id}
-                        className={`relative rounded-2xl border border-[#F1E4D9] bg-[#FFFCF9] p-3 ${
-                          menuOpen ? "z-20" : ""
-                        }`}
+                return (
+                  <li
+                    key={category.id}
+                    className={`relative rounded-2xl border border-[#F1E4D9] bg-[#FFFCF9] p-3 ${
+                      menuOpen ? "z-20" : ""
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span
+                        aria-hidden="true"
+                        className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl"
+                        style={{
+                          backgroundColor: category.color,
+                        }}
                       >
-                        <div className="flex items-center gap-3">
-                          <span
-                            aria-hidden="true"
-                            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl"
-                            style={{
-                              backgroundColor: category.color,
-                            }}
-                          >
-                            <Icon size={30} strokeWidth={2.2} color="#42251D" />
-                          </span>
+                        <AppIcon name={category.icon || "Folder"} size={72} />
+                      </span>
 
-                          <div className="min-w-0 flex-1">
-                            <h3 className="break-words font-bold text-[#42251D]">
-                              {category.name}
-                            </h3>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="break-words font-bold text-[#42251D]">
+                          {category.name}
+                        </h3>
 
-                            {category.description && (
-                              <p className="mt-1 break-words text-xs leading-relaxed text-[#80685D]">
-                                {category.description}
-                              </p>
-                            )}
-                          </div>
+                        {category.description && (
+                          <p className="mt-1 break-words text-xs leading-relaxed text-[#80685D]">
+                            {category.description}
+                          </p>
+                        )}
+                      </div>
 
-                          {/* Menu de ações */}
-                          <div className="relative shrink-0">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setOpenMenuId((current) =>
-                                  current === category.id ? null : category.id,
-                                )
-                              }
-                              aria-label={`Opções da categoria ${category.name}`}
-                              aria-expanded={menuOpen}
-                              aria-haspopup="true"
-                              className="flex h-11 w-11 items-center justify-center rounded-xl text-[#592B1D] transition-colors hover:bg-[#F6ECE3]"
+                      {/* Menu de ações */}
+
+                      <div className="relative shrink-0">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenMenuId((current) =>
+                              current === category.id ? null : category.id,
+                            )
+                          }
+                          aria-label={`Opções da categoria ${category.name}`}
+                          aria-expanded={menuOpen}
+                          aria-haspopup="true"
+                          className="flex h-11 w-11 items-center justify-center rounded-xl text-[#592B1D] transition-colors hover:bg-[#F6ECE3]"
+                        >
+                          <EllipsisVertical size={23} />
+                        </button>
+
+                        {menuOpen && (
+                          <>
+                            <div
+                              className="fixed inset-0 z-10"
+                              aria-hidden="true"
+                              onClick={() => setOpenMenuId(null)}
+                            />
+
+                            <div
+                              className={`absolute right-0 z-20 w-48 rounded-2xl border border-[#F1E4D9] bg-white p-2 shadow-xl ${
+                                index === categories.length - 1 && index > 0
+                                  ? "bottom-full mb-2"
+                                  : "top-full mt-2"
+                              }`}
                             >
-                              <EllipsisVertical size={23} />
-                            </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenMenuId(null);
 
-                            {menuOpen && (
-                              <>
-                                <div
-                                  className="fixed inset-0 z-10"
-                                  aria-hidden="true"
-                                  onClick={() => setOpenMenuId(null)}
-                                />
+                                  navigate(
+                                    `/perfil/categorias/${category.id}/cartoes`,
+                                    {
+                                      state: {
+                                        origin: "manage-categories",
+                                      },
+                                    },
+                                  );
+                                }}
+                                className="flex w-full items-center gap-2 rounded-xl px-3 py-3 text-left text-sm font-medium text-[#42251D] hover:bg-[#FFF7F0]"
+                              >
+                                <LayoutGrid size={18} />
+                                Gerenciar cartões
+                              </button>
 
-                                <div
-                                  className={`absolute right-0 z-20 w-48 rounded-2xl border border-[#F1E4D9] bg-white p-2 shadow-xl ${
-                                    index === categories.length - 1 && index > 0
-                                      ? "bottom-full mb-2"
-                                      : "top-full mt-2"
-                                  }`}
-                                >
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setOpenMenuId(null);
+                              <button
+                                type="button"
+                                onClick={() => openEditForm(category)}
+                                className="flex w-full items-center gap-2 rounded-xl px-3 py-3 text-left text-sm font-medium text-[#42251D] hover:bg-[#FFF7F0]"
+                              >
+                                <Pencil size={18} />
+                                Editar categoria
+                              </button>
 
-                                      navigate(
-                                        `/perfil/categorias/${category.id}/cartoes`,
-                                        {
-                                          state: {
-                                            origin: "manage-categories",
-                                          },
-                                        },
-                                      );
-                                    }}
-                                    className="flex w-full items-center gap-2 rounded-xl px-3 py-3 text-left text-sm font-medium text-[#42251D] hover:bg-[#FFF7F0]"
-                                  >
-                                    <LayoutGrid size={18} />
-                                    Gerenciar cartões
-                                  </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenMenuId(null);
+                                  setCategoryToDelete(category);
+                                  setError("");
+                                }}
+                                className="flex w-full items-center gap-2 rounded-xl px-3 py-3 text-left text-sm font-medium text-red-700 hover:bg-red-50"
+                              >
+                                <Trash2 size={18} />
+                                Excluir
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
 
-                                  <button
-                                    type="button"
-                                    onClick={() => openEditForm(category)}
-                                    className="flex w-full items-center gap-2 rounded-xl px-3 py-3 text-left text-sm font-medium text-[#42251D] hover:bg-[#FFF7F0]"
-                                  >
-                                    <Pencil size={18} />
-                                    Editar categoria
-                                  </button>
-
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setOpenMenuId(null);
-                                      setCategoryToDelete(category);
-                                      setError("");
-                                    }}
-                                    className="flex w-full items-center gap-2 rounded-xl px-3 py-3 text-left text-sm font-medium text-red-700 hover:bg-red-50"
-                                  >
-                                    <Trash2 size={18} />
-                                    Excluir
-                                  </button>
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-
-              <button
-                type="button"
-                onClick={handleBack}
-                className="mt-6 min-h-12 w-full rounded-xl bg-brand-primary px-4 py-3 font-bold text-white transition-colors hover:bg-brand-hover"
-              >
-                Confirmar
-              </button>
-            </section>
-          </>
-        )}
+          <button
+            type="button"
+            onClick={handleBack}
+            className="mt-6 min-h-12 w-full rounded-xl bg-brand-primary px-4 py-3 font-bold text-white transition-colors hover:bg-brand-hover"
+          >
+            Confirmar
+          </button>
+        </section>
       </div>
 
       {/* Modal de criação e edição */}
+
       {!needsPin && formOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4"
@@ -581,6 +543,7 @@ export default function ManageCategoriesPage() {
             className="flex max-h-[90dvh] w-full max-w-md min-w-0 flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
           >
             {/* Cabeçalho fixo */}
+
             <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[#F1E4D9] bg-[#FFF7F0] px-5 py-4">
               <h2
                 id="category-form-title"
@@ -608,6 +571,7 @@ export default function ManageCategoriesPage() {
               className="flex min-h-0 flex-1 flex-col"
             >
               {/* Conteúdo com rolagem */}
+
               <div className="min-h-0 space-y-5 overflow-y-auto overscroll-contain p-5">
                 <div>
                   <label
@@ -629,30 +593,45 @@ export default function ManageCategoriesPage() {
                   />
                 </div>
 
-                <fieldset>
+                {/* Seletor de pictogramas */}
+
+                <fieldset className="min-w-0">
                   <legend className="mb-3 text-sm font-semibold text-[#42251D]">
                     Ícone da categoria
                   </legend>
 
-                  <div className="grid grid-cols-5 gap-2">
-                    {categoryIcons.map(({ name, value, Icon }) => (
-                      <button
-                        key={value}
-                        type="button"
-                        aria-label={`Selecionar ícone ${name}`}
-                        aria-pressed={categoryIcon === value}
-                        onClick={() => setCategoryIcon(value)}
-                        className={`flex aspect-square items-center justify-center rounded-xl border-2 transition-colors ${
-                          categoryIcon === value
-                            ? "border-brand-primary bg-[#FFF0E4] text-brand-primary"
-                            : "border-[#E7D5C8] bg-[#FFFCF9] text-[#42251D]"
-                        }`}
-                      >
-                        <Icon size={25} aria-hidden="true" />
-                      </button>
-                    ))}
+                  <div className="max-h-56 overflow-x-hidden overflow-y-auto overscroll-y-contain touch-pan-y rounded-xl border border-[#E7D5C8] p-2">
+                    <div className="grid grid-cols-4 gap-2">
+                      {categoryIcons.map(({ name, value }) => (
+                        <button
+                          key={value}
+                          type="button"
+                          aria-label={`Selecionar ícone ${name}`}
+                          aria-pressed={categoryIcon === value}
+                          onClick={() => setCategoryIcon(value)}
+                          title={name}
+                          className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl border-2 p-1 transition-colors focus-visible:outline-2 focus-visible:outline-brand-primary ${
+                            categoryIcon === value
+                              ? "border-brand-primary bg-[#FFF0E4]"
+                              : "border-[#E7D5C8] bg-[#FFFCF9]"
+                          }`}
+                        >
+                          <AppIcon
+                            name={value}
+                            size={64}
+                            className="max-w-full"
+                          />
+
+                          <span className="max-w-full break-words text-center text-[10px] font-semibold leading-tight text-[#592B1D]">
+                            {name}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </fieldset>
+
+                {/* Seletor de cores */}
 
                 <fieldset>
                   <legend className="mb-3 text-sm font-semibold text-[#42251D]">
@@ -672,7 +651,9 @@ export default function ManageCategoriesPage() {
                             ? "ring-2 ring-brand-primary ring-offset-2"
                             : ""
                         }`}
-                        style={{ backgroundColor: color.value }}
+                        style={{
+                          backgroundColor: color.value,
+                        }}
                       >
                         {categoryColor === color.value && (
                           <Check
@@ -686,6 +667,8 @@ export default function ManageCategoriesPage() {
                     ))}
                   </div>
                 </fieldset>
+
+                {/* Descrição */}
 
                 <div>
                   <label
@@ -708,6 +691,36 @@ export default function ManageCategoriesPage() {
                   />
                 </div>
 
+                {/* Prévia da categoria */}
+
+                <div>
+                  <p className="mb-3 text-sm font-semibold text-[#42251D]">
+                    Prévia da categoria
+                  </p>
+
+                  <div
+                    className="relative mx-auto flex min-h-44 w-full max-w-44 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 border-white/60 p-2 text-center shadow-sm"
+                    style={{
+                      backgroundColor: categoryColor,
+                    }}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
+                    />
+
+                    <AppIcon
+                      name={categoryIcon}
+                      size={128}
+                      className="relative max-w-full"
+                    />
+
+                    <span className="relative max-w-full break-words text-base font-extrabold leading-tight text-[#42251D]">
+                      {categoryName.trim() || "Sua categoria"}
+                    </span>
+                  </div>
+                </div>
+
                 {formError && (
                   <p
                     role="alert"
@@ -718,7 +731,8 @@ export default function ManageCategoriesPage() {
                 )}
               </div>
 
-              {/* Rodapé separado da área de rolagem */}
+              {/* Rodapé fixo */}
+
               <div className="grid shrink-0 grid-cols-2 gap-3 border-t border-[#F1E4D9] bg-white p-4">
                 <button
                   type="button"
@@ -748,7 +762,6 @@ export default function ManageCategoriesPage() {
         categoryToDelete &&
         createPortal(
           <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 py-6">
-            {/* Tocar fora do modal cancela a exclusão */}
             <button
               type="button"
               aria-label="Cancelar exclusão e fechar janela"

@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import {
-  MessageCircle,
-  MessageSquare,
-  Pencil,
-  TrendingUp,
-  Volume2,
-  MessageCircleHeartIcon
-} from "lucide-react";
+import { Pencil } from "lucide-react";
 
 import {
   getQuickPhrases,
@@ -20,9 +13,9 @@ import type { QuickPhrase } from "../../types/quickPhrase";
 import type { Card } from "../../types/card";
 import type { Category } from "../../types/category";
 
-import { quickPhraseIcons } from "../../constants/quickPhraseIcons";
 import { speak } from "../../utils/speech";
 import QuickPhraseCard from "../../components/common/QuickPhraseCard";
+import AppIcon from "../../components/common/AppIcon";
 
 type MostUsedItem =
   | {
@@ -214,11 +207,7 @@ function QuickPhrasesPage() {
               aria-hidden="true"
               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FFE0BD]"
             >
-              <MessageCircleHeartIcon
-                size={29}
-                strokeWidth={2.4}
-                color="#C2410C"
-              />
+              <AppIcon name="MessageCircleHeart" size={44} />
             </span>
 
             <h1 className="text-2xl font-extrabold tracking-tight text-[#42251D]">
@@ -235,7 +224,7 @@ function QuickPhrasesPage() {
               aria-hidden="true"
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFE0BD] text-brand-primary"
             >
-              <Volume2 size={23} strokeWidth={2.5} />
+              <AppIcon name="Volume2" size={40} />
             </span>
           </div>
         </header>
@@ -256,7 +245,7 @@ function QuickPhrasesPage() {
             <section className="mb-8">
               <div className="mb-4 flex items-center gap-3">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FFE0BD] text-brand-primary">
-                  <TrendingUp size={24} strokeWidth={2.4} />
+                  <AppIcon name="TrendingUp" size={40} />
                 </span>
 
                 <div>
@@ -272,10 +261,10 @@ function QuickPhrasesPage() {
 
               {mostUsedItems.length === 0 ? (
                 <div className="rounded-3xl bg-white p-6 text-center shadow-sm">
-                  <TrendingUp
-                    size={40}
-                    className="mx-auto mb-3 text-brand-primary"
-                    aria-hidden="true"
+                  <AppIcon
+                    name="TrendingUp"
+                    size={64}
+                    className="mx-auto mb-3"
                   />
 
                   <p className="text-sm font-medium leading-relaxed text-[#80685D]">
@@ -301,12 +290,6 @@ function QuickPhrasesPage() {
                       (entry) => entry.id === item.card.categoryId,
                     );
 
-                    const selectedIcon = quickPhraseIcons.find(
-                      (entry) => entry.id === item.card.icon,
-                    );
-
-                    const Icon = selectedIcon?.Icon ?? MessageCircle;
-
                     const isSpeaking = speakingId === `card-${item.card.id}`;
 
                     return (
@@ -315,7 +298,7 @@ function QuickPhrasesPage() {
                         type="button"
                         onClick={() => handleSpeakCard(item.card)}
                         aria-label={`Falar: ${item.card.speechText}`}
-                        className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border-2 p-4 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+                        className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 p-2 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
                           isSpeaking
                             ? "border-brand-primary shadow-[0_5px_18px_rgba(194,65,12,0.18)]"
                             : "border-white/60 shadow-[0_5px_14px_rgba(41,37,36,0.07)]"
@@ -337,10 +320,16 @@ function QuickPhrasesPage() {
                             <img
                               src={item.card.image}
                               alt=""
-                              className="h-16 w-16 object-contain"
+                              width={128}
+                              height={128}
+                              draggable={false}
+                              className="shrink-0 object-contain select-none"
                             />
                           ) : (
-                            <Icon size={58} strokeWidth={2.2} color="#42251D" />
+                            <AppIcon
+                              name={item.card.icon || "MessageCircle"}
+                              size={128}
+                            />
                           )}
                         </span>
 
@@ -367,7 +356,7 @@ function QuickPhrasesPage() {
             <section>
               <div className="mb-4 flex items-center gap-3">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F3DDFC] text-[#8B47A7]">
-                  <MessageSquare size={24} strokeWidth={2.4} />
+                  <AppIcon name="MessageSquare" size={40} />
                 </span>
 
                 <div>
@@ -383,10 +372,10 @@ function QuickPhrasesPage() {
 
               {remainingPhrases.length === 0 ? (
                 <div className="rounded-3xl bg-white p-6 text-center shadow-sm">
-                  <MessageSquare
-                    size={40}
-                    className="mx-auto mb-3 text-brand-primary"
-                    aria-hidden="true"
+                  <AppIcon
+                    name="MessageSquare"
+                    size={64}
+                    className="mx-auto mb-3"
                   />
 
                   <p className="text-sm font-medium text-[#80685D]">
