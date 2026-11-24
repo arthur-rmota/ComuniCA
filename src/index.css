@@ -1,31 +1,34 @@
 @import "tailwindcss";
 
 @theme {
+  /* Tipografia */
+  --font-sans: "Nunito", Arial, sans-serif;
+
   /* Identidade principal */
-  --color-brand-primary: #C2410C;
-  --color-brand-hover: #9A3412;
-  --color-brand-soft: #FFEDD5;
+  --color-brand-primary: #c2410c;
+  --color-brand-hover: #9a3412;
+  --color-brand-soft: #ffedd5;
 
   /* Interface */
-  --color-app-background: #F1EFEB;
-  --color-app-surface: #FFFFFF;
+  --color-app-background: #f1efeb;
+  --color-app-surface: #ffffff;
   --color-app-text: #292524;
-  --color-app-muted: #78716C;
-  --color-app-border: #E7E5E4;
+  --color-app-muted: #78716c;
+  --color-app-border: #e7e5e4;
 
   /* Categorias */
-  --color-category-green: #B8D8BA;
-  --color-category-blue: #BFD7EA;
-  --color-category-purple: #D8C8E8;
-  --color-category-peach: #F4C7AB;
-  --color-category-yellow: #F9E79F;
-  --color-category-pink: #F4B8C5;
+  --color-category-green: #b8d8ba;
+  --color-category-blue: #bfd7ea;
+  --color-category-purple: #d8c8e8;
+  --color-category-peach: #f4c7ab;
+  --color-category-yellow: #f9e79f;
+  --color-category-pink: #f4b8c5;
 
   /* Estados */
-  --color-app-success: #15803D;
-  --color-app-danger: #B91C1C;
-  --color-app-warning: #A16207;
-  --color-app-info: #1D4ED8;
+  --color-app-success: #15803d;
+  --color-app-danger: #b91c1c;
+  --color-app-warning: #a16207;
+  --color-app-info: #1d4ed8;
 }
 
 * {
@@ -38,7 +41,7 @@ body {
   min-height: 100vh;
   background-color: var(--color-app-background);
   color: var(--color-app-text);
-  font-family: Arial, sans-serif;
+  font-family: var(--font-sans);
 }
 
 @media (pointer: coarse) {
