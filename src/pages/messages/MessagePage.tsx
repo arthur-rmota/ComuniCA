@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
@@ -53,31 +52,81 @@ import {
 } from "../../utils/speech";
 
 const wordPictograms: Record<string, string> = {
+  // Pessoas
+  eu: "Eu",
+  voce: "Voce",
+  mamae: "Mamae",
+  papai: "Papai",
+
+  // Ações
+  quero: "Quero",
+  preciso: "Preciso",
+  estou: "Estou",
+  gosto: "Gosto",
+  posso: "Posso",
+  "nao-quero": "NaoQuero",
+  vou: "Vou",
+  "nao-posso": "NaoPosso",
+  adoro: "Adoro",
+  "nao-gosto": "NaoGosto",
+
+  // Objetos, alimentos e necessidades
   agua: "Agua",
   comida: "Comida",
   ajuda: "Ajuda",
   casa: "Casa",
+  suco: "CupSoda",
+  leite: "Milk",
+  lanche: "Cookie",
+  fruta: "Apple",
+  brinquedo: "Brinquedo",
+  bola: "Bola",
+  livro: "BookOpen",
+  abraco: "Abraco",
+  musica: "Music",
+
+  // Atividades
+  jogar: "Jogar",
+  brincar: "Brincar",
+  dormir: "Dormir",
+  ler: "Ler",
+  comer: "Comer",
+  beber: "Beber",
+  desenhar: "Desenhar",
+  cantar: "Cantar",
+  passear: "Footprints",
   banheiro: "Banheiro",
   banho: "Banho",
-  dormir: "Dormir",
+  descansar: "Descansar",
+  "ir-casa": "IrCasa",
+
+  // Sentimentos e sensações
+  feliz: "Smile",
+  triste: "Frown",
+  bem: "Bem",
+  mal: "Mal",
+  medo: "Medo",
+  sono: "Sono",
+  fome: "Fome",
+  sede: "Sede",
+  frio: "Frio",
+  calor: "Calor",
+  dor: "Dor",
+
+  // Tempo
+  agora: "Agora",
+  depois: "Depois",
+  hoje: "Hoje",
+  amanha: "Amanha",
+
+  // Expressões sociais
+  "por-favor": "PorFavor",
   sim: "Sim",
   nao: "Nao",
-  "ir-casa": "Casa",
-  "nao-quero": "Nao",
-  "nao-posso": "Nao",
-  comer: "Comida",
-  beber: "Agua",
-  sede: "Agua",
-  fome: "Comida",
-  descanso: "Dormir",
-  descansar: "Dormir",
-  suco: "CupSoda",
-  musica: "Music",
-  cantar: "Music",
-  brinquedo: "Puzzle",
-  brincar: "Puzzle",
-  bola: "Gamepad2",
-  frio: "Thermometer",
+  ola: "Ola",
+  tchau: "Tchau",
+  obrigado: "Obrigado",
+  obrigada: "Obrigado",
 };
 
 function getWordIcon(word: MessageWord): string {
@@ -85,11 +134,7 @@ function getWordIcon(word: MessageWord): string {
     return word.originalCard?.icon || "MessageCircle";
   }
 
-  return (
-    wordPictograms[word.id] ??
-    word.Icon.displayName ??
-    "MessageCircle"
-  );
+  return wordPictograms[word.id] ?? "MessageCircle";
 }
 
 export default function MessagePage() {
@@ -131,13 +176,9 @@ export default function MessagePage() {
       return;
     }
 
-    const oldIndex = items.findIndex(
-      (item) => item.id === active.id,
-    );
+    const oldIndex = items.findIndex((item) => item.id === active.id);
 
-    const newIndex = items.findIndex(
-      (item) => item.id === over.id,
-    );
+    const newIndex = items.findIndex((item) => item.id === over.id);
 
     if (oldIndex === -1 || newIndex === -1) {
       return;
@@ -177,9 +218,7 @@ export default function MessagePage() {
     };
   }, []);
 
-  const currentGroup = messageGroups.find(
-    (group) => group.id === groupId,
-  )!;
+  const currentGroup = messageGroups.find((group) => group.id === groupId)!;
 
   const allowedGroups = availableMessageGroups(items);
 
@@ -248,9 +287,7 @@ export default function MessagePage() {
   }
 
   function handleRemove(itemId: string): void {
-    const remaining = items.filter(
-      (item) => item.id !== itemId,
-    );
+    const remaining = items.filter((item) => item.id !== itemId);
 
     removeItem(itemId);
     setGroupId(suggestedMessageGroup(remaining) ?? "quem");
@@ -263,9 +300,7 @@ export default function MessagePage() {
     if (!text) return;
 
     if (!("speechSynthesis" in window)) {
-      setNotice(
-        "Este dispositivo não oferece reprodução por voz.",
-      );
+      setNotice("Este dispositivo não oferece reprodução por voz.");
       return;
     }
 
@@ -305,11 +340,7 @@ export default function MessagePage() {
               aria-label="Voltar para o início"
               className="absolute left-0 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#42251D] shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
             >
-              <ArrowLeft
-                size={24}
-                strokeWidth={2.5}
-                aria-hidden="true"
-              />
+              <ArrowLeft size={24} strokeWidth={2.5} aria-hidden="true" />
             </button>
 
             <h1 className="px-14 text-center text-2xl font-extrabold tracking-tight text-[#42251D]">
@@ -355,9 +386,7 @@ export default function MessagePage() {
           )}
 
           <p className="sr-only" aria-live="polite">
-            {draft
-              ? `Mensagem: ${formatMessage(draft)}`
-              : "Mensagem vazia"}
+            {draft ? `Mensagem: ${formatMessage(draft)}` : "Mensagem vazia"}
           </p>
 
           <div className="mt-3 flex gap-2">
@@ -412,16 +441,12 @@ export default function MessagePage() {
               id="word-bank-title"
               className="text-xl font-extrabold text-[#42251D]"
             >
-              {allowedGroups.length === 0
-                ? "Pronto!"
-                : currentGroup.label}
+              {allowedGroups.length === 0 ? "Pronto!" : currentGroup.label}
             </h2>
 
             <button
               type="button"
-              onClick={() =>
-                setShowGroups((current) => !current)
-              }
+              onClick={() => setShowGroups((current) => !current)}
               disabled={allowedGroups.length <= 1}
               aria-expanded={showGroups}
               aria-controls="message-word-groups"
@@ -450,9 +475,7 @@ export default function MessagePage() {
             aria-label="Escolher grupo de palavras"
           >
             {messageGroups
-              .filter((group) =>
-                allowedGroups.includes(group.id),
-              )
+              .filter((group) => allowedGroups.includes(group.id))
               .map((group) => {
                 const selected = group.id === groupId;
 
@@ -472,10 +495,7 @@ export default function MessagePage() {
                     }`}
                   >
                     <AppIcon
-                      name={
-                        group.Icon.displayName ??
-                        "MessageCircle"
-                      }
+                      name={group.Icon.displayName ?? "MessageCircle"}
                       size={40}
                     />
 
