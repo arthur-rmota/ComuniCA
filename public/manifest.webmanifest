@@ -11,7 +11,7 @@
   "icons": [
     {
       "src": "/comunica-white-icon.png",
-      "sizes": "2048x2048",
+      "sizes": "2000x2000",
       "type": "image/png",
       "purpose": "any"
     }
