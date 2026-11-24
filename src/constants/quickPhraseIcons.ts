@@ -104,7 +104,65 @@ import {
 } from "lucide-react";
 
 export const quickPhraseIcons = [
+  // Pictogramas adicionais de comunicação alternativa
+
+  {
+    id: "agua",
+    label: "Água (ilustrada)",
+    category: "Necessidades",
+    Icon: GlassWater,
+  },
+  {
+    id: "comida",
+    label: "Comida (ilustrada)",
+    category: "Alimentação",
+    Icon: Utensils,
+  },
+  {
+    id: "ajuda",
+    label: "Ajuda (ilustrada)",
+    category: "Saúde",
+    Icon: HandHelping,
+  },
+  {
+    id: "banheiro",
+    label: "Banheiro (ilustrado)",
+    category: "Necessidades",
+    Icon: Toilet,
+  },
+  {
+    id: "banho",
+    label: "Banho (ilustrado)",
+    category: "Higiene",
+    Icon: ShowerHead,
+  },
+  {
+    id: "casa",
+    label: "Casa (ilustrada)",
+    category: "Necessidades",
+    Icon: House,
+  },
+  {
+    id: "dormir",
+    label: "Dormir (ilustrado)",
+    category: "Necessidades",
+    Icon: Bed,
+  },
+  {
+    id: "sim",
+    label: "Sim (ilustrado)",
+    category: "Comunicação",
+    Icon: ThumbsUp,
+  },
+  {
+    id: "nao",
+    label: "Não (ilustrado)",
+    category: "Comunicação",
+    Icon: ThumbsDown,
+  },
+
   // Necessidades básicas
+
   {
     id: "glass-water",
     label: "Água",
@@ -128,6 +186,7 @@ export const quickPhraseIcons = [
   { id: "house", label: "Casa", category: "Necessidades", Icon: House },
 
   // Emoções
+
   { id: "smile", label: "Feliz", category: "Emoções", Icon: Smile },
   { id: "frown", label: "Triste", category: "Emoções", Icon: Frown },
   { id: "angry", label: "Bravo", category: "Emoções", Icon: Angry },
@@ -136,6 +195,7 @@ export const quickPhraseIcons = [
   { id: "heart", label: "Amor", category: "Emoções", Icon: Heart },
 
   // Saúde e segurança
+
   { id: "heart-pulse", label: "Saúde", category: "Saúde", Icon: HeartPulse },
   { id: "pill", label: "Remédio", category: "Saúde", Icon: Pill },
   { id: "thermometer", label: "Febre", category: "Saúde", Icon: Thermometer },
@@ -155,6 +215,7 @@ export const quickPhraseIcons = [
   },
 
   // Comunicação
+
   {
     id: "message-circle",
     label: "Conversar",
@@ -186,6 +247,7 @@ export const quickPhraseIcons = [
   { id: "x", label: "Recusar", category: "Comunicação", Icon: X },
 
   // Pessoas e animais
+
   { id: "users", label: "Família", category: "Pessoas", Icon: Users },
   { id: "user-round", label: "Pessoa", category: "Pessoas", Icon: UserRound },
   { id: "baby", label: "Bebê", category: "Pessoas", Icon: Baby },
@@ -195,6 +257,7 @@ export const quickPhraseIcons = [
   { id: "phone", label: "Telefone", category: "Pessoas", Icon: Phone },
 
   // Alimentação
+
   { id: "apple", label: "Fruta", category: "Alimentação", Icon: Apple },
   { id: "milk", label: "Leite", category: "Alimentação", Icon: Milk },
   { id: "coffee", label: "Bebida", category: "Alimentação", Icon: Coffee },
@@ -202,6 +265,7 @@ export const quickPhraseIcons = [
   { id: "sandwich", label: "Lanche", category: "Alimentação", Icon: Sandwich },
 
   // Atividades e lugares
+
   { id: "gamepad-2", label: "Brincar", category: "Atividades", Icon: Gamepad2 },
   { id: "book-open", label: "Ler", category: "Atividades", Icon: BookOpen },
   { id: "music", label: "Música", category: "Atividades", Icon: Music },
@@ -220,6 +284,7 @@ export const quickPhraseIcons = [
   { id: "clock", label: "Horário", category: "Atividades", Icon: Clock },
 
   // Mais alimentos
+
   { id: "pizza", label: "Pizza", category: "Alimentação", Icon: Pizza },
   { id: "soup", label: "Sopa", category: "Alimentação", Icon: Soup },
   { id: "egg", label: "Ovo", category: "Alimentação", Icon: Egg },
@@ -243,6 +308,7 @@ export const quickPhraseIcons = [
   },
 
   // Higiene e cuidados pessoais
+
   { id: "bath", label: "Banheira", category: "Higiene", Icon: Bath },
   { id: "brush", label: "Escovar", category: "Higiene", Icon: Brush },
   { id: "shirt", label: "Roupa", category: "Higiene", Icon: Shirt },
@@ -266,6 +332,7 @@ export const quickPhraseIcons = [
   },
 
   // Mais opções de saúde
+
   { id: "stethoscope", label: "Médico", category: "Saúde", Icon: Stethoscope },
   { id: "syringe", label: "Vacina", category: "Saúde", Icon: Syringe },
   { id: "hospital", label: "Hospital", category: "Saúde", Icon: Hospital },
@@ -275,6 +342,7 @@ export const quickPhraseIcons = [
   { id: "ear", label: "Ouvir", category: "Saúde", Icon: Ear },
 
   // Escola e aprendizagem
+
   { id: "backpack", label: "Mochila", category: "Escola", Icon: Backpack },
   { id: "pencil", label: "Escrever", category: "Escola", Icon: Pencil },
   { id: "notebook", label: "Caderno", category: "Escola", Icon: Notebook },
@@ -294,6 +362,7 @@ export const quickPhraseIcons = [
   },
 
   // Transporte e natureza
+
   { id: "bike", label: "Bicicleta", category: "Transporte", Icon: Bike },
   { id: "train", label: "Trem", category: "Transporte", Icon: Train },
   { id: "plane", label: "Avião", category: "Transporte", Icon: Plane },
@@ -313,6 +382,7 @@ export const quickPhraseIcons = [
   },
 
   // Brincadeiras e lazer
+
   { id: "balloons", label: "Festa", category: "Lazer", Icon: Balloon },
   { id: "puzzle", label: "Quebra-cabeça", category: "Lazer", Icon: Puzzle },
   { id: "trophy", label: "Vitória", category: "Lazer", Icon: Trophy },
@@ -327,6 +397,7 @@ export const quickPhraseIcons = [
   },
 
   // Mais opções de comunicação
+
   {
     id: "circle-help",
     label: "Perguntar",
@@ -341,6 +412,6 @@ export const quickPhraseIcons = [
   },
   { id: "bell", label: "Chamar alguém", category: "Comunicação", Icon: Bell },
   { id: "search", label: "Procurar", category: "Comunicação", Icon: Search },
-  { id: "star", label: "Favorito", category: "Comunicação", Icon: Star },
+  { id: "star", label: "Estrela", category: "Comunicação", Icon: Star },
   { id: "lightbulb", label: "Ideia", category: "Comunicação", Icon: Lightbulb },
 ];
