@@ -6,6 +6,7 @@ import { PinSetupForm } from "../../components/profile/PinSetupForm";
 import { ProfileForm } from "../../components/profile/ProfileForm";
 import { ProfileMenuItem } from "../../components/profile/ProfileMenuItem";
 import { useProfileContext } from "../../contexts/ProfileContext";
+import { SlidersHorizontal } from "lucide-react";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -128,6 +129,13 @@ function ProfilePage() {
                   label="Gerenciar categorias"
                   onClick={handleManageCategories}
                   accent="green"
+                />
+
+                <ProfileMenuItem
+                  icon="SlidersHorizontal"
+                  label="Gerenciar interface"
+                  onClick={() => navigate("/perfil/interface")}
+                  accent="orange"
                 />
 
                 <ProfileMenuItem
