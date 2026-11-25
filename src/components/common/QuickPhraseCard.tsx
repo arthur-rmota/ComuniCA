@@ -22,14 +22,11 @@ function QuickPhraseCard({
 
   const { settings } = useInterface();
 
-  const cardHeight =
-    interfaceSizes[settings.cardSize].cardHeight;
+  const cardHeight = interfaceSizes[settings.cardSize].cardHeight;
 
-  const textSize =
-    interfaceSizes[settings.textSize].textSize;
+  const textSize = interfaceSizes[settings.textSize].textSize;
 
-  const symbolSize =
-    interfaceSizes[settings.symbolSize].symbolSize;
+  const symbolSize = interfaceSizes[settings.symbolSize].symbolSize;
 
   return (
     <button
@@ -67,7 +64,12 @@ function QuickPhraseCard({
 
       <AppIcon name={phrase.icon} size={symbolSize} className="relative" />
 
-      <span className="relative break-words font-extrabold leading-tight text-[#42251D]" style={{ fontSize: `${textSize}px`}}>
+      <span
+        className="relative w-full font-extrabold leading-tight text-[#42251D] [overflow-wrap:anywhere]"
+        style={{
+          fontSize: `${textSize}px`,
+        }}
+      >
         {phrase.text}
       </span>
 
