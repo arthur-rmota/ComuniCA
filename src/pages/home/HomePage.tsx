@@ -16,7 +16,7 @@ function HomePage() {
         className="pointer-events-none absolute -right-20 top-24 h-48 w-48 rounded-full bg-[#FFF0BB]/40"
       />
 
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="app-page-container">
         <HomeHeader />
         <DailyMessage />
         <MessageShortcut />

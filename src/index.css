@@ -31,6 +31,12 @@
   --color-app-info: #1d4ed8;
 }
 
+/* Configurações globais */
+
+:root {
+  --app-sidebar-width: 0rem;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -49,5 +55,129 @@ body {
   textarea,
   select {
     font-size: max(16px, 1rem);
+  }
+}
+
+/* Estrutura principal da aplicação */
+
+.app-content {
+  width: calc(100% - var(--app-sidebar-width));
+  min-width: 0;
+  min-height: 100dvh;
+  margin-left: var(--app-sidebar-width);
+  padding-left: 0;
+}
+
+/* Container responsivo das páginas */
+
+.app-page-container {
+  position: relative;
+  width: 100%;
+  max-width: 32rem;
+  margin-inline: auto;
+}
+
+/* Navegação desktop oculta por padrão */
+
+.app-navigation-desktop {
+  display: none;
+}
+
+/* Tablets */
+
+@media (min-width: 48rem) {
+  .app-page-container {
+    max-width: 48rem;
+  }
+}
+
+/* Telas maiores */
+
+@media (min-width: 64rem) {
+  .app-page-container {
+    max-width: 64rem;
+  }
+}
+
+/* Tablet horizontal */
+
+@media (min-width: 64rem) and (orientation: landscape) {
+  :root {
+    --app-sidebar-width: 7.5rem;
+  }
+
+  .app-navigation {
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    width: var(--app-sidebar-width);
+    height: 100dvh;
+
+    flex-direction: column;
+    justify-content: flex-start;
+    justify-content: safe center;
+
+    gap: 1.25rem;
+    padding: 1.5rem 0.75rem;
+
+    overflow-y: auto;
+
+    border-top: none;
+    border-right: 1px solid var(--color-app-border);
+
+    box-shadow: 3px 0 12px rgba(41, 37, 36, 0.06);
+  }
+
+  .app-navigation > a {
+    flex: 0 0 auto;
+    width: 100%;
+    min-height: 4.5rem;
+    justify-content: center;
+  }
+
+  .app-navigation > .app-navigation-sos {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+
+  .app-navigation-label {
+    font-size: 0.875rem;
+  }
+}
+
+/* Desktop */
+
+@media (min-width: 80rem) {
+  :root {
+    --app-sidebar-width: 14rem;
+  }
+
+  .app-page-container {
+    max-width: 72rem;
+  }
+
+  .app-navigation {
+    display: none;
+  }
+
+  .app-navigation-desktop {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 40;
+
+    display: flex;
+    flex-direction: column;
+
+    width: var(--app-sidebar-width);
+    height: 100dvh;
+
+    padding: 1.5rem 1rem;
+    overflow-y: auto;
+
+    background-color: white;
+    border-right: 1px solid var(--color-app-border);
+
+    box-shadow: 3px 0 12px rgba(41, 37, 36, 0.06);
   }
 }
