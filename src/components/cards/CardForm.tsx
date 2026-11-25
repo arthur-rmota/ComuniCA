@@ -95,7 +95,7 @@ export default function CardForm({
         role="dialog"
         aria-modal="true"
         aria-labelledby="card-form-title"
-        className="min-w-0 max-h-[90dvh] w-full max-w-md overflow-x-hidden overflow-y-auto rounded-2xl bg-white p-4 shadow-xl sm:p-6"
+        className="min-w-0 max-h-[calc(100dvh-2rem)] w-full max-w-md md:max-w-2xl overflow-x-hidden overflow-y-auto rounded-2xl bg-white p-4 shadow-xl sm:p-6"
       >
         <h2
           id="card-form-title"
@@ -199,8 +199,8 @@ export default function CardForm({
 
             {/* Área de pictogramas com rolagem interna */}
 
-            <div className="max-h-56 overflow-x-hidden overflow-y-auto overscroll-y-contain touch-pan-y rounded-xl border border-gray-200 p-2">
-              <div className="grid grid-cols-4 gap-2">
+            <div className="max-h-56 md:max-h-80 overflow-x-hidden overflow-y-auto overscroll-y-contain touch-pan-y rounded-xl border border-gray-200 p-2">
+              <div className="grid grid-cols-4 gap-2 md:grid-cols-6 md:gap-3">
                 {filteredIcons.map(({ id, label }) => (
                   <button
                     key={id}

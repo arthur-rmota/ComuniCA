@@ -1,5 +1,6 @@
 import { NavLink } from "react-router";
 import AppIcon from "../common/AppIcon";
+import { useVirtualKeyboard } from "../../hooks/useVirtualKeyboard";
 
 const navigationItems = [
   {
@@ -92,12 +93,14 @@ function EmergencyNavigationLink({ desktop = false }: { desktop?: boolean }) {
 }
 
 function BottomNavigation() {
+  const keyboardOpen = useVirtualKeyboard();
   return (
     <>
       {/* Celulares e tablets */}
 
       <nav
         aria-label="Navegação principal"
+        data-keyboard-open={keyboardOpen}
         className="app-navigation fixed bottom-0 left-0 z-40 flex w-full items-center justify-around border-t border-app-border bg-white px-2 py-3 shadow-[0_-3px_12px_rgba(41,37,36,0.06)]"
       >
         {navigationItems.slice(0, 2).map((item) => (

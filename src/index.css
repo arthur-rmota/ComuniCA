@@ -196,3 +196,11 @@ body {
     scrollbar-width: thin;
   }
 }
+
+/* Oculta a navegação inferior durante o teclado virtual */
+
+@media (width < 64rem), (width < 80rem) and (orientation: portrait) {
+  .app-navigation[data-keyboard-open="true"] {
+    display: none;
+  }
+}

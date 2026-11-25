@@ -233,7 +233,7 @@ export default function ManageEmergencyPhrasesPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+    <main className="relative min-h-dvh overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 lg:landscape:pb-8 xl:px-8 xl:pb-8 xl:pt-8">
       {/* Decoração do fundo */}
 
       <div
@@ -246,7 +246,7 @@ export default function ManageEmergencyPhrasesPage() {
         className="pointer-events-none absolute -left-20 top-96 h-48 w-48 rounded-full bg-[#FFF0BB]/30"
       />
 
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="relative mx-auto w-full max-w-lg md:max-w-3xl lg:max-w-4xl">
         {/* Cabeçalho */}
 
         <header className="mb-6 pt-3">
@@ -338,7 +338,7 @@ export default function ManageEmergencyPhrasesPage() {
               </p>
             </div>
           ) : (
-            <ul className="space-y-3">
+            <ul className="grid grid-cols-1 gap-3 lg:landscape:grid-cols-2 xl:grid-cols-2 md:gap-4">
               {phrases.map((phrase) => (
                 <li
                   key={phrase.id}
@@ -455,7 +455,7 @@ export default function ManageEmergencyPhrasesPage() {
               aria-modal="true"
               aria-labelledby="delete-emergency-title"
               aria-describedby="delete-emergency-description"
-              className="relative z-10 w-full max-w-[360px] rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_24px_60px_rgba(38,22,14,0.25)]"
+              className="relative z-10 w-full max-w-[360px] max-h-[calc(100dvh-3rem)] overflow-y-auto overscroll-contain rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_24px_60px_rgba(38,22,14,0.25)]"
             >
               <div className="flex items-center gap-3">
                 <span
