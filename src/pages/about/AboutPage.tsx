@@ -84,7 +84,7 @@ export default function AboutPage() {
         <section className="overflow-hidden rounded-3xl border border-[#F5E9DF] bg-white p-6 text-center shadow-[0_5px_14px_rgba(41,37,36,0.06)]">
           <div className="mx-auto mb-4 flex h-28 w-28 items-center justify-center rounded-3xl bg-[#FFF7F0] p-3">
             <img
-              src="/comunica2-icon.png"
+              src="/comunica-dark-icon.png"
               alt="Logo do ComuniCA"
               className="h-full w-full object-contain"
             />

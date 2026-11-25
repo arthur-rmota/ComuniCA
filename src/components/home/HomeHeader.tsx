@@ -5,13 +5,13 @@ function HomeHeader() {
   const { user } = useProfileContext();
   const navigate = useNavigate();
 
-  const firstName = user?.name?.trim().split(/\s+/)[0] || "Olá";
+  const firstName = user?.name?.trim().split(/\s+/)[0] || "";
 
   return (
     <header className="relative mb-6 pt-2">
       <div className="mb-3 flex items-center justify-center gap-2">
         <img
-          src="/comunica2-icon.png"
+          src="/comunica-dark-icon.png"
           alt=""
           aria-hidden="true"
           className="h-14 w-14 object-contain"
@@ -25,7 +25,7 @@ function HomeHeader() {
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <h1 className="break-words text-2xl font-extrabold tracking-tight text-[#42251D]">
-            Olá, {firstName}! 👋
+            {firstName ? `Olá, ${firstName}!` : "Olá, Usuário!"} 👋
           </h1>
 
           <p className="mt-1 text-sm font-medium text-[#80685D]">

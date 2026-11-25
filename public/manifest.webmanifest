@@ -10,8 +10,8 @@
   "theme_color": "#F1EFEB",
   "icons": [
     {
-      "src": "/comunica-icon2.png",
-      "sizes": "2048x2048",
+      "src": "/comunica-white-icon.png",
+      "sizes": "2000x2000",
       "type": "image/png",
       "purpose": "any"
     }
