@@ -2,23 +2,27 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { getCategories } from "../../services/categoryService";
 import type { Category } from "../../types/category";
-import { useInterface, type InterfaceSize } from "../../contexts/InterfaceContext";
+import {
+  useInterface,
+  type InterfaceSize,
+} from "../../contexts/InterfaceContext";
 import { interfaceSizes } from "../../constants/interfaceSizes";
 import AppIcon from "../common/AppIcon";
 
 function HomeSections() {
   const navigate = useNavigate();
   const { settings } = useInterface();
-
   const cardHeight =
     interfaceSizes[settings.cardSize as InterfaceSize].cardHeight;
-
-  const textSize =
-    interfaceSizes[settings.textSize as InterfaceSize].textSize;
-
+  const textSize = interfaceSizes[settings.textSize as InterfaceSize].textSize;
   const symbolSize =
     interfaceSizes[settings.symbolSize as InterfaceSize].symbolSize;
-
+  const minCardWidth = Math.max(
+    136,
+    cardHeight - 24,
+    symbolSize + 20,
+    textSize * 6 + 20,
+  );
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -82,7 +86,12 @@ function HomeSections() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-3">
+        <div
+          className="grid gap-3 md:gap-4 [--category-min-width:0px] md:[--category-min-width:184px] xl:[--category-min-width:208px]"
+          style={{
+            gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, max(${minCardWidth}px, var(--category-min-width))), 1fr))`,
+          }}
+        >
           {categories.map((category) => (
             <button
               key={category.id}
@@ -100,9 +109,18 @@ function HomeSections() {
                 className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
               />
 
-              <AppIcon name={category.icon} size={symbolSize} className="relative" />
+              <AppIcon
+                name={category.icon}
+                size={symbolSize}
+                className="relative"
+              />
 
-              <span className="relative break-words font-extrabold leading-tight text-[#42251D]" style={{ fontSize: `${textSize}px`}}>
+              <span
+                className="relative w-full font-extrabold leading-tight text-[#42251D] [overflow-wrap:anywhere]"
+                style={{
+                  fontSize: `${textSize}px`,
+                }}
+              >
                 {category.name}
               </span>
             </button>
