@@ -1,5 +1,6 @@
 
 import { useNavigate } from "react-router";
+import InterfacePreview from "../../components/profile/InterfacePreview";
 import {
   ArrowLeft,
   Minus,
@@ -212,6 +213,8 @@ function InterfaceSettingsPage() {
             icon={Image}
             onChange={setSymbolSize}
           />
+
+          <InterfacePreview />
 
           <div className="mt-2 rounded-2xl border border-[#F1E4D9] bg-white p-4">
             <div className="mb-3">
