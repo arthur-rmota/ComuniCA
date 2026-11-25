@@ -1,4 +1,3 @@
-
 import { useInterface } from "../../contexts/InterfaceContext";
 import { interfaceSizes } from "../../constants/interfaceSizes";
 import AppIcon from "../common/AppIcon";
@@ -6,14 +5,17 @@ import AppIcon from "../common/AppIcon";
 function InterfacePreview() {
   const { settings } = useInterface();
 
-  const cardHeight =
-    interfaceSizes[settings.cardSize].cardHeight;
+  const cardHeight = interfaceSizes[settings.cardSize].cardHeight;
 
-  const textSize =
-    interfaceSizes[settings.textSize].textSize;
+  const textSize = interfaceSizes[settings.textSize].textSize;
 
-  const symbolSize =
-    interfaceSizes[settings.symbolSize].symbolSize;
+  const symbolSize = interfaceSizes[settings.symbolSize].symbolSize;
+  const minCardWidth = Math.max(
+    136,
+    cardHeight - 24,
+    symbolSize + 28,
+    textSize * 6 + 20,
+  );
 
   const previewCards = [
     {
@@ -39,16 +41,19 @@ function InterfacePreview() {
   return (
     <section className="rounded-2xl border border-[#F1E4D9] bg-white p-4">
       <div className="mb-4">
-        <h2 className="font-extrabold text-[#42251D]">
-          Pré-visualização
-        </h2>
+        <h2 className="font-extrabold text-[#42251D]">Pré-visualização</h2>
 
         <p className="mt-1 text-sm leading-relaxed text-[#80685D]">
           Veja como os cartões ficarão com os tamanhos selecionados.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div
+        className="grid gap-3"
+        style={{
+          gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, ${minCardWidth}px), 1fr))`,
+        }}
+      >
         {previewCards.map((card) => (
           <div
             key={card.id}
@@ -66,11 +71,11 @@ function InterfacePreview() {
             <AppIcon
               name={card.icon}
               size={symbolSize}
-              className="relative"
+              className="relative max-w-full"
             />
 
             <span
-              className="relative break-words font-extrabold leading-tight text-[#42251D]"
+              className="relative w-full font-extrabold leading-tight text-[#42251D] [overflow-wrap:anywhere]"
               style={{
                 fontSize: `${textSize}px`,
               }}

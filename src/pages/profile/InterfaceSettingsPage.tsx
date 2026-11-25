@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router";
 import InterfacePreview from "../../components/profile/InterfacePreview";
 import {
@@ -76,9 +75,7 @@ function SizeControl({
         </span>
 
         <div className="min-w-0">
-          <h2 className="font-extrabold text-[#42251D]">
-            {title}
-          </h2>
+          <h2 className="font-extrabold text-[#42251D]">{title}</h2>
 
           <p className="mt-1 text-sm leading-relaxed text-[#80685D]">
             {description}
@@ -102,10 +99,7 @@ function SizeControl({
         </button>
 
         <div className="flex-1 text-center">
-          <span
-            aria-live="polite"
-            className="font-bold text-brand-primary"
-          >
+          <span aria-live="polite" className="font-bold text-brand-primary">
             {sizeLabels[value]}
           </span>
 
@@ -114,9 +108,7 @@ function SizeControl({
               <span
                 key={option}
                 className={`h-1.5 w-7 rounded-full ${
-                  index <= currentIndex
-                    ? "bg-brand-primary"
-                    : "bg-[#F1E4D9]"
+                  index <= currentIndex ? "bg-brand-primary" : "bg-[#F1E4D9]"
                 }`}
               />
             ))}
@@ -140,22 +132,17 @@ function SizeControl({
 function InterfaceSettingsPage() {
   const navigate = useNavigate();
 
-  const {
-    settings,
-    setCardSize,
-    setTextSize,
-    setSymbolSize,
-    resetSettings,
-  } = useInterface();
+  const { settings, setCardSize, setTextSize, setSymbolSize, resetSettings } =
+    useInterface();
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+    <main className="relative min-h-dvh overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 lg:landscape:pb-8 xl:px-8 xl:pb-8 xl:pt-8">
+      {" "}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
       />
-
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="app-page-container">
         <header className="mb-6 pt-3">
           <div className="relative flex min-h-14 items-center justify-center">
             <button
@@ -189,32 +176,36 @@ function InterfaceSettingsPage() {
           </div>
         </header>
 
-        <div className="flex flex-col gap-4">
-          <SizeControl
-            title="Tamanho dos cartões"
-            description="Ajuste a dimensão dos cartões de comunicação e categorias."
-            value={settings.cardSize}
-            icon={Grid2X2}
-            onChange={setCardSize}
-          />
+        <div className="flex flex-col gap-4 lg:landscape:grid lg:landscape:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] xl:grid xl:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-start md:gap-6">
+          <div className="flex min-w-0 flex-col gap-4">
+            <SizeControl
+              title="Tamanho dos cartões"
+              description="Ajuste a dimensão dos cartões de comunicação e categorias."
+              value={settings.cardSize}
+              icon={Grid2X2}
+              onChange={setCardSize}
+            />
 
-          <SizeControl
-            title="Tamanho dos textos"
-            description="Ajuste o tamanho das palavras e frases."
-            value={settings.textSize}
-            icon={Type}
-            onChange={setTextSize}
-          />
+            <SizeControl
+              title="Tamanho dos textos"
+              description="Ajuste o tamanho das palavras e frases."
+              value={settings.textSize}
+              icon={Type}
+              onChange={setTextSize}
+            />
 
-          <SizeControl
-            title="Tamanho dos símbolos"
-            description="Ajuste o tamanho das imagens e dos ícones."
-            value={settings.symbolSize}
-            icon={Image}
-            onChange={setSymbolSize}
-          />
+            <SizeControl
+              title="Tamanho dos símbolos"
+              description="Ajuste o tamanho das imagens e dos ícones."
+              value={settings.symbolSize}
+              icon={Image}
+              onChange={setSymbolSize}
+            />
+          </div>
 
-          <InterfacePreview />
+          <div className="min-w-0 lg:landscape:col-start-2 lg:landscape:row-start-1 lg:landscape:row-span-3 xl:col-start-2 xl:row-start-1 xl:row-span-3">
+            <InterfacePreview />
+          </div>
 
           <div className="mt-2 rounded-2xl border border-[#F1E4D9] bg-white p-4">
             <div className="mb-3">
@@ -238,7 +229,8 @@ function InterfaceSettingsPage() {
           </div>
 
           <p className="px-2 text-center text-xs leading-relaxed text-[#80685D]">
-            Suas alterações são aplicadas automaticamente e ficam salvas neste navegador.
+            Suas alterações são aplicadas automaticamente e ficam salvas neste
+            navegador.
           </p>
         </div>
       </div>
