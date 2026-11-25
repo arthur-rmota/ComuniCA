@@ -20,6 +20,7 @@ import ManageRoutineActivitiesPage from "./pages/routine/ManageRoutineActivities
 import RoutineActivityPage from "./pages/routine/RoutineActivityPage";
 import HistoryPage from "./pages/history/HistoryPage";
 import MessagePage from "./pages/messages/MessagePage";
+import NeuralSpeechIndicator from "./components/common/NeuralSpeechIndicator";
 
 function App() {
   return (
@@ -31,21 +32,34 @@ function App() {
         <Route path="/agenda" element={<AgendaPage />} />
         <Route path="/rotina/:sectionId" element={<RoutineSectionPage />} />
         <Route path="/emergencia" element={<EmergencyPage />} />
-        <Route path="/emergencia/gerenciar" element={<ManageEmergencyPhrasesPage />}/>
+        <Route
+          path="/emergencia/gerenciar"
+          element={<ManageEmergencyPhrasesPage />}
+        />
         <Route path="/perfil" element={<ProfilePage />} />
         <Route path="/perfil/gerenciar" element={<ManageProfilePage />} />
         <Route path="/perfil/categorias" element={<ManageCategoriesPage />} />
         <Route path="/perfil/recuperar-pin" element={<RecoverPinPage />} />
-        <Route path="/perfil/categorias/:categoryId/cartoes" element={<ManageCardsPage />} />
+        <Route
+          path="/perfil/categorias/:categoryId/cartoes"
+          element={<ManageCardsPage />}
+        />
         <Route path="/categorias/:categoryId" element={<CategoryCardsPage />} />
         <Route path="/sobre" element={<AboutPage />} />
         <Route path="/rotina/gerenciar" element={<ManageRoutinePage />} />
-        <Route path="/rotina/gerenciar/:sectionId/atividades" element={<ManageRoutineActivitiesPage />} />
-        <Route path="/rotina/:sectionId/atividades/:activityId" element={<RoutineActivityPage />} />
+        <Route
+          path="/rotina/gerenciar/:sectionId/atividades"
+          element={<ManageRoutineActivitiesPage />}
+        />
+        <Route
+          path="/rotina/:sectionId/atividades/:activityId"
+          element={<RoutineActivityPage />}
+        />
         <Route path="/historico" element={<HistoryPage />} />
         <Route path="/mensagem" element={<MessagePage />} />
       </Routes>
 
+      <NeuralSpeechIndicator />
       <BottomNavigation />
     </ProfileProvider>
   );

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { generateId } from "../utils/generateId";
 import type { Card } from "../types/card";
 import type {
   MessageBuilder,
@@ -13,7 +14,7 @@ export function useMessageBuilder(): MessageBuilder {
   // Adiciona um cartão à mensagem, permitindo repetições
   function addItem(card: Card): void {
     const newItem: MessageItem = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       cardId: card.id,
       title: card.title,
       speechText: card.speechText,
