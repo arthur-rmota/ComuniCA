@@ -2,10 +2,22 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { getCategories } from "../../services/categoryService";
 import type { Category } from "../../types/category";
+import { useInterface, type InterfaceSize } from "../../contexts/InterfaceContext";
+import { interfaceSizes } from "../../constants/interfaceSizes";
 import AppIcon from "../common/AppIcon";
 
 function HomeSections() {
   const navigate = useNavigate();
+  const { settings } = useInterface();
+
+  const cardHeight =
+    interfaceSizes[settings.cardSize as InterfaceSize].cardHeight;
+
+  const textSize =
+    interfaceSizes[settings.textSize as InterfaceSize].textSize;
+
+  const symbolSize =
+    interfaceSizes[settings.symbolSize as InterfaceSize].symbolSize;
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,9 +89,10 @@ function HomeSections() {
               type="button"
               onClick={() => navigate(`/categorias/${category.id}`)}
               aria-label={`Abrir categoria ${category.name}`}
-              className="group relative flex min-h-44 min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 border-white/60 p-2 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-transform duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+              className="group relative flex min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 border-white/60 p-2 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-transform duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
               style={{
                 backgroundColor: category.color,
+                minHeight: `${cardHeight}px`,
               }}
             >
               <span
@@ -87,9 +100,9 @@ function HomeSections() {
                 className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
               />
 
-              <AppIcon name={category.icon} size={128} className="relative" />
+              <AppIcon name={category.icon} size={symbolSize} className="relative" />
 
-              <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
+              <span className="relative break-words font-extrabold leading-tight text-[#42251D]" style={{ fontSize: `${textSize}px`}}>
                 {category.name}
               </span>
             </button>

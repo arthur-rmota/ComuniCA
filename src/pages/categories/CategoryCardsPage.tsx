@@ -9,9 +9,23 @@ import type { Card } from "../../types/card";
 import AppIcon from "../../components/common/AppIcon";
 import { speak } from "../../utils/speech";
 
+import { useInterface } from "../../contexts/InterfaceContext";
+import { interfaceSizes } from "../../constants/interfaceSizes";
+
 export default function CategoryCardsPage() {
   const navigate = useNavigate();
   const { categoryId } = useParams<{ categoryId: string }>();
+
+  const { settings } = useInterface();
+
+  const cardHeight =
+    interfaceSizes[settings.cardSize].cardHeight;
+
+  const textSize = 
+    interfaceSizes[settings.textSize].textSize;
+
+  const symbolSize =
+    interfaceSizes[settings.symbolSize].symbolSize;
 
   const [category, setCategory] = useState<Category | null>(null);
   const [cards, setCards] = useState<Card[]>([]);
@@ -168,13 +182,14 @@ export default function CategoryCardsPage() {
                   type="button"
                   onClick={() => handleSpeak(card)}
                   aria-label={`Falar: ${card.speechText}`}
-                  className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 p-2 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+                  className={`group relative flex w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 p-2 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
                     isSpeaking
                       ? "border-brand-primary shadow-[0_5px_18px_rgba(194,65,12,0.18)]"
                       : "border-white/60 shadow-[0_5px_14px_rgba(41,37,36,0.07)]"
                   }`}
                   style={{
                     backgroundColor: category?.color ?? "#B8D8BA",
+                    minHeight: `${cardHeight}px`,
                   }}
                 >
                   <span
@@ -190,17 +205,21 @@ export default function CategoryCardsPage() {
                       <img
                         src={card.image}
                         alt=""
-                        width={128}
-                        height={128}
+                        width={symbolSize}
+                        height={symbolSize}
                         draggable={false}
                         className="h-32 w-32 select-none object-contain"
+                        style={{
+                          width: `${symbolSize}px`,
+                          height: `${symbolSize}px`,
+                        }}
                       />
                     ) : (
-                      <AppIcon name={card.icon || "Smile"} size={128} />
+                      <AppIcon name={card.icon || "Smile"} size={symbolSize} />
                     )}
                   </span>
 
-                  <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
+                  <span className="relative break-words font-extrabold leading-tight text-[#42251D]" style={{ fontSize: `${textSize}px` }}>
                     {card.title}
                   </span>
 
