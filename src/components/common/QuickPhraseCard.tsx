@@ -1,5 +1,7 @@
 import type { QuickPhrase } from "../../types/quickPhrase";
 import AppIcon from "./AppIcon";
+import { useInterface } from "../../contexts/InterfaceContext";
+import { interfaceSizes } from "../../constants/interfaceSizes";
 
 interface QuickPhraseCardProps {
   phrase: QuickPhrase;
@@ -18,6 +20,17 @@ function QuickPhraseCard({
 }: QuickPhraseCardProps) {
   const canEdit = phrase.userId === "local-user";
 
+  const { settings } = useInterface();
+
+  const cardHeight =
+    interfaceSizes[settings.cardSize].cardHeight;
+
+  const textSize =
+    interfaceSizes[settings.textSize].textSize;
+
+  const symbolSize =
+    interfaceSizes[settings.symbolSize].symbolSize;
+
   return (
     <button
       type="button"
@@ -35,7 +48,7 @@ function QuickPhraseCard({
         isSelectingToEdit ? `Editar ${phrase.text}` : `Falar: ${phrase.text}`
       }
       disabled={isSelectingToEdit && !canEdit}
-      className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 p-2 text-center transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+      className={`group relative flex w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 p-2 text-center transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
         isSelectingToEdit && !canEdit
           ? "cursor-not-allowed border-white/60 opacity-40"
           : isSpeaking || isSelectingToEdit
@@ -44,6 +57,7 @@ function QuickPhraseCard({
       }`}
       style={{
         backgroundColor: phrase.color,
+        minHeight: `${cardHeight}px`,
       }}
     >
       <span
@@ -51,9 +65,9 @@ function QuickPhraseCard({
         className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
       />
 
-      <AppIcon name={phrase.icon} size={128} className="relative" />
+      <AppIcon name={phrase.icon} size={symbolSize} className="relative" />
 
-      <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
+      <span className="relative break-words font-extrabold leading-tight text-[#42251D]" style={{ fontSize: `${textSize}px`}}>
         {phrase.text}
       </span>
 
