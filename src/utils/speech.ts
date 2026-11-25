@@ -2,7 +2,25 @@ import { recordHistory } from "../services/historyService";
 
 import { speakNeural, stopNeuralSpeech } from "../services/neuralSpeechService";
 
-let lastSpokenText: string | null = null;
+const LAST_SPEECH_KEY = "comunica:last-speech:v1";
+
+function loadLastSpeech(): string | null {
+  try {
+    return sessionStorage.getItem(LAST_SPEECH_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function saveLastSpeech(text: string): void {
+  try {
+    sessionStorage.setItem(LAST_SPEECH_KEY, text);
+  } catch (error) {
+    console.warn("Não foi possível salvar a última fala:", error);
+  }
+}
+
+let lastSpokenText: string | null = loadLastSpeech();
 let cancelCurrent: (() => void) | null = null;
 
 const NEURAL_TIMEOUT = 15000;
@@ -37,7 +55,8 @@ export function speak(
   stopSpeaking();
 
   lastSpokenText = cleanText;
-
+  saveLastSpeech(cleanText);
+  
   const volume = Math.max(0, Math.min(1, options?.volume ?? 1));
 
   let finished = false;

@@ -181,3 +181,18 @@ body {
     box-shadow: 3px 0 12px rgba(41, 37, 36, 0.06);
   }
 }
+/* Painel adaptativo do construtor de mensagens */
+
+@media (min-width: 64rem) and (min-height: 42rem) and (orientation: landscape),
+  (min-width: 80rem) and (min-height: 42rem) {
+  .message-builder-panel {
+    position: sticky;
+    top: 1.5rem;
+    align-self: start;
+
+    max-height: calc(100dvh - 3rem);
+    overflow-y: auto;
+
+    scrollbar-width: thin;
+  }
+}
