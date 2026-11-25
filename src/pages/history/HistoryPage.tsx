@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { createPortal } from "react-dom";
@@ -81,9 +80,7 @@ export default function HistoryPage() {
         setPlayingId(null);
 
         if (!started) {
-          setActionError(
-            "Não foi possível reproduzir esta mensagem.",
-          );
+          setActionError("Não foi possível reproduzir esta mensagem.");
 
           return;
         }
@@ -108,34 +105,29 @@ export default function HistoryPage() {
     } catch (error) {
       console.error("Erro ao limpar histórico:", error);
 
-      setActionError(
-        "Não foi possível limpar o histórico. Tente novamente.",
-      );
+      setActionError("Não foi possível limpar o histórico. Tente novamente.");
     } finally {
       setClearing(false);
       setConfirmOpen(false);
     }
   }
 
-  const isEmpty =
-    status === "ready" && items.length === 0;
+  const isEmpty = status === "ready" && items.length === 0;
 
-  const hasItems =
-    status === "ready" && items.length > 0;
+  const hasItems = status === "ready" && items.length > 0;
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+    <main className="relative min-h-dvh overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 lg:landscape:pb-8 xl:px-8 xl:pb-8 xl:pt-8">
+      {" "}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
       />
-
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-20 top-80 h-44 w-44 rounded-full bg-[#FFF0BB]/30"
       />
-
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="relative mx-auto w-full max-w-lg md:max-w-3xl lg:max-w-4xl">
         {/* Cabeçalho */}
 
         <header className="mb-6 pt-3">
@@ -146,11 +138,7 @@ export default function HistoryPage() {
               aria-label="Voltar para o perfil"
               className="absolute left-0 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#42251D] shadow-sm transition-transform active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
             >
-              <ArrowLeft
-                size={24}
-                strokeWidth={2.5}
-                aria-hidden="true"
-              />
+              <ArrowLeft size={24} strokeWidth={2.5} aria-hidden="true" />
             </button>
 
             <h1 className="px-14 text-center text-2xl font-extrabold tracking-tight text-[#42251D]">
@@ -172,9 +160,7 @@ export default function HistoryPage() {
               aria-hidden="true"
             />
 
-            <span className="text-sm font-medium">
-              Carregando histórico...
-            </span>
+            <span className="text-sm font-medium">Carregando histórico...</span>
           </div>
         )}
 
@@ -205,11 +191,7 @@ export default function HistoryPage() {
               onClick={() => void loadHistory()}
               className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-brand-primary px-5 font-bold text-white active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
             >
-              <RotateCcw
-                size={19}
-                aria-hidden="true"
-              />
-
+              <RotateCcw size={19} aria-hidden="true" />
               Tentar novamente
             </button>
           </div>
@@ -234,10 +216,7 @@ export default function HistoryPage() {
                   aria-hidden="true"
                   className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#FFE0BD]"
                 >
-                  <AppIcon
-                    name="History"
-                    size={48}
-                  />
+                  <AppIcon name="History" size={48} />
                 </span>
 
                 <div>
@@ -250,9 +229,7 @@ export default function HistoryPage() {
 
                   <p className="text-xs text-[#80685D]">
                     {items.length}{" "}
-                    {items.length === 1
-                      ? "registro"
-                      : "registros"}
+                    {items.length === 1 ? "registro" : "registros"}
                   </p>
                 </div>
               </div>
@@ -264,11 +241,7 @@ export default function HistoryPage() {
                   disabled={clearing || playingId !== null}
                   className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-bold text-[#A1442D] transition-colors active:bg-[#FFF0E4] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-brand-primary"
                 >
-                  <Trash2
-                    size={18}
-                    aria-hidden="true"
-                  />
-
+                  <Trash2 size={18} aria-hidden="true" />
                   Limpar
                 </button>
               )}
@@ -283,10 +256,7 @@ export default function HistoryPage() {
                     aria-hidden="true"
                     className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#FFF0E4]"
                   >
-                    <AppIcon
-                      name="History"
-                      size={72}
-                    />
+                    <AppIcon name="History" size={72} />
                   </span>
 
                   <div className="min-w-0 flex-1">
@@ -306,7 +276,6 @@ export default function HistoryPage() {
                   className="mt-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#FFF0E4] px-4 text-sm font-bold text-brand-primary transition-colors active:bg-[#FFE0BD] focus-visible:outline-2 focus-visible:outline-brand-primary"
                 >
                   Montar uma frase
-
                   <ArrowLeft
                     size={18}
                     className="rotate-180"
@@ -323,9 +292,7 @@ export default function HistoryPage() {
                     <li
                       key={item.id}
                       className={`flex min-h-[88px] items-center gap-3 rounded-3xl border bg-white p-4 shadow-[0_5px_14px_rgba(41,37,36,0.06)] ${
-                        isPlaying
-                          ? "border-[#F1BC93]"
-                          : "border-[#F5E9DF]"
+                        isPlaying ? "border-[#F1BC93]" : "border-[#F5E9DF]"
                       }`}
                     >
                       <div className="min-w-0 flex-1">
@@ -334,9 +301,7 @@ export default function HistoryPage() {
                         </p>
 
                         <time
-                          dateTime={new Date(
-                            item.createdAt,
-                          ).toISOString()}
+                          dateTime={new Date(item.createdAt).toISOString()}
                           className="mt-1.5 block text-xs font-medium text-[#9A8276]"
                         >
                           {formatDateTime(item.createdAt)}
@@ -353,9 +318,7 @@ export default function HistoryPage() {
                             : `Reproduzir: ${item.text}`
                         }
                         className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-white shadow-sm transition-transform active:scale-95 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
-                          isPlaying
-                            ? "bg-[#9A3412]"
-                            : "bg-brand-primary"
+                          isPlaying ? "bg-[#9A3412]" : "bg-brand-primary"
                         }`}
                       >
                         {isPlaying ? (
@@ -380,9 +343,7 @@ export default function HistoryPage() {
           </section>
         )}
       </div>
-
       {/* Confirmação de exclusão */}
-
       {confirmOpen &&
         createPortal(
           <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 py-6">
@@ -406,10 +367,7 @@ export default function HistoryPage() {
                   aria-hidden="true"
                   className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FFF0E4] text-brand-primary"
                 >
-                  <Trash2
-                    size={23}
-                    strokeWidth={2.2}
-                  />
+                  <Trash2 size={23} strokeWidth={2.2} />
                 </span>
 
                 <h2
@@ -424,8 +382,8 @@ export default function HistoryPage() {
                 id="confirm-clear-description"
                 className="mt-4 text-sm leading-6 text-[#80685D]"
               >
-                Todas as mensagens do histórico serão apagadas.
-                Esta ação não pode ser desfeita.
+                Todas as mensagens do histórico serão apagadas. Esta ação não
+                pode ser desfeita.
               </p>
 
               <div className="mt-5 grid grid-cols-2 gap-3">
@@ -452,16 +410,11 @@ export default function HistoryPage() {
                         className="animate-spin"
                         aria-hidden="true"
                       />
-
                       Limpando
                     </>
                   ) : (
                     <>
-                      <Trash2
-                        size={17}
-                        aria-hidden="true"
-                      />
-
+                      <Trash2 size={17} aria-hidden="true" />
                       Apagar
                     </>
                   )}

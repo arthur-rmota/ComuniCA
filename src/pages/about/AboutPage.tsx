@@ -52,7 +52,7 @@ export default function AboutPage() {
   const navigate = useNavigate();
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+    <main className="relative min-h-dvh overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 lg:landscape:pb-8 xl:px-8 xl:pb-8 xl:pt-8">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
@@ -63,7 +63,7 @@ export default function AboutPage() {
         className="pointer-events-none absolute -left-20 top-96 h-48 w-48 rounded-full bg-[#FFF0BB]/30"
       />
 
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="relative mx-auto w-full max-w-lg md:max-w-3xl">
         <header className="mb-6 pt-3">
           <div className="relative flex min-h-14 items-center justify-center">
             <button

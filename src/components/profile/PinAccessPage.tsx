@@ -22,14 +22,13 @@ export default function PinAccessPage({ title, onBack }: PinAccessPageProps) {
   } = useProfileContext();
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-5 pb-28 pt-4">
+    <main className="relative min-h-dvh overflow-hidden bg-[#FFF9F3] px-5 pb-28 pt-4 md:pt-8 lg:landscape:pb-8 xl:pb-8">
+      {" "}
       {/* Decoração no fundo */}
-
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full bg-[#FFE6D0]/60"
       />
-
       <div className="relative mx-auto w-full max-w-lg">
         {/* Cabeçalho */}
 

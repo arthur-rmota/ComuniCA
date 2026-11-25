@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { ArrowLeft, Pencil, Plus, Trash2 } from "lucide-react";
@@ -61,11 +60,7 @@ function ManageRoutineActivitiesPage() {
   const navigate = useNavigate();
   const { sectionId } = useParams<{ sectionId: string }>();
 
-  const {
-    user,
-    loading: profileLoading,
-    isPinVerified,
-  } = useProfileContext();
+  const { user, loading: profileLoading, isPinVerified } = useProfileContext();
 
   const needsPin = Boolean(user?.pinHash && !isPinVerified);
 
@@ -145,8 +140,7 @@ function ManageRoutineActivitiesPage() {
         setAvailableCards(
           cardsData.filter(
             (card) =>
-              card.isActive &&
-              !emergencyCategoryIds.has(card.categoryId),
+              card.isActive && !emergencyCategoryIds.has(card.categoryId),
           ),
         );
 
@@ -207,9 +201,7 @@ function ManageRoutineActivitiesPage() {
     setFormOpen(true);
   }
 
-  async function handleSave(
-    event: React.SubmitEvent<HTMLFormElement>,
-  ) {
+  async function handleSave(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!user || needsPin || !sectionId || saving) return;
@@ -263,8 +255,7 @@ function ManageRoutineActivitiesPage() {
         });
       }
 
-      const updated =
-        await routineService.getActivitiesBySection(sectionId);
+      const updated = await routineService.getActivitiesBySection(sectionId);
 
       setActivities(updated);
       setFormOpen(false);
@@ -287,9 +278,7 @@ function ManageRoutineActivitiesPage() {
       await routineService.removeActivity(activityToDelete.id);
 
       setActivities((current) =>
-        current.filter(
-          (item) => item.id !== activityToDelete.id,
-        ),
+        current.filter((item) => item.id !== activityToDelete.id),
       );
 
       setActivityToDelete(null);
@@ -313,133 +302,126 @@ function ManageRoutineActivitiesPage() {
 
     return (
       matchesSearch &&
-      (iconCategory === "Todas" ||
-        item.category === iconCategory)
+      (iconCategory === "Todas" || item.category === iconCategory)
     );
   });
 
   if (profileLoading || !user) return null;
 
   if (needsPin) {
-    return (
-      <PinAccessPage
-        title="Gerenciar atividades"
-        onBack={handleBack}
-      />
-    );
+    return <PinAccessPage title="Gerenciar atividades" onBack={handleBack} />;
   }
 
   return (
-    <main className="min-h-screen bg-[#FFF9F3] px-4 pb-28 pt-4">
-      <button
-        type="button"
-        onClick={handleBack}
-        className="mb-5 flex min-h-11 items-center gap-2 rounded-2xl text-[#592B1D]"
-      >
-        <ArrowLeft size={20} />
-        Voltar
-      </button>
-
-      <h1 className="mb-5 text-2xl font-extrabold tracking-tight text-[#42251D]">
-        Atividades — {section?.name ?? "Rotina"}
-      </h1>
-
-      <section className="rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_5px_14px_rgba(41,37,36,0.06)]">
-        <div className="mb-4 flex items-center justify-between gap-2">
-          <h2 className="font-semibold text-app-text">
-            Atividades cadastradas
-          </h2>
-
-          <button
-            type="button"
-            onClick={openCreateForm}
-            disabled={!section || loading}
-            className="flex shrink-0 items-center gap-2 rounded-xl bg-brand-primary px-3 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
-          >
-            <Plus size={18} />
-            Nova atividade
-          </button>
-        </div>
-
-        {error && (
-          <p role="alert" className="mb-4 text-sm text-red-600">
-            {error}
-          </p>
-        )}
-
-        {loading ? (
-          <p className="text-sm text-app-muted">
-            Carregando atividades...
-          </p>
-        ) : activities.length === 0 ? (
-          <p className="text-sm text-app-muted">
-            Nenhuma atividade cadastrada nesta seção.
-          </p>
-        ) : (
-          <ul className="space-y-3">
-            {activities.map((activity) => (
-              <li
-                key={activity.id}
-                className="rounded-2xl border border-[#F1E4D9] bg-[#FFFCF9] p-4"
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl"
-                    style={{
-                      backgroundColor: section?.color ?? "#FFF0D6",
-                    }}
-                  >
-                    <AppIcon
-                      name={getActivityIcon(activity.icon)}
-                      size={72}
-                    />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <h3 className="break-words font-semibold text-app-text">
-                      {activity.title}
-                    </h3>
-
-                    <p className="text-sm text-app-muted">
-                      {periodLabels[activity.period]}
-                      {activity.time ? ` · ${activity.time}` : ""}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-3 flex justify-end gap-2 border-t border-app-border pt-3">
-                  <button
-                    type="button"
-                    onClick={() => openEditForm(activity)}
-                    className="flex items-center gap-2 rounded-xl bg-stone-100 px-3 py-2 text-sm font-medium"
-                  >
-                    <Pencil size={16} />
-                    Editar
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setActivityToDelete(activity)}
-                    className="flex items-center gap-2 rounded-xl border border-red-200 px-3 py-2 text-sm font-medium text-red-700"
-                  >
-                    <Trash2 size={16} />
-                    Excluir
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-
+    <main className="min-h-dvh bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 lg:landscape:pb-8 xl:px-8 xl:pb-8 xl:pt-8">
+      <div className="relative mx-auto w-full max-w-lg md:max-w-3xl lg:max-w-4xl">
         <button
           type="button"
           onClick={handleBack}
-          className="mt-6 w-full rounded-xl bg-brand-primary px-4 py-3 font-semibold text-white"
+          className="mb-5 flex min-h-11 items-center gap-2 rounded-2xl text-[#592B1D]"
         >
-          Confirmar
+          <ArrowLeft size={20} />
+          Voltar
         </button>
-      </section>
 
+        <h1 className="mb-5 text-2xl font-extrabold tracking-tight text-[#42251D]">
+          Atividades — {section?.name ?? "Rotina"}
+        </h1>
+
+        <section className="rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_5px_14px_rgba(41,37,36,0.06)]">
+          <div className="mb-4 flex items-center justify-between gap-2">
+            <h2 className="font-semibold text-app-text">
+              Atividades cadastradas
+            </h2>
+
+            <button
+              type="button"
+              onClick={openCreateForm}
+              disabled={!section || loading}
+              className="flex shrink-0 items-center gap-2 rounded-xl bg-brand-primary px-3 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+            >
+              <Plus size={18} />
+              Nova atividade
+            </button>
+          </div>
+
+          {error && (
+            <p role="alert" className="mb-4 text-sm text-red-600">
+              {error}
+            </p>
+          )}
+
+          {loading ? (
+            <p className="text-sm text-app-muted">Carregando atividades...</p>
+          ) : activities.length === 0 ? (
+            <p className="text-sm text-app-muted">
+              Nenhuma atividade cadastrada nesta seção.
+            </p>
+          ) : (
+            <ul className="grid grid-cols-1 gap-3 lg:landscape:grid-cols-2 xl:grid-cols-2 md:gap-4">
+              {activities.map((activity) => (
+                <li
+                  key={activity.id}
+                  className="rounded-2xl border border-[#F1E4D9] bg-[#FFFCF9] p-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl"
+                      style={{
+                        backgroundColor: section?.color ?? "#FFF0D6",
+                      }}
+                    >
+                      <AppIcon
+                        name={getActivityIcon(activity.icon)}
+                        size={72}
+                      />
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <h3 className="break-words font-semibold text-app-text">
+                        {activity.title}
+                      </h3>
+
+                      <p className="text-sm text-app-muted">
+                        {periodLabels[activity.period]}
+                        {activity.time ? ` · ${activity.time}` : ""}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 flex justify-end gap-2 border-t border-app-border pt-3">
+                    <button
+                      type="button"
+                      onClick={() => openEditForm(activity)}
+                      className="flex items-center gap-2 rounded-xl bg-stone-100 px-3 py-2 text-sm font-medium"
+                    >
+                      <Pencil size={16} />
+                      Editar
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setActivityToDelete(activity)}
+                      className="flex items-center gap-2 rounded-xl border border-red-200 px-3 py-2 text-sm font-medium text-red-700"
+                    >
+                      <Trash2 size={16} />
+                      Excluir
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <button
+            type="button"
+            onClick={handleBack}
+            className="mt-6 w-full rounded-xl bg-brand-primary px-4 py-3 font-semibold text-white"
+          >
+            Confirmar
+          </button>
+        </section>
+      </div>
       {!needsPin && formOpen && (
         <RoutineModal
           title={editingActivity ? "Editar atividade" : "Nova atividade"}
@@ -555,18 +537,14 @@ function ManageRoutineActivitiesPage() {
             </div>
 
             <div>
-              <p className="mb-3 text-sm font-semibold">
-                Ícone da atividade
-              </p>
+              <p className="mb-3 text-sm font-semibold">Ícone da atividade</p>
 
               <input
                 type="search"
                 aria-label="Pesquisar ícones"
                 placeholder="Pesquisar ícone..."
                 value={iconSearch}
-                onChange={(event) =>
-                  setIconSearch(event.target.value)
-                }
+                onChange={(event) => setIconSearch(event.target.value)}
                 className="mb-3 w-full rounded-xl border border-[#E7D5C8] bg-white p-3 text-base text-[#42251D] outline-none focus:border-brand-primary focus:ring-2 focus:ring-[#F8D8BF]"
               />
 
@@ -588,8 +566,8 @@ function ManageRoutineActivitiesPage() {
                 ))}
               </div>
 
-              <div className="max-h-72 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-2">
-                <div className="grid grid-cols-4 gap-2">
+              <div className="max-h-72 md:max-h-96 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-2">
+                <div className="grid grid-cols-4 gap-2 md:grid-cols-6 md:gap-3">
                   {filteredIcons.map(({ id, label }) => (
                     <button
                       key={id}

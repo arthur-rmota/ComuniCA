@@ -1,14 +1,28 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { AlertCircle, Pencil, ChevronRight } from "lucide-react";
-
+import { useInterface } from "../../contexts/InterfaceContext";
+import { interfaceSizes } from "../../constants/interfaceSizes";
 import { routineService } from "../../services/routineService";
 import type { RoutineSection } from "../../types/routine";
 import AppIcon from "../../components/common/AppIcon";
 
 function AgendaPage() {
   const navigate = useNavigate();
+  const { settings } = useInterface();
 
+  const cardHeight = interfaceSizes[settings.cardSize].cardHeight;
+
+  const textSize = interfaceSizes[settings.textSize].textSize;
+
+  const symbolSize = interfaceSizes[settings.symbolSize].symbolSize;
+
+  const minCardWidth = Math.max(
+    136,
+    cardHeight - 24,
+    symbolSize + 20,
+    textSize * 6 + 20,
+  );
   const [sections, setSections] = useState<RoutineSection[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -45,7 +59,7 @@ function AgendaPage() {
   }, []);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+    <main className="relative min-h-dvh overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 lg:landscape:pb-8 xl:px-8 xl:pb-8 xl:pt-8">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
@@ -56,7 +70,7 @@ function AgendaPage() {
         className="pointer-events-none absolute -left-20 top-80 h-48 w-48 rounded-full bg-[#FFF0BB]/30"
       />
 
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="app-page-container">
         <header className="mb-7 pt-3">
           <div className="mb-5 flex items-center justify-center gap-3">
             <span
@@ -113,7 +127,10 @@ function AgendaPage() {
         ) : (
           <section
             aria-label="Seções da rotina"
-            className="grid grid-cols-2 gap-3"
+            className="grid gap-3 md:gap-4 [--card-min-width:0px] md:[--card-min-width:184px] xl:[--card-min-width:208px]"
+            style={{
+              gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, max(${minCardWidth}px, var(--card-min-width))), 1fr))`,
+            }}
           >
             {sections.map((section) => (
               <button
@@ -121,9 +138,10 @@ function AgendaPage() {
                 type="button"
                 onClick={() => navigate(`/rotina/${section.id}`)}
                 aria-label={`Abrir rotina: ${section.name}`}
-                className="group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 border-white/60 p-2 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+                className="group relative flex w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 border-white/60 p-2 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
                 style={{
                   backgroundColor: section.color,
+                  minHeight: `${cardHeight}px`,
                 }}
               >
                 <span
@@ -133,11 +151,16 @@ function AgendaPage() {
 
                 <AppIcon
                   name={section.icon || "CalendarCheck2"}
-                  size={128}
-                  className="relative"
+                  size={symbolSize}
+                  className="relative max-w-full"
                 />
 
-                <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
+                <span
+                  className="relative w-full font-extrabold leading-tight text-[#42251D] [overflow-wrap:anywhere]"
+                  style={{
+                    fontSize: `${textSize}px`,
+                  }}
+                >
                   {section.name}
                 </span>
               </button>
@@ -150,7 +173,7 @@ function AgendaPage() {
         type="button"
         onClick={() => navigate("/rotina/gerenciar")}
         aria-label="Gerenciar rotina"
-        className="fixed bottom-24 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full border border-[#F8E5D8] bg-white text-[#592B1D] shadow-lg transition-transform active:scale-95"
+        className="fixed bottom-24 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full border border-[#F8E5D8] bg-white text-[#592B1D] shadow-lg transition-transform active:scale-95 lg:landscape:bottom-6 xl:bottom-6"
       >
         <Pencil size={24} strokeWidth={2.5} aria-hidden="true" />
       </button>

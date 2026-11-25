@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { generateId } from "../utils/generateId";
 import type { Card } from "../types/card";
 import type {
@@ -7,11 +7,58 @@ import type {
   MoveDirection,
 } from "../types/message";
 
+const MESSAGE_DRAFT_KEY = "comunica:message-draft:v1";
+
+function loadDraft(): MessageItem[] {
+  try {
+    const storedDraft = sessionStorage.getItem(MESSAGE_DRAFT_KEY);
+
+    if (!storedDraft) return [];
+
+    const parsed: unknown = JSON.parse(storedDraft);
+
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.filter(
+      (item): item is MessageItem =>
+        item !== null &&
+        typeof item === "object" &&
+        typeof item.id === "string" &&
+        typeof item.cardId === "string" &&
+        typeof item.title === "string" &&
+        typeof item.speechText === "string" &&
+        (item.icon === null || typeof item.icon === "string") &&
+        (item.image === null || typeof item.image === "string"),
+    );
+  } catch {
+    return [];
+  }
+}
+
+function saveDraft(items: MessageItem[]): void {
+  try {
+    if (items.length === 0) {
+      sessionStorage.removeItem(MESSAGE_DRAFT_KEY);
+      return;
+    }
+
+    sessionStorage.setItem(MESSAGE_DRAFT_KEY, JSON.stringify(items));
+  } catch (error) {
+    console.warn("Não foi possível salvar o rascunho da mensagem:", error);
+  }
+}
+
 export function useMessageBuilder(): MessageBuilder {
-  const [items, setItems] = useState<MessageItem[]>([]);
+  const [items, setItems] = useState<MessageItem[]>(loadDraft);
+
   const [finalizedText, setFinalizedText] = useState<string | null>(null);
 
-  // Adiciona um cartão à mensagem, permitindo repetições
+  // Preserva o rascunho durante a sessão.
+  useEffect(() => {
+    saveDraft(items);
+  }, [items]);
+
+  // Adiciona um cartão, permitindo repetições.
   function addItem(card: Card): void {
     const newItem: MessageItem = {
       id: generateId(),
@@ -26,15 +73,14 @@ export function useMessageBuilder(): MessageBuilder {
     setFinalizedText(null);
   }
 
-  // Remove apenas a ocorrência selecionada
+  // Remove apenas a ocorrência selecionada.
   function removeItem(itemId: string): void {
     setItems((current) => current.filter((item) => item.id !== itemId));
 
     setFinalizedText(null);
   }
 
-  // Move um elemento uma posição para esquerda ou direita
-
+  // Move um elemento uma posição.
   function moveItem(itemId: string, direction: MoveDirection): void {
     setItems((current) => {
       const index = current.findIndex((item) => item.id === itemId);
@@ -67,13 +113,13 @@ export function useMessageBuilder(): MessageBuilder {
     setFinalizedText(null);
   }
 
-  // Limpa todos os elementos da mensagem
+  // Limpa a mensagem e seu rascunho.
   function clearMessage(): void {
     setItems([]);
     setFinalizedText(null);
   }
 
-  // Finaliza a mensagem e retorna o texto para reprodução
+  // Finaliza a mensagem para reprodução.
   function finalizeMessage(): string | null {
     if (items.length === 0) {
       setFinalizedText(null);
@@ -91,6 +137,7 @@ export function useMessageBuilder(): MessageBuilder {
     }
 
     setFinalizedText(text);
+
     return text;
   }
 

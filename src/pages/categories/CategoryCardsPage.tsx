@@ -15,18 +15,16 @@ import { interfaceSizes } from "../../constants/interfaceSizes";
 export default function CategoryCardsPage() {
   const navigate = useNavigate();
   const { categoryId } = useParams<{ categoryId: string }>();
-
   const { settings } = useInterface();
-
-  const cardHeight =
-    interfaceSizes[settings.cardSize].cardHeight;
-
-  const textSize = 
-    interfaceSizes[settings.textSize].textSize;
-
-  const symbolSize =
-    interfaceSizes[settings.symbolSize].symbolSize;
-
+  const cardHeight = interfaceSizes[settings.cardSize].cardHeight;
+  const textSize = interfaceSizes[settings.textSize].textSize;
+  const symbolSize = interfaceSizes[settings.symbolSize].symbolSize;
+  const minCardWidth = Math.max(
+    136,
+    cardHeight - 24,
+    symbolSize + 20,
+    textSize * 6 + 20,
+  );
   const [category, setCategory] = useState<Category | null>(null);
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
@@ -114,13 +112,13 @@ export default function CategoryCardsPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+    <main className="relative min-h-dvh overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 xl:px-8 xl:pt-8">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
       />
 
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="app-page-container">
         <header className="mb-6 pt-3">
           <div className="relative flex min-h-14 items-center justify-center">
             <button
@@ -171,7 +169,10 @@ export default function CategoryCardsPage() {
         ) : (
           <section
             aria-label={`Cartões da categoria ${category?.name ?? ""}`}
-            className="grid grid-cols-2 gap-3"
+            className="grid gap-3 md:gap-4 [--card-min-width:0px] md:[--card-min-width:184px] xl:[--card-min-width:208px]"
+            style={{
+              gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, max(${minCardWidth}px, var(--card-min-width))), 1fr))`,
+            }}
           >
             {cards.map((card) => {
               const isSpeaking = speakingCardId === card.id;
@@ -219,7 +220,12 @@ export default function CategoryCardsPage() {
                     )}
                   </span>
 
-                  <span className="relative break-words font-extrabold leading-tight text-[#42251D]" style={{ fontSize: `${textSize}px` }}>
+                  <span
+                    className="relative w-full font-extrabold leading-tight text-[#42251D] [overflow-wrap:anywhere]"
+                    style={{
+                      fontSize: `${textSize}px`,
+                    }}
+                  >
                     {card.title}
                   </span>
 
@@ -249,7 +255,7 @@ export default function CategoryCardsPage() {
           }
         }}
         aria-label="Gerenciar cartões da categoria"
-        className="fixed bottom-24 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full border border-[#F8E5D8] bg-white text-[#592B1D] shadow-lg transition-transform active:scale-95"
+        className="fixed bottom-24 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full border border-[#F8E5D8] bg-white text-[#592B1D] shadow-lg transition-transform active:scale-95 lg:landscape:bottom-6 xl:bottom-6"
       >
         <Pencil size={24} strokeWidth={2.5} aria-hidden="true" />
       </button>

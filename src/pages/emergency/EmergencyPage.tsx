@@ -1,8 +1,8 @@
-
 import { useEffect, useState } from "react";
 import { AlertTriangle, Pencil } from "lucide-react";
 import { useNavigate } from "react-router";
-
+import { useInterface } from "../../contexts/InterfaceContext";
+import { interfaceSizes } from "../../constants/interfaceSizes";
 import AppIcon from "../../components/common/AppIcon";
 import { getEmergencyPhrases } from "../../services/emergencyPhraseService";
 import type { EmergencyPhrase } from "../../types/emergencyPhrase";
@@ -15,7 +15,20 @@ const emergencyPictograms: Record<string, string> = {
 
 function EmergencyPage() {
   const navigate = useNavigate();
+  const { settings } = useInterface();
 
+  const cardHeight = interfaceSizes[settings.cardSize].cardHeight;
+
+  const textSize = interfaceSizes[settings.textSize].textSize;
+
+  const symbolSize = interfaceSizes[settings.symbolSize].symbolSize;
+
+  const minCardWidth = Math.max(
+    136,
+    cardHeight - 24,
+    symbolSize + 24,
+    textSize * 6 + 24,
+  );
   const [phrases, setPhrases] = useState<EmergencyPhrase[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -79,13 +92,13 @@ function EmergencyPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+    <main className="relative min-h-dvh overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 xl:px-8 xl:pt-8">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE0D6]/60"
       />
 
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="app-page-container">
         <header className="mb-7 pt-3">
           <div className="mb-5 flex items-center justify-center gap-3">
             <span
@@ -95,13 +108,13 @@ function EmergencyPage() {
               <AppIcon name="ShieldAlert" size={44} />
             </span>
 
-            <h1 className="text-2xl font-extrabold tracking-tight text-[#42251D]">
+            <h1 className="text-2xl font-extrabold tracking-tight text-[#42251D] md:text-3xl xl:text-4xl">
               Emergência
             </h1>
           </div>
 
           <div className="flex items-center justify-between gap-3 rounded-3xl bg-white px-4 py-3 shadow-[0_5px_14px_rgba(41,37,36,0.05)]">
-            <p className="text-sm font-semibold leading-relaxed text-[#592B1D]">
+            <p className="text-sm font-semibold leading-relaxed text-[#592B1D] md:text-base">
               Toque em uma mensagem e peça ajuda
             </p>
 
@@ -144,11 +157,7 @@ function EmergencyPage() {
           </p>
         ) : phrases.length === 0 ? (
           <div className="rounded-3xl bg-white p-6 text-center shadow-sm">
-            <AppIcon
-              name="AlertTriangle"
-              size={64}
-              className="mx-auto mb-3"
-            />
+            <AppIcon name="AlertTriangle" size={64} className="mx-auto mb-3" />
 
             <p className="font-bold text-[#42251D]">
               Nenhuma mensagem disponível
@@ -162,13 +171,15 @@ function EmergencyPage() {
         ) : (
           <section
             aria-label="Frases de emergência"
-            className="grid grid-cols-2 gap-3"
+            className="grid gap-3 md:gap-4 [--emergency-min-width:0px] md:[--emergency-min-width:208px] xl:[--emergency-min-width:224px]"
+            style={{
+              gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, max(${minCardWidth}px, var(--emergency-min-width))), 1fr))`,
+            }}
           >
             {phrases.map((phrase) => {
               const isSpeaking = speakingId === phrase.id;
 
-              const iconName =
-                emergencyPictograms[phrase.icon] ?? phrase.icon;
+              const iconName = emergencyPictograms[phrase.icon] ?? phrase.icon;
 
               return (
                 <button
@@ -176,13 +187,14 @@ function EmergencyPage() {
                   type="button"
                   onClick={() => handleSpeak(phrase)}
                   aria-label={`Falar: ${phrase.speechText}`}
-                  className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 p-2 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+                  className={`group relative flex w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 p-2 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
                     isSpeaking
                       ? "border-[#A52E24] shadow-[0_5px_18px_rgba(165,46,36,0.18)]"
                       : "border-white/60 shadow-[0_5px_14px_rgba(41,37,36,0.07)]"
                   }`}
                   style={{
                     backgroundColor: "#F7C7BD",
+                    minHeight: `${cardHeight}px`,
                   }}
                 >
                   <span
@@ -192,11 +204,16 @@ function EmergencyPage() {
 
                   <AppIcon
                     name={iconName || "AlertTriangle"}
-                    size={128}
-                    className="relative"
+                    size={symbolSize}
+                    className="relative max-w-full"
                   />
 
-                  <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
+                  <span
+                    className="relative w-full font-extrabold leading-tight text-[#42251D] [overflow-wrap:anywhere]"
+                    style={{
+                      fontSize: `${textSize}px`,
+                    }}
+                  >
                     {phrase.text}
                   </span>
 
@@ -220,7 +237,7 @@ function EmergencyPage() {
         type="button"
         onClick={() => navigate("/emergencia/gerenciar")}
         aria-label="Gerenciar frases de emergência"
-        className="fixed bottom-24 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full border border-[#F8E5D8] bg-white text-[#592B1D] shadow-lg transition-transform active:scale-95"
+        className="fixed bottom-24 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full border border-[#F8E5D8] bg-white text-[#592B1D] shadow-lg transition-transform active:scale-95 lg:landscape:bottom-6 xl:bottom-6"
       >
         <Pencil size={24} strokeWidth={2.5} aria-hidden="true" />
       </button>

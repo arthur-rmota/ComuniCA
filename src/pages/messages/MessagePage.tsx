@@ -8,7 +8,8 @@ import {
   Square,
   Volume2,
 } from "lucide-react";
-
+import { useInterface } from "../../contexts/InterfaceContext";
+import { interfaceSizes } from "../../constants/interfaceSizes";
 import {
   closestCenter,
   DndContext,
@@ -140,6 +141,21 @@ function getWordIcon(word: MessageWord): string {
 export default function MessagePage() {
   const navigate = useNavigate();
 
+  const { settings } = useInterface();
+
+  const cardHeight = interfaceSizes[settings.cardSize].cardHeight;
+
+  const textSize = interfaceSizes[settings.textSize].textSize;
+
+  const symbolSize = interfaceSizes[settings.symbolSize].symbolSize;
+
+  const minCardWidth = Math.max(
+    136,
+    cardHeight - 24,
+    symbolSize + 20,
+    textSize * 6 + 20,
+  );
+
   const {
     items,
     finalizedText,
@@ -149,7 +165,9 @@ export default function MessagePage() {
     moveItem,
   } = useMessageBuilder();
 
-  const [groupId, setGroupId] = useState<MessageGroupId>("quem");
+  const [groupId, setGroupId] = useState<MessageGroupId>(
+    () => suggestedMessageGroup(items) ?? "quem",
+  );
   const [showGroups, setShowGroups] = useState(false);
   const [cards, setCards] = useState<Card[]>([]);
   const [loadingCards, setLoadingCards] = useState(true);
@@ -325,13 +343,13 @@ export default function MessagePage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+    <main className="relative min-h-dvh overflow-x-clip bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 xl:px-8 xl:pt-8">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
       />
 
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="app-page-container">
         <header className="mb-5 pt-3">
           <div className="relative flex min-h-14 items-center justify-center">
             <button
@@ -348,228 +366,263 @@ export default function MessagePage() {
             </h1>
           </div>
         </header>
-
-        <section
-          aria-label="Mensagem em construção"
-          className="mb-6 rounded-3xl border border-[#F5E9DF] bg-white p-4 shadow-[0_5px_14px_rgba(41,37,36,0.06)]"
-        >
-          {items.length === 0 ? (
-            <div className="flex min-h-16 items-center justify-center rounded-2xl border-2 border-dashed border-[#EEDFD2] bg-[#FFFCF9] p-3 text-center">
-              <p className="text-sm font-semibold text-[#80685D]">
-                Toque em uma palavra
-              </p>
-            </div>
-          ) : (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
+        <div className="lg:landscape:grid lg:landscape:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] xl:grid xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-start gap-6">
+          <div className="message-builder-panel min-w-0 lg:landscape:col-start-2 lg:landscape:row-start-1 xl:col-start-2 xl:row-start-1">
+            <section
+              aria-label="Mensagem em construção"
+              className="mb-6 rounded-3xl border border-[#F5E9DF] bg-white p-4 shadow-[0_5px_14px_rgba(41,37,36,0.06)]"
             >
-              <SortableContext
-                items={items.map((item) => item.id)}
-                strategy={rectSortingStrategy}
-              >
-                <div
-                  className="flex min-w-0 flex-1 flex-wrap gap-2"
-                  aria-label="Palavras da mensagem"
-                >
-                  {items.map((item) => (
-                    <SortableMessageWord
-                      key={item.id}
-                      item={item}
-                      onRemove={() => handleRemove(item.id)}
-                    />
-                  ))}
+              <h2 className="mb-4 hidden text-xl font-extrabold text-[#42251D] lg:landscape:block xl:block">
+                Mensagem em construção
+              </h2>
+              {items.length === 0 ? (
+                <div className="flex min-h-16 items-center justify-center rounded-2xl border-2 border-dashed border-[#EEDFD2] bg-[#FFFCF9] p-3 text-center">
+                  <p className="text-sm font-semibold text-[#80685D]">
+                    Toque em uma palavra
+                  </p>
                 </div>
-              </SortableContext>
-            </DndContext>
-          )}
+              ) : (
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={items.map((item) => item.id)}
+                    strategy={rectSortingStrategy}
+                  >
+                    <div
+                      className="flex min-w-0 flex-1 flex-wrap gap-2"
+                      aria-label="Palavras da mensagem"
+                    >
+                      {items.map((item) => (
+                        <SortableMessageWord
+                          key={item.id}
+                          item={item}
+                          onRemove={() => handleRemove(item.id)}
+                        />
+                      ))}
+                    </div>
+                  </SortableContext>
+                </DndContext>
+              )}
 
-          <p className="sr-only" aria-live="polite">
-            {draft ? `Mensagem: ${formatMessage(draft)}` : "Mensagem vazia"}
-          </p>
+              <p className="sr-only" aria-live="polite">
+                {draft ? `Mensagem: ${formatMessage(draft)}` : "Mensagem vazia"}
+              </p>
+              {draft && (
+                <div
+                  aria-hidden="true"
+                  className="mt-4 hidden rounded-2xl border border-[#F5E9DF] bg-[#FFF9F3] p-4 text-center lg:landscape:block xl:block"
+                >
+                  <p className="text-xl font-extrabold leading-relaxed text-[#42251D] [overflow-wrap:anywhere]">
+                    {formatMessage(draft)}
+                  </p>
+                </div>
+              )}
 
-          <div className="mt-3 flex gap-2">
-            <button
-              type="button"
-              onClick={handleSpeak}
-              disabled={items.length === 0}
-              className="flex min-h-14 min-w-0 flex-1 items-center justify-center gap-2 rounded-2xl bg-brand-primary px-4 text-base font-extrabold text-white shadow-sm transition-transform active:scale-[0.98] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
-            >
-              <Volume2 size={23} aria-hidden="true" />
-              Falar
-            </button>
+              <div className="mt-3 flex gap-2">
+                <button
+                  type="button"
+                  onClick={handleSpeak}
+                  disabled={items.length === 0}
+                  className="flex min-h-14 min-w-0 flex-1 items-center justify-center gap-2 rounded-2xl bg-brand-primary px-4 text-base font-extrabold text-white shadow-sm transition-transform active:scale-[0.98] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+                >
+                  <Volume2 size={23} aria-hidden="true" />
+                  Falar
+                </button>
 
-            {speaking ? (
-              <button
-                type="button"
-                onClick={() => {
-                  stopSpeaking();
-                  setSpeaking(false);
-                }}
-                aria-label="Parar a fala"
-                className="flex min-h-14 min-w-14 items-center justify-center rounded-2xl border border-[#F2D8C5] bg-[#FFF0E4] text-brand-primary focus-visible:outline-2 focus-visible:outline-brand-primary"
-              >
-                <Square size={22} aria-hidden="true" />
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleRepeat}
-                disabled={!canRepeat}
-                aria-label="Repetir a última fala"
-                className="flex min-h-14 min-w-14 items-center justify-center rounded-2xl border border-[#F2D8C5] bg-[#FFF0E4] text-brand-primary disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-brand-primary"
-              >
-                <RotateCcw size={22} aria-hidden="true" />
-              </button>
-            )}
-          </div>
-        </section>
-
-        {notice && (
-          <p
-            role="status"
-            className="mb-4 rounded-2xl bg-[#FFF0E4] p-3 text-sm font-semibold text-[#9A3412]"
-          >
-            {notice}
-          </p>
-        )}
-
-        <section aria-labelledby="word-bank-title">
-          <div className="mb-4 flex items-center justify-between gap-2">
-            <h2
-              id="word-bank-title"
-              className="text-xl font-extrabold text-[#42251D]"
-            >
-              {allowedGroups.length === 0 ? "Pronto!" : currentGroup.label}
-            </h2>
-
-            <button
-              type="button"
-              onClick={() => setShowGroups((current) => !current)}
-              disabled={allowedGroups.length <= 1}
-              aria-expanded={showGroups}
-              aria-controls="message-word-groups"
-              className="flex min-h-11 items-center gap-1.5 rounded-xl px-2 text-sm font-bold text-[#80685D] hover:bg-[#FFF0E4] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-brand-primary"
-            >
-              <LayoutGrid size={18} aria-hidden="true" />
-
-              <span>Outras palavras</span>
-
-              <ChevronDown
-                size={16}
-                aria-hidden="true"
-                className={`transition-transform ${
-                  showGroups ? "rotate-180" : ""
-                }`}
-              />
-            </button>
-          </div>
-
-          <div
-            id="message-word-groups"
-            className={`${
-              showGroups ? "mb-5 grid" : "hidden"
-            } grid-cols-2 gap-2 rounded-2xl border border-[#F5E9DF] bg-white p-3`}
-            role="group"
-            aria-label="Escolher grupo de palavras"
-          >
-            {messageGroups
-              .filter((group) => allowedGroups.includes(group.id))
-              .map((group) => {
-                const selected = group.id === groupId;
-
-                return (
+                {speaking ? (
                   <button
-                    key={group.id}
                     type="button"
                     onClick={() => {
-                      setGroupId(group.id);
-                      setShowGroups(false);
+                      stopSpeaking();
+                      setSpeaking(false);
                     }}
-                    aria-pressed={selected}
-                    className={`flex min-h-14 items-center gap-2 rounded-xl border px-3 py-2 text-left text-sm font-bold focus-visible:outline-2 focus-visible:outline-brand-primary ${
-                      selected
-                        ? "border-brand-primary bg-[#FFF0E4] text-[#9A3412]"
-                        : "border-[#F5E9DF] bg-[#FFFCF9] text-[#592B1D]"
-                    }`}
+                    aria-label="Parar a fala"
+                    className="flex min-h-14 min-w-14 items-center justify-center rounded-2xl border border-[#F2D8C5] bg-[#FFF0E4] text-brand-primary focus-visible:outline-2 focus-visible:outline-brand-primary"
                   >
-                    <AppIcon
-                      name={group.Icon.displayName ?? "MessageCircle"}
-                      size={40}
-                    />
-
-                    <span>{group.label}</span>
+                    <Square size={22} aria-hidden="true" />
                   </button>
-                );
-              })}
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleRepeat}
+                    disabled={!canRepeat}
+                    aria-label="Repetir a última fala"
+                    className="flex min-h-14 min-w-14 items-center justify-center rounded-2xl border border-[#F2D8C5] bg-[#FFF0E4] text-brand-primary disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-brand-primary"
+                  >
+                    <RotateCcw size={22} aria-hidden="true" />
+                  </button>
+                )}
+              </div>
+            </section>
+
+            {notice && (
+              <p
+                role="status"
+                className="mb-4 rounded-2xl bg-[#FFF0E4] p-3 text-sm font-semibold text-[#9A3412]"
+              >
+                {notice}
+              </p>
+            )}
           </div>
 
-          {allowedGroups.length === 0 ? (
-            <p className="rounded-2xl bg-white p-4 text-center text-sm font-semibold text-[#80685D]">
-              Frase pronta para falar!
-            </p>
-          ) : groupId === "cartoes" && loadingCards ? (
-            <p
-              role="status"
-              className="rounded-2xl bg-white p-4 text-sm text-[#80685D]"
-            >
-              Carregando cartões...
-            </p>
-          ) : groupId === "cartoes" && cardsError ? (
-            <p
-              role="alert"
-              className="rounded-2xl bg-white p-4 text-sm text-red-700"
-            >
-              {cardsError}
-            </p>
-          ) : visibleWords.length === 0 ? (
-            <p className="rounded-2xl bg-white p-4 text-sm text-[#80685D]">
-              Nenhuma palavra disponível.
-            </p>
-          ) : (
-            <div className="grid grid-cols-2 gap-3">
-              {visibleWords.map((word) => (
-                <button
-                  key={word.id}
-                  type="button"
-                  onClick={() => addWord(word)}
-                  aria-label={`Adicionar ${word.label} à mensagem`}
-                  className="group relative flex min-h-44 min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 border-white/60 p-2 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-transform duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
-                  style={{
-                    backgroundColor: currentGroup.color,
-                  }}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
-                  />
+          <section
+            aria-labelledby="word-bank-title"
+            className="min-w-0 lg:landscape:col-start-1 lg:landscape:row-start-1 xl:col-start-1 xl:row-start-1"
+          >
+            <div className="mb-4 flex items-center justify-between gap-2">
+              <h2
+                id="word-bank-title"
+                className="text-xl font-extrabold text-[#42251D]"
+              >
+                {allowedGroups.length === 0 ? "Pronto!" : currentGroup.label}
+              </h2>
 
-                  {word.originalCard?.image ? (
-                    <img
-                      src={word.originalCard.image}
-                      alt=""
-                      width={128}
-                      height={128}
-                      draggable={false}
-                      className="relative h-32 w-32 select-none object-contain"
-                    />
-                  ) : (
-                    <AppIcon
-                      name={getWordIcon(word)}
-                      size={128}
-                      className="relative"
-                    />
-                  )}
+              <button
+                type="button"
+                onClick={() => setShowGroups((current) => !current)}
+                disabled={allowedGroups.length <= 1}
+                aria-expanded={showGroups}
+                aria-controls="message-word-groups"
+                className="flex min-h-11 items-center gap-1.5 rounded-xl px-2 text-sm font-bold text-[#80685D] hover:bg-[#FFF0E4] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-brand-primary"
+              >
+                <LayoutGrid size={18} aria-hidden="true" />
 
-                  <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
-                    {word.label}
-                  </span>
-                </button>
-              ))}
+                <span>Outras palavras</span>
+
+                <ChevronDown
+                  size={16}
+                  aria-hidden="true"
+                  className={`transition-transform ${
+                    showGroups ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
             </div>
-          )}
-        </section>
+
+            <div
+              id="message-word-groups"
+              className={`${
+                showGroups ? "mb-5 grid" : "hidden"
+              } grid-cols-2 gap-2 rounded-2xl border border-[#F5E9DF] bg-white p-3`}
+              role="group"
+              aria-label="Escolher grupo de palavras"
+            >
+              {messageGroups
+                .filter((group) => allowedGroups.includes(group.id))
+                .map((group) => {
+                  const selected = group.id === groupId;
+
+                  return (
+                    <button
+                      key={group.id}
+                      type="button"
+                      onClick={() => {
+                        setGroupId(group.id);
+                        setShowGroups(false);
+                      }}
+                      aria-pressed={selected}
+                      className={`flex min-h-14 items-center gap-2 rounded-xl border px-3 py-2 text-left text-sm font-bold focus-visible:outline-2 focus-visible:outline-brand-primary ${
+                        selected
+                          ? "border-brand-primary bg-[#FFF0E4] text-[#9A3412]"
+                          : "border-[#F5E9DF] bg-[#FFFCF9] text-[#592B1D]"
+                      }`}
+                    >
+                      <AppIcon
+                        name={group.Icon.displayName ?? "MessageCircle"}
+                        size={40}
+                      />
+
+                      <span>{group.label}</span>
+                    </button>
+                  );
+                })}
+            </div>
+
+            {allowedGroups.length === 0 ? (
+              <p className="rounded-2xl bg-white p-4 text-center text-sm font-semibold text-[#80685D]">
+                Frase pronta para falar!
+              </p>
+            ) : groupId === "cartoes" && loadingCards ? (
+              <p
+                role="status"
+                className="rounded-2xl bg-white p-4 text-sm text-[#80685D]"
+              >
+                Carregando cartões...
+              </p>
+            ) : groupId === "cartoes" && cardsError ? (
+              <p
+                role="alert"
+                className="rounded-2xl bg-white p-4 text-sm text-red-700"
+              >
+                {cardsError}
+              </p>
+            ) : visibleWords.length === 0 ? (
+              <p className="rounded-2xl bg-white p-4 text-sm text-[#80685D]">
+                Nenhuma palavra disponível.
+              </p>
+            ) : (
+              <div
+                className="grid gap-3 md:gap-4"
+                style={{
+                  gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${minCardWidth}px), 1fr))`,
+                }}
+              >
+                {" "}
+                {visibleWords.map((word) => (
+                  <button
+                    key={word.id}
+                    type="button"
+                    onClick={() => addWord(word)}
+                    aria-label={`Adicionar ${word.label} à mensagem`}
+                    className="group relative flex min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 border-white/60 p-2 text-center shadow-[0_5px_14px_rgba(41,37,36,0.07)] transition-transform duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+                    style={{
+                      backgroundColor: currentGroup.color,
+                      minHeight: `${cardHeight}px`,
+                    }}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/15"
+                    />
+
+                    {word.originalCard?.image ? (
+                      <img
+                        src={word.originalCard.image}
+                        alt=""
+                        width={symbolSize}
+                        height={symbolSize}
+                        draggable={false}
+                        className="relative max-w-full select-none object-contain"
+                        style={{
+                          width: symbolSize,
+                          height: symbolSize,
+                        }}
+                      />
+                    ) : (
+                      <AppIcon
+                        name={getWordIcon(word)}
+                        size={symbolSize}
+                        className="relative max-w-full"
+                      />
+                    )}
+
+                    <span
+                      className="relative w-full font-extrabold leading-tight text-[#42251D] [overflow-wrap:anywhere]"
+                      style={{
+                        fontSize: `${textSize}px`,
+                      }}
+                    >
+                      {word.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
       </div>
     </main>
   );

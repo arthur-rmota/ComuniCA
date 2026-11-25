@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { ArrowLeft, Clock3 } from "lucide-react";
-
+import { useInterface } from "../../contexts/InterfaceContext";
+import { interfaceSizes } from "../../constants/interfaceSizes";
 import { routineService } from "../../services/routineService";
 import { getCards, recordCardUse } from "../../services/cardService";
 import {
@@ -31,7 +32,20 @@ const periodLabels: Record<RoutinePeriod, string> = {
 
 function RoutineActivityPage() {
   const navigate = useNavigate();
+  const { settings } = useInterface();
 
+  const cardHeight = interfaceSizes[settings.cardSize].cardHeight;
+
+  const textSize = interfaceSizes[settings.textSize].textSize;
+
+  const symbolSize = interfaceSizes[settings.symbolSize].symbolSize;
+
+  const minCardWidth = Math.max(
+    136,
+    cardHeight - 24,
+    symbolSize + 20,
+    textSize * 6 + 20,
+  );
   const { sectionId, activityId } = useParams<{
     sectionId: string;
     activityId: string;
@@ -176,7 +190,7 @@ function RoutineActivityPage() {
   const hasMessages = cards.length > 0 || phrases.length > 0;
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+    <main className="relative min-h-dvh overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 lg:landscape:pb-8 xl:px-8 xl:pb-8 xl:pt-8">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
@@ -187,7 +201,7 @@ function RoutineActivityPage() {
         className="pointer-events-none absolute -left-20 top-80 h-48 w-48 rounded-full bg-[#FFF0BB]/30"
       />
 
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="app-page-container">
         <header className="mb-7 pt-3">
           <div className="relative flex min-h-14 items-center justify-center">
             <button
@@ -303,7 +317,10 @@ function RoutineActivityPage() {
 
             <section
               aria-label="Mensagens relacionadas à atividade"
-              className="grid grid-cols-2 gap-3"
+              className="grid gap-3 md:gap-4 [--card-min-width:0px] md:[--card-min-width:184px] xl:[--card-min-width:208px]"
+              style={{
+                gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, max(${minCardWidth}px, var(--card-min-width))), 1fr))`,
+              }}
             >
               {cards.map((card) => {
                 const category = categories.find(
@@ -319,7 +336,7 @@ function RoutineActivityPage() {
                     type="button"
                     onClick={() => handleSpeakCard(card)}
                     aria-label={`Falar: ${card.speechText}`}
-                    className={`group relative flex min-h-44 w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 p-2 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+                    className={`group relative flex w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 p-2 text-center transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
                       isSpeaking
                         ? "border-brand-primary shadow-[0_5px_18px_rgba(194,65,12,0.18)]"
                         : "border-white/60 shadow-[0_5px_14px_rgba(41,37,36,0.07)]"
@@ -327,6 +344,7 @@ function RoutineActivityPage() {
                     style={{
                       backgroundColor:
                         category?.color ?? section?.color ?? "#DDEBFA",
+                      minHeight: `${cardHeight}px`,
                     }}
                   >
                     <span
@@ -338,24 +356,39 @@ function RoutineActivityPage() {
                       aria-hidden="true"
                       className="relative flex items-center justify-center"
                     >
-                      {card.image && !card.icon ? (
-                        <img
-                          src={card.image}
-                          alt=""
-                          width={128}
-                          height={128}
-                          draggable={false}
-                          className="h-32 w-32 select-none object-contain"
-                        />
-                      ) : (
-                        <AppIcon
-                          name={card.icon || "MessageCircle"}
-                          size={128}
-                        />
-                      )}
+                      <span
+                        aria-hidden="true"
+                        className="relative flex w-full items-center justify-center"
+                      >
+                        {card.image && !card.icon ? (
+                          <img
+                            src={card.image}
+                            alt=""
+                            width={symbolSize}
+                            height={symbolSize}
+                            draggable={false}
+                            className="max-w-full select-none object-contain"
+                            style={{
+                              width: symbolSize,
+                              height: symbolSize,
+                            }}
+                          />
+                        ) : (
+                          <AppIcon
+                            name={card.icon || "MessageCircle"}
+                            size={symbolSize}
+                            className="max-w-full"
+                          />
+                        )}
+                      </span>
                     </span>
 
-                    <span className="relative break-words text-base font-extrabold leading-tight text-[#42251D]">
+                    <span
+                      className="relative w-full font-extrabold leading-tight text-[#42251D] [overflow-wrap:anywhere]"
+                      style={{
+                        fontSize: `${textSize}px`,
+                      }}
+                    >
                       {card.title}
                     </span>
 

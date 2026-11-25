@@ -58,10 +58,16 @@ export default function RoutineModal({
       const last = focusable[focusable.length - 1];
       const focused = document.activeElement;
 
-      if (event.shiftKey && (focused === first || !dialogRef.current?.contains(focused))) {
+      if (
+        event.shiftKey &&
+        (focused === first || !dialogRef.current?.contains(focused))
+      ) {
         event.preventDefault();
         last?.focus();
-      } else if (!event.shiftKey && (focused === last || !dialogRef.current?.contains(focused))) {
+      } else if (
+        !event.shiftKey &&
+        (focused === last || !dialogRef.current?.contains(focused))
+      ) {
         event.preventDefault();
         first?.focus();
       }
@@ -83,10 +89,15 @@ export default function RoutineModal({
         role={destructive ? "alertdialog" : "dialog"}
         aria-modal="true"
         aria-labelledby={titleId}
-        className="flex max-h-[calc(100dvh-1.5rem)] w-full max-w-md min-w-0 flex-col overflow-hidden rounded-3xl border border-[#E8DDD5] bg-white shadow-[0_20px_60px_rgba(41,37,36,0.22)]"
+        className={`flex max-h-[calc(100dvh-1.5rem)] w-full max-w-md min-w-0 flex-col overflow-hidden rounded-3xl border border-[#E8DDD5] bg-white shadow-[0_20px_60px_rgba(41,37,36,0.22)] sm:max-h-[calc(100dvh-2.5rem)] ${
+          destructive ? "" : "md:max-w-2xl"
+        }`}
       >
         <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[#EEE4DC] bg-white px-5 py-4">
-          <h2 id={titleId} className="min-w-0 text-xl font-extrabold text-[#42251D]">
+          <h2
+            id={titleId}
+            className="min-w-0 text-xl font-extrabold text-[#42251D]"
+          >
             {title}
           </h2>
           <button

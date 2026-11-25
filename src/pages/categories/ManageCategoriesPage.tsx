@@ -306,13 +306,13 @@ export default function ManageCategoriesPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+    <main className="relative min-h-dvh overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 lg:landscape:pb-8 xl:px-8 xl:pb-8 xl:pt-8">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
       />
 
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="relative mx-auto w-full max-w-lg md:max-w-3xl lg:max-w-4xl">
         {/* Cabeçalho */}
 
         <header className="mb-6 pt-3">
@@ -396,7 +396,7 @@ export default function ManageCategoriesPage() {
               </p>
             </div>
           ) : (
-            <ul className="space-y-3">
+            <ul className="grid grid-cols-1 gap-3 lg:landscape:grid-cols-2 xl:grid-cols-2 md:gap-4">
               {categories.map((category, index) => {
                 const menuOpen = openMenuId === category.id;
 
@@ -540,7 +540,7 @@ export default function ManageCategoriesPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="category-form-title"
-            className="flex max-h-[90dvh] w-full max-w-md min-w-0 flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
+            className="flex max-h-[calc(100dvh-2rem)] w-full max-w-md md:max-w-2xl min-w-0 flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
           >
             {/* Cabeçalho fixo */}
 
@@ -600,8 +600,8 @@ export default function ManageCategoriesPage() {
                     Ícone da categoria
                   </legend>
 
-                  <div className="max-h-56 overflow-x-hidden overflow-y-auto overscroll-y-contain touch-pan-y rounded-xl border border-[#E7D5C8] p-2">
-                    <div className="grid grid-cols-4 gap-2">
+                  <div className="max-h-56 md:max-h-80 overflow-x-hidden overflow-y-auto overscroll-y-contain touch-pan-y rounded-xl border border-[#E7D5C8] p-2">
+                    <div className="grid grid-cols-4 gap-2 md:grid-cols-6 md:gap-3">
                       {categoryIcons.map(({ name, value }) => (
                         <button
                           key={value}
@@ -775,7 +775,7 @@ export default function ManageCategoriesPage() {
               aria-modal="true"
               aria-labelledby="delete-category-title"
               aria-describedby="delete-category-description"
-              className="relative z-10 w-full max-w-[360px] rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_24px_60px_rgba(38,22,14,0.25)]"
+              className="relative z-10 w-full max-w-[360px] max-h-[calc(100dvh-3rem)] overflow-y-auto overscroll-contain rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_24px_60px_rgba(38,22,14,0.25)]"
             >
               <div className="flex items-center gap-3">
                 <span

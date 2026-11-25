@@ -243,148 +243,151 @@ function ManageRoutinePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FFF9F3] px-4 pb-28 pt-4">
-      <button
-        type="button"
-        onClick={handleBack}
-        className="mb-5 flex min-h-11 items-center gap-2 rounded-2xl text-[#592B1D]"
-      >
-        <ArrowLeft size={20} />
-        Voltar
-      </button>
+    <main className="min-h-dvh bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 lg:landscape:pb-8 xl:px-8 xl:pb-8 xl:pt-8">
+      <div className="relative mx-auto w-full max-w-lg md:max-w-3xl lg:max-w-4xl">
+        <button
+          type="button"
+          onClick={handleBack}
+          className="mb-5 flex min-h-11 items-center gap-2 rounded-2xl text-[#592B1D]"
+        >
+          <ArrowLeft size={20} />
+          Voltar
+        </button>
 
-      <h1 className="mb-5 text-2xl font-extrabold tracking-tight text-[#42251D]">
-        Gerenciar Rotina
-      </h1>
+        <h1 className="mb-5 text-2xl font-extrabold tracking-tight text-[#42251D]">
+          Gerenciar Rotina
+        </h1>
 
-      <section className="rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_5px_14px_rgba(41,37,36,0.06)]">
-        {needsPin ? (
-          <>
-            <h2 className="mb-4 text-lg font-semibold text-app-text">
-              Verificar PIN de acesso
-            </h2>
+        <section className="rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_5px_14px_rgba(41,37,36,0.06)]">
+          {needsPin ? (
+            <>
+              <h2 className="mb-4 text-lg font-semibold text-app-text">
+                Verificar PIN de acesso
+              </h2>
 
-            <PinVerificationForm
-              enteredPin={enteredPin}
-              accessPinError={accessPinError}
-              verifyingPin={verifyingPin}
-              onPinChange={setEnteredPin}
-              onSubmit={handleVerifyPin}
-              onCancel={handleBack}
-              onForgotPin={() => navigate("/perfil/recuperar-pin")}
-            />
-          </>
-        ) : (
-          <>
-            <div className="mb-4 flex items-center justify-between gap-2">
-              <h2 className="font-semibold text-app-text">Seções da rotina</h2>
+              <PinVerificationForm
+                enteredPin={enteredPin}
+                accessPinError={accessPinError}
+                verifyingPin={verifyingPin}
+                onPinChange={setEnteredPin}
+                onSubmit={handleVerifyPin}
+                onCancel={handleBack}
+                onForgotPin={() => navigate("/perfil/recuperar-pin")}
+              />
+            </>
+          ) : (
+            <>
+              <div className="mb-4 flex items-center justify-between gap-2">
+                <h2 className="font-semibold text-app-text">
+                  Seções da rotina
+                </h2>
+
+                <button
+                  type="button"
+                  onClick={openCreateForm}
+                  className="flex shrink-0 items-center gap-2 rounded-xl bg-brand-primary px-3 py-2.5 text-sm font-semibold text-white"
+                >
+                  <Plus size={18} />
+                  Nova seção
+                </button>
+              </div>
+
+              {error && (
+                <p
+                  role="alert"
+                  className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-700"
+                >
+                  {error}
+                </p>
+              )}
+
+              {loading ? (
+                <p className="text-sm text-app-muted">Carregando seções...</p>
+              ) : sections.length === 0 ? (
+                <p className="text-sm text-app-muted">
+                  Nenhuma seção cadastrada.
+                </p>
+              ) : (
+                <ul className="grid grid-cols-1 gap-3 lg:landscape:grid-cols-2 xl:grid-cols-2 md:gap-4">
+                  {sections.map((section) => (
+                    <li
+                      key={section.id}
+                      className="rounded-2xl border border-[#F1E4D9] bg-[#FFFCF9] p-4"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl"
+                          style={{
+                            backgroundColor: section.color,
+                          }}
+                        >
+                          <AppIcon
+                            name={section.icon || "CalendarCheck2"}
+                            size={72}
+                          />
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <h3 className="break-words font-semibold text-app-text">
+                            {section.name}
+                          </h3>
+
+                          {section.description && (
+                            <p className="mt-1 break-words text-sm text-app-muted">
+                              {section.description}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          navigate(`/rotina/gerenciar/${section.id}/atividades`)
+                        }
+                        className="mt-3 w-full rounded-xl bg-[#FFF3E0] px-4 py-3 text-sm font-semibold text-[#9A3412]"
+                      >
+                        Gerenciar atividades
+                      </button>
+
+                      <div className="mt-3 flex justify-end gap-2 border-t border-app-border pt-3">
+                        <button
+                          type="button"
+                          onClick={() => openEditForm(section)}
+                          className="flex items-center gap-2 rounded-xl bg-stone-100 px-3 py-2 text-sm font-medium text-app-text"
+                        >
+                          <Pencil size={16} />
+                          Editar
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setError("");
+                            setSectionToDelete(section);
+                          }}
+                          className="flex items-center gap-2 rounded-xl border border-red-200 px-3 py-2 text-sm font-medium text-red-700"
+                        >
+                          <Trash2 size={16} />
+                          Excluir
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
 
               <button
                 type="button"
-                onClick={openCreateForm}
-                className="flex shrink-0 items-center gap-2 rounded-xl bg-brand-primary px-3 py-2.5 text-sm font-semibold text-white"
+                onClick={handleBack}
+                className="mt-6 w-full rounded-xl bg-brand-primary px-4 py-3 font-semibold text-white transition-colors hover:bg-brand-hover"
               >
-                <Plus size={18} />
-                Nova seção
+                Confirmar
               </button>
-            </div>
-
-            {error && (
-              <p
-                role="alert"
-                className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-700"
-              >
-                {error}
-              </p>
-            )}
-
-            {loading ? (
-              <p className="text-sm text-app-muted">Carregando seções...</p>
-            ) : sections.length === 0 ? (
-              <p className="text-sm text-app-muted">
-                Nenhuma seção cadastrada.
-              </p>
-            ) : (
-              <ul className="space-y-3">
-                {sections.map((section) => (
-                  <li
-                    key={section.id}
-                    className="rounded-2xl border border-[#F1E4D9] bg-[#FFFCF9] p-4"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl"
-                        style={{
-                          backgroundColor: section.color,
-                        }}
-                      >
-                        <AppIcon
-                          name={section.icon || "CalendarCheck2"}
-                          size={72}
-                        />
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <h3 className="break-words font-semibold text-app-text">
-                          {section.name}
-                        </h3>
-
-                        {section.description && (
-                          <p className="mt-1 break-words text-sm text-app-muted">
-                            {section.description}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        navigate(`/rotina/gerenciar/${section.id}/atividades`)
-                      }
-                      className="mt-3 w-full rounded-xl bg-[#FFF3E0] px-4 py-3 text-sm font-semibold text-[#9A3412]"
-                    >
-                      Gerenciar atividades
-                    </button>
-
-                    <div className="mt-3 flex justify-end gap-2 border-t border-app-border pt-3">
-                      <button
-                        type="button"
-                        onClick={() => openEditForm(section)}
-                        className="flex items-center gap-2 rounded-xl bg-stone-100 px-3 py-2 text-sm font-medium text-app-text"
-                      >
-                        <Pencil size={16} />
-                        Editar
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setError("");
-                          setSectionToDelete(section);
-                        }}
-                        className="flex items-center gap-2 rounded-xl border border-red-200 px-3 py-2 text-sm font-medium text-red-700"
-                      >
-                        <Trash2 size={16} />
-                        Excluir
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <button
-              type="button"
-              onClick={handleBack}
-              className="mt-6 w-full rounded-xl bg-brand-primary px-4 py-3 font-semibold text-white transition-colors hover:bg-brand-hover"
-            >
-              Confirmar
-            </button>
-          </>
-        )}
-      </section>
-
+            </>
+          )}
+        </section>
+      </div>
       {!needsPin && formOpen && (
         <RoutineModal
           title={editingSection ? "Editar seção" : "Nova seção"}
@@ -532,8 +535,8 @@ function ManageRoutinePage() {
                 ))}
               </div>
 
-              <div className="max-h-72 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-2">
-                <div className="grid grid-cols-4 gap-2">
+              <div className="max-h-72 md:max-h-96 overflow-y-auto rounded-2xl border border-[#E7D5C8] bg-white p-2">
+                <div className="grid grid-cols-4 gap-2 md:grid-cols-6 md:gap-3">
                   {filteredIcons.map(({ id, label }) => (
                     <button
                       key={id}
@@ -599,7 +602,7 @@ function ManageRoutinePage() {
               aria-modal="true"
               aria-labelledby="delete-routine-title"
               aria-describedby="delete-routine-description"
-              className="relative z-10 w-full max-w-[360px] rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_24px_60px_rgba(38,22,14,0.25)]"
+              className="relative z-10 w-full max-w-[360px] max-h-[calc(100dvh-3rem)] overflow-y-auto overscroll-contain rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_24px_60px_rgba(38,22,14,0.25)]"
             >
               <div className="flex items-center gap-3">
                 <span

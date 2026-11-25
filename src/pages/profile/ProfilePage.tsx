@@ -56,18 +56,17 @@ function ProfilePage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+    <main className="relative min-h-dvh overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 lg:landscape:pb-8 xl:px-8 xl:pb-8 xl:pt-8">
+      {" "}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
       />
-
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-20 top-80 h-44 w-44 rounded-full bg-[#FFF0BB]/30"
       />
-
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="app-page-container">
         <header className="mb-6 flex items-center justify-center gap-3 pt-3">
           <span
             aria-hidden="true"
@@ -76,7 +75,7 @@ function ProfilePage() {
             <AppIcon name="UserRound" size={44} />
           </span>
 
-          <h1 className="text-2xl font-extrabold tracking-tight text-[#42251D]">
+          <h1 className="text-2xl font-extrabold tracking-tight text-[#42251D] md:text-3xl xl:text-4xl">
             Perfil
           </h1>
         </header>
@@ -86,31 +85,32 @@ function ProfilePage() {
             Carregando perfil...
           </p>
         ) : user ? (
-          <div className="flex flex-col gap-5">
-            <ProfileInfo user={user} />
+          <div className="flex flex-col gap-5 md:grid md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:items-start md:gap-6">
+            <div className="flex min-w-0 flex-col gap-5">
+              <ProfileInfo user={user} />
 
-            {!user.pinHash && (
-              <section aria-label="Configuração de segurança">
-                <div className="mb-3 flex items-center gap-2 px-1">
-                  <AppIcon name="ShieldCheck" size={36} />
+              {!user.pinHash && (
+                <section aria-label="Configuração de segurança">
+                  <div className="mb-3 flex items-center gap-2 px-1">
+                    <AppIcon name="ShieldCheck" size={36} />
 
-                  <h2 className="text-lg font-extrabold text-[#42251D]">
-                    Proteja suas configurações
-                  </h2>
-                </div>
+                    <h2 className="text-lg font-extrabold text-[#42251D]">
+                      Proteja suas configurações
+                    </h2>
+                  </div>
 
-                <PinSetupForm
-                  pin={pin}
-                  confirmPin={confirmPin}
-                  pinError={pinError}
-                  savingPin={savingPin}
-                  onPinChange={setPin}
-                  onConfirmPinChange={setConfirmPin}
-                  onSubmit={handleSavePin}
-                />
-              </section>
-            )}
-
+                  <PinSetupForm
+                    pin={pin}
+                    confirmPin={confirmPin}
+                    pinError={pinError}
+                    savingPin={savingPin}
+                    onPinChange={setPin}
+                    onConfirmPinChange={setConfirmPin}
+                    onSubmit={handleSavePin}
+                  />
+                </section>
+              )}
+            </div>
             <section aria-label="Opções da conta">
               <h2 className="mb-3 px-1 text-lg font-extrabold text-[#42251D]">
                 Minha conta

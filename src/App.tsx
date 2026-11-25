@@ -29,47 +29,55 @@ function App() {
   return (
     <ProfileProvider>
       <InterfaceProvider>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/rapidos" element={<QuickPhrasesPage />} />
-          <Route
-            path="/rapidos/gerenciar"
-            element={<ManageQuickPhrasesPage />}
-          />
-          <Route path="/agenda" element={<AgendaPage />} />
-          <Route path="/rotina/:sectionId" element={<RoutineSectionPage />} />
-          <Route path="/emergencia" element={<EmergencyPage />} />
-          <Route
-            path="/emergencia/gerenciar"
-            element={<ManageEmergencyPhrasesPage />}
-          />
-          <Route path="/perfil" element={<ProfilePage />} />
-          <Route path="/perfil/interface" element={<InterfaceSettingsPage />} />
-          <Route path="/perfil/gerenciar" element={<ManageProfilePage />} />
-          <Route path="/perfil/categorias" element={<ManageCategoriesPage />} />
-          <Route path="/perfil/recuperar-pin" element={<RecoverPinPage />} />
-          <Route
-            path="/perfil/categorias/:categoryId/cartoes"
-            element={<ManageCardsPage />}
-          />
-          <Route
-            path="/categorias/:categoryId"
-            element={<CategoryCardsPage />}
-          />
-          <Route path="/sobre" element={<AboutPage />} />
-          <Route path="/rotina/gerenciar" element={<ManageRoutinePage />} />
-          <Route
-            path="/rotina/gerenciar/:sectionId/atividades"
-            element={<ManageRoutineActivitiesPage />}
-          />
-          <Route
-            path="/rotina/:sectionId/atividades/:activityId"
-            element={<RoutineActivityPage />}
-          />
-          <Route path="/historico" element={<HistoryPage />} />
-          <Route path="/mensagem" element={<MessagePage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        <div className="app-content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/rapidos" element={<QuickPhrasesPage />} />
+            <Route
+              path="/rapidos/gerenciar"
+              element={<ManageQuickPhrasesPage />}
+            />
+            <Route path="/agenda" element={<AgendaPage />} />
+            <Route path="/rotina/:sectionId" element={<RoutineSectionPage />} />
+            <Route path="/emergencia" element={<EmergencyPage />} />
+            <Route
+              path="/emergencia/gerenciar"
+              element={<ManageEmergencyPhrasesPage />}
+            />
+            <Route path="/perfil" element={<ProfilePage />} />
+            <Route
+              path="/perfil/interface"
+              element={<InterfaceSettingsPage />}
+            />
+            <Route path="/perfil/gerenciar" element={<ManageProfilePage />} />
+            <Route
+              path="/perfil/categorias"
+              element={<ManageCategoriesPage />}
+            />
+            <Route path="/perfil/recuperar-pin" element={<RecoverPinPage />} />
+            <Route
+              path="/perfil/categorias/:categoryId/cartoes"
+              element={<ManageCardsPage />}
+            />
+            <Route
+              path="/categorias/:categoryId"
+              element={<CategoryCardsPage />}
+            />
+            <Route path="/sobre" element={<AboutPage />} />
+            <Route path="/rotina/gerenciar" element={<ManageRoutinePage />} />
+            <Route
+              path="/rotina/gerenciar/:sectionId/atividades"
+              element={<ManageRoutineActivitiesPage />}
+            />
+            <Route
+              path="/rotina/:sectionId/atividades/:activityId"
+              element={<RoutineActivityPage />}
+            />
+            <Route path="/historico" element={<HistoryPage />} />
+            <Route path="/mensagem" element={<MessagePage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </div>
 
         <NeuralSpeechIndicator />
         <BottomNavigation />

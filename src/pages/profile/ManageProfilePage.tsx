@@ -106,20 +106,18 @@ export default function ManageProfilePage() {
   const title = isRecoveringPin ? "Redefinir PIN" : "Gerenciar perfil";
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4">
+    <main className="relative min-h-dvh overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-4 md:px-6 md:pt-6 lg:landscape:pb-8 xl:px-8 xl:pb-8 xl:pt-8">
+      {" "}
       {/* Elementos decorativos */}
-
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FFE6D0]/60"
       />
-
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-20 top-80 h-48 w-48 rounded-full bg-[#FFF0BB]/30"
       />
-
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="relative mx-auto w-full max-w-lg md:max-w-2xl">
         {/* Cabeçalho */}
 
         <header className="mb-6 pt-3">
@@ -169,7 +167,7 @@ export default function ManageProfilePage() {
 
         {/* Formulários de gerenciamento */}
 
-        <section className="rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_5px_14px_rgba(41,37,36,0.06)]">
+        <section className="rounded-3xl border border-[#F5E9DF] bg-white p-5 shadow-[0_5px_14px_rgba(41,37,36,0.06)] md:p-8">
           {pinSuccess && (
             <p
               role="status"
