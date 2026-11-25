@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router";
 import { ProfileProvider } from "./contexts/ProfileContext";
+import { InterfaceProvider } from "./contexts/InterfaceContext";
 import HomePage from "./pages/home/HomePage";
 import QuickPhrasesPage from "./pages/phrases/QuickPhrasesPage";
 import AgendaPage from "./pages/routine/AgendaPage";
@@ -20,33 +21,37 @@ import ManageRoutineActivitiesPage from "./pages/routine/ManageRoutineActivities
 import RoutineActivityPage from "./pages/routine/RoutineActivityPage";
 import HistoryPage from "./pages/history/HistoryPage";
 import MessagePage from "./pages/messages/MessagePage";
+import InterfaceSettingsPage from "./pages/profile/InterfaceSettingsPage";
 
 function App() {
   return (
     <ProfileProvider>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/rapidos" element={<QuickPhrasesPage />} />
-        <Route path="/rapidos/gerenciar" element={<ManageQuickPhrasesPage />} />
-        <Route path="/agenda" element={<AgendaPage />} />
-        <Route path="/rotina/:sectionId" element={<RoutineSectionPage />} />
-        <Route path="/emergencia" element={<EmergencyPage />} />
-        <Route path="/emergencia/gerenciar" element={<ManageEmergencyPhrasesPage />}/>
-        <Route path="/perfil" element={<ProfilePage />} />
-        <Route path="/perfil/gerenciar" element={<ManageProfilePage />} />
-        <Route path="/perfil/categorias" element={<ManageCategoriesPage />} />
-        <Route path="/perfil/recuperar-pin" element={<RecoverPinPage />} />
-        <Route path="/perfil/categorias/:categoryId/cartoes" element={<ManageCardsPage />} />
-        <Route path="/categorias/:categoryId" element={<CategoryCardsPage />} />
-        <Route path="/sobre" element={<AboutPage />} />
-        <Route path="/rotina/gerenciar" element={<ManageRoutinePage />} />
-        <Route path="/rotina/gerenciar/:sectionId/atividades" element={<ManageRoutineActivitiesPage />} />
-        <Route path="/rotina/:sectionId/atividades/:activityId" element={<RoutineActivityPage />} />
-        <Route path="/historico" element={<HistoryPage />} />
-        <Route path="/mensagem" element={<MessagePage />} />
-      </Routes>
+      <InterfaceProvider>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/rapidos" element={<QuickPhrasesPage />} />
+          <Route path="/rapidos/gerenciar" element={<ManageQuickPhrasesPage />} />
+          <Route path="/agenda" element={<AgendaPage />} />
+          <Route path="/rotina/:sectionId" element={<RoutineSectionPage />} />
+          <Route path="/emergencia" element={<EmergencyPage />} />
+          <Route path="/emergencia/gerenciar" element={<ManageEmergencyPhrasesPage />} />
+          <Route path="/perfil" element={<ProfilePage />} />
+          <Route path="/perfil/interface" element={<InterfaceSettingsPage />} />
+          <Route path="/perfil/gerenciar" element={<ManageProfilePage />} />
+          <Route path="/perfil/categorias" element={<ManageCategoriesPage />} />
+          <Route path="/perfil/recuperar-pin" element={<RecoverPinPage />} />
+          <Route path="/perfil/categorias/:categoryId/cartoes" element={<ManageCardsPage />} />
+          <Route path="/categorias/:categoryId" element={<CategoryCardsPage />} />
+          <Route path="/sobre" element={<AboutPage />} />
+          <Route path="/rotina/gerenciar" element={<ManageRoutinePage />} />
+          <Route path="/rotina/gerenciar/:sectionId/atividades" element={<ManageRoutineActivitiesPage />} />
+          <Route path="/rotina/:sectionId/atividades/:activityId" element={<RoutineActivityPage />} />
+          <Route path="/historico" element={<HistoryPage />} />
+          <Route path="/mensagem" element={<MessagePage />} />
+        </Routes>
 
-      <BottomNavigation />
+        <BottomNavigation />
+      </InterfaceProvider>
     </ProfileProvider>
   );
 }
