@@ -20,7 +20,7 @@ function NeuralSpeechIndicator() {
     <div
       role="status"
       aria-live="polite"
-      className="pointer-events-none fixed inset-x-4 bottom-24 z-50 mx-auto max-w-lg"
+      className="pointer-events-none fixed bottom-24 right-4 left-[calc(var(--app-sidebar-width)+1rem)] z-50 mx-auto max-w-lg lg:landscape:bottom-6 xl:bottom-6"
     >
       <div className="flex items-center gap-3 rounded-2xl border border-orange-200 bg-brand-soft p-3 text-brand-hover shadow-lg">
         <LoaderCircle

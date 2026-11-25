@@ -3,7 +3,7 @@ import AppIcon from "../../components/common/AppIcon";
 
 export default function NotFoundPage() {
   return (
-    <main className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-8">
+    <main className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-[#FFF9F3] px-4 pb-28 pt-8 md:px-6 lg:landscape:pb-8 xl:px-8 xl:pb-8">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-16 -top-16 h-52 w-52 rounded-full bg-[#FFE6D0]/60"
@@ -14,7 +14,7 @@ export default function NotFoundPage() {
         className="pointer-events-none absolute -right-20 top-24 h-48 w-48 rounded-full bg-[#FFF0BB]/40"
       />
 
-      <div className="relative mx-auto w-full max-w-lg">
+      <div className="relative mx-auto w-full max-w-lg md:max-w-xl">
         <header className="mb-6 text-center">
           <img
             src={`${import.meta.env.BASE_URL}comunica-dark-icon.png`}
