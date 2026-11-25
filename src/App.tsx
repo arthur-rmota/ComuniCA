@@ -21,6 +21,7 @@ import RoutineActivityPage from "./pages/routine/RoutineActivityPage";
 import HistoryPage from "./pages/history/HistoryPage";
 import MessagePage from "./pages/messages/MessagePage";
 import NeuralSpeechIndicator from "./components/common/NeuralSpeechIndicator";
+import NotFoundPage from "./pages/errors/NotFoundPage";
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
         />
         <Route path="/historico" element={<HistoryPage />} />
         <Route path="/mensagem" element={<MessagePage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
       <NeuralSpeechIndicator />
